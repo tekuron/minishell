@@ -1,19 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_striteri.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/01/28 17:53:25 by danz             ###   ########.fr       */
+/*   Created: 2025/09/29 23:16:22 by danz              #+#    #+#             */
+/*   Updated: 2025/10/05 11:01:14 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-
-int	main(int argc, char **argv)
+void	ft_striteri(char *s, void (*f)(unsigned int, char*))
 {
-	(void)argc;
-	(void)argv;
+	unsigned int	i;
+
+	i = 0;
+	while (s[i])
+	{
+		f(i, &s[i]);
+		i++;
+	}
 }

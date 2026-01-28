@@ -1,19 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/01/28 17:53:25 by danz             ###   ########.fr       */
+/*   Created: 2025/09/29 23:25:45 by danz              #+#    #+#             */
+/*   Updated: 2025/10/05 11:01:04 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int	main(int argc, char **argv)
+void	ft_putstr_fd(char *s, int fd)
 {
-	(void)argc;
-	(void)argv;
+	write(fd, s, ft_strlen(s));
 }

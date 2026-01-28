@@ -1,19 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/01/28 17:53:25 by danz             ###   ########.fr       */
+/*   Created: 2025/09/29 11:26:46 by danzamor          #+#    #+#             */
+/*   Updated: 2025/10/05 11:01:27 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int	main(int argc, char **argv)
+size_t	ft_strlen(const char *str)
 {
-	(void)argc;
-	(void)argv;
+	size_t	i;
+
+	i = 0;
+	while (*str)
+	{
+		str++;
+		i++;
+	}
+	return (i);
 }

@@ -1,19 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/01/28 17:53:25 by danz             ###   ########.fr       */
+/*   Created: 2025/09/29 11:58:58 by danzamor          #+#    #+#             */
+/*   Updated: 2025/09/29 12:04:55 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int	main(int argc, char **argv)
+void	ft_bzero(void *s, size_t n)
 {
-	(void)argc;
-	(void)argv;
+	unsigned char	*p;
+
+	p = s;
+	while (n > 0)
+	{
+		*p = 0;
+		n--;
+		p++;
+	}
 }

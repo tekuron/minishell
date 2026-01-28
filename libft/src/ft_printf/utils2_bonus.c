@@ -1,19 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   utils2_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/01/28 17:53:25 by danz             ###   ########.fr       */
+/*   Created: 2025/10/09 18:12:12 by danzamor          #+#    #+#             */
+/*   Updated: 2025/10/09 19:42:22 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "ft_printf_bonus.h"
 
-int	main(int argc, char **argv)
+int	digits_hex(unsigned long long nb)
 {
-	(void)argc;
-	(void)argv;
+	int	ret;
+
+	ret = 1;
+	while (nb >= 16)
+	{
+		nb /= 16;
+		ret++;
+	}
+	return (ret);
 }

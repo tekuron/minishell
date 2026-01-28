@@ -1,19 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/01/28 17:53:25 by danz             ###   ########.fr       */
+/*   Created: 2025/09/29 22:53:51 by danz              #+#    #+#             */
+/*   Updated: 2025/10/05 11:01:30 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int	main(int argc, char **argv)
+char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 {
-	(void)argc;
-	(void)argv;
+	char			*ret;
+	unsigned int	i;
+
+	ret = ft_strdup(s);
+	if (!ret)
+		return (NULL);
+	i = 0;
+	while (s[i])
+	{
+		ret[i] = f(i, s[i]);
+		i++;
+	}
+	ret[i] = 0;
+	return (ret);
 }

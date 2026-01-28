@@ -1,17 +1,14 @@
-PROJECT = minishell
-NAME = minishell
-
+PROJECT = libft
+NAME = libft.a
 SRC_DIR = src
 INC_DIR = inc
-INCLUDE = -I $(INC_DIR) -I libft/inc
+INCLUDE = -I $(INC_DIR)
 OBJ_DIR = obj
+
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 RM = rm -rf
 AR = ar rcs
-
-LIB_DIR = libft
-LIB = $(LIB_DIR)/libft.a
 
 GREEN = \033[0;32m
 YELLOW = \033[0;33m
@@ -24,11 +21,8 @@ OBJS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 
 all: $(NAME)
 
-$(LIB):
-	@make -C $(LIB_DIR)
-
-$(NAME): $(LIB) $(OBJS)
-	@$(CC) $(CFLAGS) $(INCLUDE) $(OBJS) $(LIB) -lreadline -o $(NAME)
+$(NAME): $(OBJS)
+	@$(AR) $(NAME) $(OBJS)
 	@echo "$(GREEN)$(PROJECT) built: $(NAME)"
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
@@ -38,25 +32,13 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 clean:
 	@$(RM) $(OBJ_DIR)
-	@make clean -C $(LIB_DIR)
 	@echo "$(BLUE)$(PROJECT) object files removed"
 
 fclean: clean
 	@$(RM) $(NAME)
-	@make fclean -C $(LIB_DIR)
 	@echo "$(BLUE)$(PROJECT) clean (library removed)"
 
 re: fclean all
 	@echo "$(GREEN)$(PROJECT) rebuilt"
-
-pclean:
-	@$(RM) $(OBJ_DIR)
-	@echo "$(BLUE)$(PROJECT) non-library object files removed"
-
-pfclean: pclean
-	@$(RM) $(NAME)
-	@echo "$(BLUE)$(PROJECT) pclean (library removed)"
-
-pre: pfclean all
 
 .PHONY: all clean fclean re
