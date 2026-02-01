@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/01/28 17:49:29 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/01 19:32:25 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,5 +59,8 @@ typedef struct s_command
 	t_sep				sep;
 	struct s_command	*next;
 }	t_command;
+
+char		*prompt(int last_exit);
+t_command	*get_cmd(char *line, char **envp);
 
 #endif
