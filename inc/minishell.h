@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/02/01 19:32:25 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/07 15:11:53 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,5 +62,7 @@ typedef struct s_command
 
 char		*prompt(int last_exit);
 t_command	*get_cmd(char *line, char **envp);
+void		*ft_realloc(void *ptr, size_t size, size_t new_size);
+char		**split_cmd(char *str);
 
 #endif

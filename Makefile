@@ -6,7 +6,7 @@ INC_DIR = inc
 INCLUDE = -I $(INC_DIR) -I libft/inc
 OBJ_DIR = obj
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g3
 RM = rm -rf
 AR = ar rcs
 
