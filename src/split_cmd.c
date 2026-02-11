@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_cmd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 14:49:15 by danzamor          #+#    #+#             */
-/*   Updated: 2026/02/07 16:34:26 by danzamor         ###   ########.fr       */
+/*   Updated: 2026/02/11 12:18:07 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,11 @@ static int	word_len(char *str, int mode)
 		while(str[i] && str[i] != '\'')
 			i++;
 	}
+	else if (mode == 2)
+	{
+		while(str[i] && str[i] != '\"')
+			i++;
+	}
 	return (i);
 }
 
@@ -43,8 +48,7 @@ static int	word_count(char *str)
 		{
 			ret++;
 			i++;
-			while (str[i] && str[i] != '\'' && str[i] !=  '\"')
-				i++;
+			i += 1 + word_len(str + i, 1 * (str[i - 1] == '\'') + 2 * (str[i - 1] == '\"'));
 		}
 		else if (str[i] != ' ' && !(str[i] >= 9 && str[i] <= 13))
 		{
@@ -70,7 +74,7 @@ static void	save_words(char **ret, char *str)
 	{
 		if (str[i] == '\'' || str[i] == '\"')
 		{
-			len = word_len(str + i, 1);
+			len = 2 + word_len(str + i + 1, 1 * (str[i] == '\'') + 2 * (str[i] == '\"'));
 			ret[word] = malloc((len + 1) * sizeof(char));
 			ft_strlcpy(ret[word], str + i, len + 1);
 			i += len - 1;
