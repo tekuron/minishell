@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/02/07 15:11:53 by danzamor         ###   ########.fr       */
+/*   Updated: 2026/02/16 12:45:06 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,12 @@ typedef struct s_command
 }	t_command;
 
 char		*prompt(int last_exit);
-t_command	*get_cmd(char *line, char **envp);
+t_command	*get_cmd(char *line, t_list *envp);
 void		*ft_realloc(void *ptr, size_t size, size_t new_size);
+t_list		*lst_from_char(char **wds);
 char		**split_cmd(char *str);
+t_list		*prep_cmd(char **wds, t_list *envp);
+void		insert_env(t_list *lst, t_list *envp);
+char		*ft_getenv(char *var, t_list *envp);
 
 #endif

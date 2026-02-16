@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/01 18:09:05 by danz              #+#    #+#             */
-/*   Updated: 2026/02/07 16:11:27 by danzamor         ###   ########.fr       */
+/*   Updated: 2026/02/16 12:30:13 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,17 +34,15 @@ char	*prompt(int last_exit)
 	return (prompt);
 }
 
-t_command	*get_cmd(char *line, char **envp)
+t_command	*get_cmd(char *line, t_list *envp)
 {
-	// t_command	*cmd;
+	t_command	*ret;
 	char		**wds;
+	t_list *cmd;
 
 	(void)envp;
 	wds = split_cmd(line);
-	while (*wds)
-	{
-		printf("%s\n", *wds);
-		wds++;
-	}
-	return (NULL);
+	cmd = prep_cmd(wds, envp);
+	free(wds);
+	return (ret);
 }

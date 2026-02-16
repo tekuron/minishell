@@ -1,44 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   prep_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/02/16 12:09:04 by danz             ###   ########.fr       */
+/*   Created: 2026/02/16 11:39:33 by danz              #+#    #+#             */
+/*   Updated: 2026/02/16 12:30:50 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	loop(t_list *envp)
+t_list	*prep_cmd(char **wds, t_list *envp)
 {
-	int			exit_code;
-	t_command	*cmd;
-	char		*line;
+	t_list	*ret;
 
-	exit_code = 0;
-	(void)cmd;
-	while (1)
-	{
-		line = readline(prompt(exit_code));
-		// if (!line)
-		// 	cleanup_and_exit();
-		cmd = get_cmd(line, envp);
-		// if (!cmd)
-		// 	cleanup_and_exit();
-		// exec_cmd()
-		// free_cmd()
-	}
-}
-
-int	main(int argc, char **argv, char **envp)
-{
-	t_list	*envl;
-
-	(void)argc;
-	(void)argv;
-	lst_from_char(envl);
-	loop(envl);
+	ret = lst_from_char(wds);
+	if (!ret)
+		return (NULL);
+	insert_env(ret, envp);
 }
