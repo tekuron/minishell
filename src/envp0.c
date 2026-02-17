@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 14:18:02 by danzamor          #+#    #+#             */
-/*   Updated: 2026/02/17 12:47:50 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/17 17:22:04 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,11 @@ static t_list	*lst_env(t_list *node, t_list *envp)
 	return (ret);
 }
 
-// static void	insert_env_mod()
-// {
-	
-// }
+static void	insert_env_mod(t_list **prev, t_list **next, t_list **cur)
+{
+	*prev = *cur;
+	*cur = *next;
+}
 
 void	insert_env(t_list **lst, t_list *envp)
 {
@@ -103,15 +104,12 @@ void	insert_env(t_list **lst, t_list *envp)
 				prev->next = new;
 			else
 				*lst = new;
-			prev = ft_lstlast(new);
-			prev->next = next;
 			ft_lstdelone(cur, free);
-			cur = prev;
+			cur = new;
+			new = ft_lstlast(new);
+			new->next = next;
 		}
 		else
-		{
-			prev = cur;
-			cur = next;
-		}
+			insert_env_mod(&prev, &next, &cur);
 	}
 }

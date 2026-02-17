@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/01 18:09:05 by danz              #+#    #+#             */
-/*   Updated: 2026/02/17 10:24:45 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/17 17:22:05 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,14 @@ char	*prompt(int last_exit)
 
 t_command	*get_cmd(char *line, t_list *envp)
 {
-	// t_command	*ret;
+	t_command	*ret;
 	char		**wds;
 	t_list		*cmd;
 
 	(void)envp;
 	wds = split_cmd(line);
 	cmd = prep_cmd(wds, envp);
-	while (cmd)
-	{
-		printf("%s\n", (char *)cmd->content);
-		cmd = cmd->next;
-	}
+	ret = save_cmd(cmd);
 	free(wds);
 	return (NULL);
 }
