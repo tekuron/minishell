@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/02/17 12:39:36 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/17 17:37:21 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,11 @@
 # include <term.h>
 # include "libft.h"
 
-typedef enum e_sep
+typedef enum e_bool
 {
-	SEP_NONE,
-	SEP_PIPE,
-	SEP_AND,
-	SEP_OR
-}	t_sep;
-
+	FALSE,
+	TRUE
+}	t_bool;
 typedef enum e_redir
 {
 	REDIR_IN,
@@ -52,20 +49,25 @@ typedef struct s_io
 	struct s_io	*next;
 }	t_io;
 
+t_io	*t_io_new(char *path, t_redir rd);
+void	t_io_append(t_io *top, t_io *new);
+
 typedef struct s_command
 {
 	char				**command;
 	t_io				*redirs;
-	t_sep				sep;
+	t_bool				pipe;
 	struct s_command	*next;
 }	t_command;
+
+t_command	*t_command_new(char **cmd);
+void	t_command_append(t_command *top, t_command *new);
 
 char		*prompt(int last_exit);
 t_command	*get_cmd(char *line, t_list *envp);
 void		*ft_realloc(void *ptr, size_t size, size_t new_size);
 t_list		*lst_from_char(char **wds);
 char		**split_cmd(char *str);
-t_list		*prep_cmd(char **wds, t_list *envp);
 void		insert_env(t_list **lst, t_list *envp);
 char		*ft_getenv(char *var, t_list *envp);
 
