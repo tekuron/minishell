@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/02/17 20:19:55 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/17 23:12:39 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,27 +25,27 @@ int	loop(t_list *envp)
 	while (1)
 	{
 		line = readline(prompt(exit_code));
-		// if (!line)
-		// 	cleanup_and_exit();
-		// if (!append_to_history(line))
-		//		continue ;
+		if (!line)
+			free_cmd(line, NULL, STOP, EXIT_FAILURE);
+		if (!append_to_history(line))
+				continue ;
 		cmd = get_cmd(line, envp);
-		while (cmd)
-		{
-			while (*(cmd->command))
-				printf("%s\n", *(cmd->command++));
-			while (cmd->redirs)
-			{
-				printf("%i %s\n", cmd->redirs->rd, cmd->redirs->path);
-				cmd->redirs = cmd->redirs->next;
-			}
-			printf("%i\n", cmd->pipe);
-			cmd = cmd->next;
-		}
-		// if (!cmd)
-		// 	cleanup_and_exit();
-		// exec_cmd()
-		// free_cmd()
+		// while (cmd)
+		// {
+		// 	while (*(cmd->command))
+		// 		printf("%s\n", *(cmd->command++));
+		// 	while (cmd->redirs)
+		// 	{
+		// 		printf("%i %s\n", cmd->redirs->rd, cmd->redirs->path);
+		// 		cmd->redirs = cmd->redirs->next;
+		// 	}
+		// 	printf("%i\n", cmd->pipe);
+		// 	cmd = cmd->next;
+		// }
+		if (!cmd)
+			free_cmd(line, NULL, STOP, EXIT_FAILURE);
+		// exec_cmd(cmd, envp);
+		free_cmd(line, cmd, CONT, -1);
 	}
 	return (0);
 }
