@@ -6,41 +6,11 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 11:39:33 by danz              #+#    #+#             */
-/*   Updated: 2026/02/17 17:22:05 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/17 17:36:17 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	remove_quotes(t_list *lst)
-{
-	size_t	len;
-
-	while (lst)
-	{
-		if (((char *)lst->content)[0] == '\''
-			|| ((char *)lst->content)[0] == '\"')
-		{
-			len = ft_strlen((char *)lst->content);
-			((char *)lst->content)[len - 1] = 0;
-			ft_memmove(lst->content, (char *)lst->content + 1, len - 1);
-			lst->content = ft_realloc(lst->content, len, len - 2);
-		}
-		lst = lst->next;
-	}
-}
-
-t_list	*prep_cmd(char **wds, t_list *envp)
-{
-	t_list	*ret;
-
-	ret = lst_from_char(wds);
-	if (!ret)
-		return (NULL);
-	insert_env(&ret, envp);
-	remove_quotes(ret);
-	return (ret);
-}
 
 char	*ft_getenv(char *var, t_list *envp)
 {
