@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/01 18:09:05 by danz              #+#    #+#             */
-/*   Updated: 2026/02/17 17:22:05 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/17 17:38:56 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,18 +32,4 @@ char	*prompt(int last_exit)
 		ft_strlcat(prompt, "ଠ "BCYAN" minishell "CRESET, PROMPT_SIZE);
 	}
 	return (prompt);
-}
-
-t_command	*get_cmd(char *line, t_list *envp)
-{
-	t_command	*ret;
-	char		**wds;
-	t_list		*cmd;
-
-	(void)envp;
-	wds = split_cmd(line);
-	cmd = prep_cmd(wds, envp);
-	ret = save_cmd(cmd);
-	free(wds);
-	return (NULL);
 }
