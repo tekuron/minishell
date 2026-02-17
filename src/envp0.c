@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   envp.c                                             :+:      :+:    :+:   */
+/*   envp0.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 14:18:02 by danzamor          #+#    #+#             */
-/*   Updated: 2026/02/17 11:49:06 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/17 12:47:50 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,28 +52,6 @@ char	*envcat(char *str, char *env)
 	return (ret);
 }
 
-char	*ft_getenv(char *var, t_list *envp)
-{
-	size_t len;
-
-	len = 0;
-	while (*var && *var != '$')
-		var++;
-	if (!(*var))
-		return (NULL);
-	var++;
-	while (ft_isalnum(var[len]) || var[len] == '_')
-		len++;
-	while (envp)
-	{
-		if (!ft_strncmp(var, (char *)envp->content, len)
-				&& ((char *)envp->content)[len] == '=')
-			return ((char *)(envp->content) + len + 1);
-		envp = envp->next;
-	}
-	return (NULL);
-}
-
 static t_list	*lst_env(t_list *node, t_list *envp)
 {
 	char	**split_env;
@@ -101,13 +79,20 @@ static t_list	*lst_env(t_list *node, t_list *envp)
 	return (ret);
 }
 
-void	insert_env(t_list **lst, t_list *envp, t_list *prev)
+// static void	insert_env_mod()
+// {
+	
+// }
+
+void	insert_env(t_list **lst, t_list *envp)
 {
+	t_list *prev;
 	t_list	*next;
-	t_list	*cur;
 	t_list	*new;
+	t_list	*cur;
 
 	cur = *lst;
+	prev = 0;
 	while (cur)
 	{
 		next = cur->next;
@@ -121,11 +106,12 @@ void	insert_env(t_list **lst, t_list *envp, t_list *prev)
 			prev = ft_lstlast(new);
 			prev->next = next;
 			ft_lstdelone(cur, free);
-			cur = new;
-			continue ;
+			cur = prev;
 		}
 		else
+		{
 			prev = cur;
-		cur = next;
+			cur = next;
+		}
 	}
 }

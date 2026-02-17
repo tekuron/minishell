@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/02/17 10:40:57 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/17 12:39:36 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void		*ft_realloc(void *ptr, size_t size, size_t new_size);
 t_list		*lst_from_char(char **wds);
 char		**split_cmd(char *str);
 t_list		*prep_cmd(char **wds, t_list *envp);
-void		insert_env(t_list **lst, t_list *envp, t_list *prev);
+void		insert_env(t_list **lst, t_list *envp);
 char		*ft_getenv(char *var, t_list *envp);
 
 #endif
