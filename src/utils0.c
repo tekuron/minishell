@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 14:24:17 by danzamor          #+#    #+#             */
-/*   Updated: 2026/02/17 10:18:22 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/17 20:09:32 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,20 +33,31 @@ void	*ft_realloc(void *ptr, size_t size, size_t new_size)
 
 t_list	*lst_from_char(char **wds)
 {
-	t_list *ret;
-	t_list *cur;
+	t_list	*ret;
+	t_list	*cur;
 
-	ret = ft_lstnew(*(wds++));
+	ret = ft_lstnew(ft_strdup(*wds));
+	wds++;
 	if (!ret)
 		return (NULL);
 	cur = ret;
 	while (*wds)
 	{
-		cur->next = ft_lstnew(*wds);
+		cur->next = ft_lstnew(ft_strdup(*wds));
 		if (!cur->next)
 			return (ft_lstclear(&ret, free), NULL);
 		cur = cur->next;
 		wds++;
 	}
 	return (ret);
+}
+
+int	is_redir(char *str)
+{
+	if ((!ft_strncmp(str, "<", 2))
+	|| (!ft_strncmp(str, ">", 2))
+	|| (!ft_strncmp(str, "<<", 3))
+	|| (!ft_strncmp(str, ">>", 3)))
+		return (1);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 17:24:40 by danz              #+#    #+#             */
-/*   Updated: 2026/02/17 17:36:10 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/17 20:11:18 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,23 +42,20 @@ static t_list	*prep_cmd(char **wds, t_list *envp)
 	return (ret);
 }
 
-t_command	*save_cmd(char **cmd)
-{
-	t_command	*ret;
-
-	
-}
-
 t_command	*get_cmd(char *line, t_list *envp)
 {
 	t_command	*ret;
 	char		**wds;
 	t_list		*cmd;
+	int i;
 
-	(void)envp;
+	i = 0;
 	wds = split_cmd(line);
 	cmd = prep_cmd(wds, envp);
-	ret = save_cmd(cmd);
+	ret = save_cmds(cmd);
+	while (wds[i])
+		free(wds[i++]);
 	free(wds);
-	return (NULL);
+	ft_lstclear(&cmd, free);
+	return (ret);
 }

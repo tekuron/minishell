@@ -14,7 +14,7 @@
 
 char	*ft_getenv(char *var, t_list *envp)
 {
-	size_t len;
+	size_t	len;
 
 	len = 0;
 	while (*var && *var != '$')
@@ -27,7 +27,7 @@ char	*ft_getenv(char *var, t_list *envp)
 	while (envp)
 	{
 		if (!ft_strncmp(var, (char *)envp->content, len)
-				&& ((char *)envp->content)[len] == '=')
+			&& ((char *)envp->content)[len] == '=')
 			return ((char *)(envp->content) + len + 1);
 		envp = envp->next;
 	}

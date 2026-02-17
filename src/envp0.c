@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 14:18:02 by danzamor          #+#    #+#             */
-/*   Updated: 2026/02/17 17:22:54 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/17 20:59:41 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int	has_env(t_list *node)
 	if (*str == '\'')
 		return (0);
 	while (*str)
-		if (*str++ == '$' && *(str + 1))
+		if (*str++ == '$' && *(str))
 			return (1);
 	return (0);
 }
@@ -39,7 +39,7 @@ char	*envcat(char *str, char *env)
 	len = 0;
 	while (str[len] && str[len] != '$')
 		len++;
-	slen = len + 1;
+	slen = len + (str[len] == '$');
 	while (str[slen] && (ft_isalnum(str[slen]) || str[slen] == '_'))
 		slen++;
 	ret = malloc(len + ft_strlen(str + slen) + ft_strlen(env) + 1);
@@ -61,7 +61,7 @@ static t_list	*lst_env(t_list *node, t_list *envp)
 	env = envcat(node->content, ft_getenv(node->content, envp));
 	if (!env)
 		return (NULL);
-	if (env[0] != '\"')
+	if (env[0] != '\"' && env[0])
 		split_env = ft_split(env, ' ');
 	else
 	{
@@ -87,7 +87,7 @@ static void	insert_env_mod(t_list **prev, t_list **next, t_list **cur)
 
 void	insert_env(t_list **lst, t_list *envp)
 {
-	t_list *prev;
+	t_list	*prev;
 	t_list	*next;
 	t_list	*new;
 	t_list	*cur;

@@ -1,22 +1,50 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_command.c                                        :+:      :+:    :+:   */
+/*   types.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 17:27:15 by danz              #+#    #+#             */
-/*   Updated: 2026/02/17 17:38:57 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/17 20:25:48 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	t_command_free(t_command *cmd)
+{
+	t_command	*cur;
+	t_io		*cur_io;
+	int			i;
+
+	cur = cmd;
+	while (cur)
+	{
+		i = 0;
+		while (cmd->command[i])
+			free(cmd->command[i++]);
+		free(cmd->command);
+		cur_io = cmd->redirs;
+		while (cur_io)
+		{
+			free(cur_io->path);
+			cur_io = cur_io->next;
+			free(cmd->redirs);
+			cmd->redirs = cur_io;
+		}
+		cur = cur->next;
+		free(cmd);
+		cmd = cur;
+	}
+}
 
 void	t_command_append(t_command *top, t_command *new)
 {
 	while (top->next)
 		top = top->next;
 	top->next = new;
+	top->pipe = TRUE;
 }
 
 t_command	*t_command_new(char **cmd)

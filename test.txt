@@ -1,0 +1,28 @@
+ls
+echo hello
+echo "hello world"
+echo 'hello world'
+echo "hello 'world'"
+echo 'hello "world"'
+echo ""
+echo ''
+ls -l | grep a
+cat file | grep word | wc -l
+echo a > out
+cat < in
+echo b >> out
+<< EOF cat
+> out echo a
+echo a>out
+echo $USER
+echo "$USER"
+echo '$USER'
+echo $USER$HOME
+echo $NONEXISTENT
+echo abc$USER
+echo "$USER"def
+echo $
+echo $?
+echo $USER > file | cat < file
+ls -la > outfile | grep "algo" >> outfile2 < infile
+ls     -l      -a
