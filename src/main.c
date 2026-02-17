@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/02/16 12:09:04 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/17 10:21:35 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ int	loop(t_list *envp)
 
 	exit_code = 0;
 	(void)cmd;
-	while (1)
-	{
+	// while (1--)
+	// {
 		line = readline(prompt(exit_code));
 		// if (!line)
 		// 	cleanup_and_exit();
@@ -30,7 +30,8 @@ int	loop(t_list *envp)
 		// 	cleanup_and_exit();
 		// exec_cmd()
 		// free_cmd()
-	}
+	// }
+	return (0);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -39,6 +40,6 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	lst_from_char(envl);
+	envl = lst_from_char(envp);
 	loop(envl);
 }

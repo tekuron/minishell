@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 14:18:02 by danzamor          #+#    #+#             */
-/*   Updated: 2026/02/16 17:26:27 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/17 11:49:06 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ char	*envcat(char *str, char *env)
 		return (NULL);
 	ft_strlcpy(ret, str, len + 1);
 	tlen = len + ft_strlen(str + slen) + ft_strlen(env) + 1;
-	ft_strlcat(ret, env, len);
-	ft_strlcat(ret, str + slen, len);
+	ft_strlcat(ret, env, tlen);
+	ft_strlcat(ret, str + slen, tlen);
 	return (ret);
 }
 
@@ -66,7 +66,8 @@ char	*ft_getenv(char *var, t_list *envp)
 		len++;
 	while (envp)
 	{
-		if (!ft_strncmp(var, (char *)envp->content, len) && ((char *)envp->content)[len] == '=')
+		if (!ft_strncmp(var, (char *)envp->content, len)
+				&& ((char *)envp->content)[len] == '=')
 			return ((char *)(envp->content) + len + 1);
 		envp = envp->next;
 	}
@@ -87,6 +88,8 @@ static t_list	*lst_env(t_list *node, t_list *envp)
 	else
 	{
 		split_env = malloc(2 * sizeof(char *));
+		if (!split_env)
+			return (NULL);
 		split_env[0] = ft_strdup(env);
 		split_env[1] = NULL;
 	}
@@ -98,22 +101,31 @@ static t_list	*lst_env(t_list *node, t_list *envp)
 	return (ret);
 }
 
-void	insert_env(t_list *lst, t_list *envp)
+void	insert_env(t_list **lst, t_list *envp, t_list *prev)
 {
-	t_list *aux;
-	t_list *new;
+	t_list	*next;
+	t_list	*cur;
+	t_list	*new;
 
-	while (lst->next)
+	cur = *lst;
+	while (cur)
 	{
-		if (has_env(lst->next))
+		next = cur->next;
+		if (has_env(cur))
 		{
-			aux = lst->next->next;
-			new = lst_env(lst, envp);
-			ft_lstdelone(lst->next, free);
-			lst->next = new;
-			new = ft_lstlast(new);
-			new->next = aux;
+			new = lst_env(cur, envp);
+			if (prev)
+				prev->next = new;
+			else
+				*lst = new;
+			prev = ft_lstlast(new);
+			prev->next = next;
+			ft_lstdelone(cur, free);
+			cur = new;
+			continue ;
 		}
-		lst = lst->next;
+		else
+			prev = cur;
+		cur = next;
 	}
 }
