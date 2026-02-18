@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 18:25:59 by danz              #+#    #+#             */
-/*   Updated: 2026/02/18 18:30:38 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/18 22:57:53 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,21 @@ static t_redir	get_redir(char *str)
 	return (ERROR);
 }
 
-static void	get_redirs(t_list *cmd, t_command *ret)
+static int	get_redirs(t_list *cmd, t_command *ret)
 {
 	t_io	*new;
 	t_redir	rd;
 
 	rd = get_redir(cmd->content);
+	if (rd == ERROR)
+		return (1);
 	cmd = cmd->next;
 	new = t_io_new(ft_strdup(cmd->content), rd);
 	if (ret->redirs)
 		t_io_append(ret->redirs, new);
 	else
 		ret->redirs = new;
+	return (0);
 }
 
 static t_command	*get_cmds(t_list *cmd, int i)
@@ -67,7 +70,7 @@ static t_command	*get_cmds(t_list *cmd, int i)
 	return (ret);
 }
 
-void	save_cmds_mod(t_list *cmd, int i, t_list *cur, t_command *new)
+int	save_cmds_mod(t_list *cmd, int i, t_list *cur, t_command *new)
 {
 	while (cmd && !is_redir(cmd->content) && i)
 	{
@@ -77,14 +80,17 @@ void	save_cmds_mod(t_list *cmd, int i, t_list *cur, t_command *new)
 	while (cmd && cmd != cur && i--)
 	{
 		if (cmd && is_redir(cmd->content))
-			get_redirs(cmd, new);
+		{
+			if (get_redirs(cmd, new))
+				return (1);
+		}
 		cmd = cmd->next;
 	}
+	return (0);
 }
 
-t_command	*save_cmds(t_list *cmd)
+t_command	*save_cmds(t_list *cmd, t_command *ret)
 {
-	t_command	*ret;
 	t_command	*new;
 	t_list		*cur;
 	int			i;
@@ -101,7 +107,8 @@ t_command	*save_cmds(t_list *cmd)
 				t_command_append(ret, new);
 			else
 				ret = new;
-			save_cmds_mod(cmd, i + (cur->next == NULL), cur, new);
+			if (save_cmds_mod(cmd, i + (cur->next == NULL), cur, new))
+				return (t_command_free(ret), NULL);
 			cmd = cur->next;
 		}
 		else

@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 17:37:06 by danz              #+#    #+#             */
-/*   Updated: 2026/02/18 18:28:25 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/18 23:04:55 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int	set_vars(char *str, int *pipe, int *redir, int word)
 			return (1);
 		*redir = 1;
 	}
-	if (*(str + 1) == 0 && (pipe || redir))
+	if (*(str + 1) == 0 && (*pipe || *redir))
 		return (1);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/02/18 18:49:58 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/18 22:57:32 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int			word_len(char *str);
 char		**split_cmd(char *str);
 void		insert_env(t_list **lst, t_list *envp);
 char		*ft_getenv(char *var, t_list *envp);
-t_command	*save_cmds(t_list *cmd);
+t_command	*save_cmds(t_list *cmd, t_command *ret);
 int			is_redir(char *str);
 int			append_to_history(char *line);
 void		s_int_handler(int sig);

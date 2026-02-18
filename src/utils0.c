@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 14:24:17 by danzamor          #+#    #+#             */
-/*   Updated: 2026/02/18 18:49:28 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/18 22:37:49 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,8 @@ void	free_strs(char **strs)
 	int i;
 
 	i = 0;
+	if (!strs)
+		return ;
 	while (strs[i])
 		free(strs[i++]);
 	free(strs);

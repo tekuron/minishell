@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 17:24:40 by danz              #+#    #+#             */
-/*   Updated: 2026/02/18 18:53:19 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/18 22:39:02 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,13 @@ t_command	*get_cmd(char *line, t_list *envp)
 	t_list		*cmd;
 
 	wds = split_cmd(line);
+	if (!wds)
+		return (NULL);
 	cmd = prep_cmd(wds, envp);
-	ret = save_cmds(cmd);
 	free_strs(wds);
+	if (!cmd)
+		return (NULL);
+	ret = save_cmds(cmd);
 	ft_lstclear(&cmd, free);
 	return (ret);
 }
