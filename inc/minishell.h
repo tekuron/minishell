@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/02/18 17:00:20 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/18 18:49:58 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ typedef enum e_bool
 	TRUE
 }	t_bool;
 
-typedef	enum e_exit
+typedef enum e_exit
 {
 	STOP,
 	CONT
@@ -81,10 +81,14 @@ t_command	*t_command_new(char **cmd);
 void		t_command_append(t_command *top, t_command *new);
 void		t_command_free(t_command *cmd);
 void		free_cmd(char *line, t_command *cmd, int cont, char *err);
+
 char		*prompt(int last_exit);
 t_command	*get_cmd(char *line, t_list *envp);
 void		*ft_realloc(void *ptr, size_t size, size_t new_size);
+void		free_strs(char **strs);
 t_list		*lst_from_char(char **wds);
+int			check_cmd(char *str);
+int			word_len(char *str);
 char		**split_cmd(char *str);
 void		insert_env(t_list **lst, t_list *envp);
 char		*ft_getenv(char *var, t_list *envp);
@@ -93,6 +97,5 @@ int			is_redir(char *str);
 int			append_to_history(char *line);
 void		s_int_handler(int sig);
 void		s_backslash_handler(int sig);
-
 
 #endif
