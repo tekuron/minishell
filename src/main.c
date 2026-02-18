@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/02/18 12:16:47 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/18 16:59:47 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-volatile int	in_input = 1;
+volatile sig_atomic_t	current_mode = INPUT_MODE;
 
 int	loop(t_list *envp)
 {
@@ -26,12 +26,12 @@ int	loop(t_list *envp)
 	{
 		line = readline(prompt(exit_code));
 		if (!line)
-			free_cmd(line, NULL, STOP, EXIT_FAILURE);
+			free_cmd(line, NULL, STOP, "readline");
 		if (!append_to_history(line))
 				continue ;
 		cmd = get_cmd(line, envp);
 		if (!cmd)
-			free_cmd(line, NULL, STOP, EXIT_FAILURE);
+			free_cmd(line, NULL, STOP, "malloc");
 		while (cmd)
 		{
 			while (*(cmd->command))
@@ -45,7 +45,7 @@ int	loop(t_list *envp)
 			cmd = cmd->next;
 		}
 		// exec_cmd(cmd, envp);
-		free_cmd(line, cmd, CONT, -1);
+		free_cmd(line, cmd, CONT, NULL);
 	}
 	return (0);
 }
@@ -53,12 +53,12 @@ int	loop(t_list *envp)
 int	main(int argc, char **argv, char **envp)
 {
 	t_list	*envl;
-	// struct sigaction sa;
+	struct sigaction sa;
 
 	(void)argc;
 	(void)argv;
-	// sa.sa_handler = s_int_handler;
-	// sigaction(SIGINT, &sa, NULL);
+	sa.sa_handler = s_int_handler;
+	sigaction(SIGINT, &sa, NULL);
 	envl = lst_from_char(envp);
 	loop(envl);
 	ft_lstclear(&envl, free);

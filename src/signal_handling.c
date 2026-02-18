@@ -6,20 +6,27 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 22:26:11 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/02/17 23:12:53 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/18 16:59:37 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "minishell.h"
+#include "minishell.h"
 
-// void	s_int_handler(int sig)
-// {
-// 	//Check input
-// 	//New line or send signal to child processess
-// }
+extern sig_atomic_t current_mode;
 
-// void	s_backslash_handler(int sig)
-// {
-// 	//Catch signal
-// 	//Do nothing
-// }
+void	s_int_handler(int sig)
+{
+	(void) sig;
+	if (current_mode == INPUT_MODE)
+	{
+		printf("\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+}
+
+void	s_backslash_handler(int sig)
+{
+	(void) sig;
+}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/02/18 13:03:31 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/18 17:00:20 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,13 @@ typedef	enum e_exit
 	CONT
 }		t_exit;
 
+typedef enum e_mode
+{
+	INPUT_MODE,
+	EXECUTION_MODE,
+	HEREDOC_MODE
+}		t_mode;
+
 typedef enum e_redir
 {
 	ERROR,
@@ -73,8 +80,7 @@ typedef struct s_command
 t_command	*t_command_new(char **cmd);
 void		t_command_append(t_command *top, t_command *new);
 void		t_command_free(t_command *cmd);
-void		free_cmd(char *line, t_command *cmd, int cont, int ex_status);
-
+void		free_cmd(char *line, t_command *cmd, int cont, char *err);
 char		*prompt(int last_exit);
 t_command	*get_cmd(char *line, t_list *envp);
 void		*ft_realloc(void *ptr, size_t size, size_t new_size);
@@ -85,6 +91,8 @@ char		*ft_getenv(char *var, t_list *envp);
 t_command	*save_cmds(t_list *cmd);
 int			is_redir(char *str);
 int			append_to_history(char *line);
+void		s_int_handler(int sig);
+void		s_backslash_handler(int sig);
 
 
 #endif
