@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2026/02/18 22:57:32 by danz             ###   ########.fr       */
+=======
+/*   Updated: 2026/02/18 23:29:47 by dplazas-         ###   ########.fr       */
+>>>>>>> ba764d0 (Structure of pipes and redirections)
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +85,7 @@ t_command	*t_command_new(char **cmd);
 void		t_command_append(t_command *top, t_command *new);
 void		t_command_free(t_command *cmd);
 void		free_cmd(char *line, t_command *cmd, int cont, char *err);
-
+void		free_pipes(int **pipes, int total);
 char		*prompt(int last_exit);
 t_command	*get_cmd(char *line, t_list *envp);
 void		*ft_realloc(void *ptr, size_t size, size_t new_size);
@@ -97,5 +101,7 @@ int			is_redir(char *str);
 int			append_to_history(char *line);
 void		s_int_handler(int sig);
 void		s_backslash_handler(int sig);
+void	piping(int **pipes, int total, int id);
+void	redirecting(t_command *cmd);
 
 #endif

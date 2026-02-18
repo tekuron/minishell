@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2026/02/18 23:03:05 by danz             ###   ########.fr       */
+=======
+/*   Updated: 2026/02/18 23:31:29 by dplazas-         ###   ########.fr       */
+>>>>>>> ba764d0 (Structure of pipes and redirections)
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +39,7 @@ void	debug(t_command *cmd)
 	}
 }
 
-int	loop(t_list *envp)
+int	loop(t_list *envp, struct sigaction sa[4]) //Change declaration
 {
 	int			exit_code;
 	t_command	*cmd;
@@ -43,6 +47,7 @@ int	loop(t_list *envp)
 
 	exit_code = 0;
 	(void)cmd;
+	(void) sa;
 	while (1)
 	{
 		line = readline(prompt(exit_code));
@@ -60,7 +65,7 @@ int	loop(t_list *envp)
 		if (!cmd)
 			free_cmd(line, NULL, STOP, "malloc");
 		exit_code = 0;
-		// exec_cmd(cmd, envp);
+		// exec_command(cmd, envp, sa); //Change envp (char ** execve argument)
 		free_cmd(line, cmd, CONT, NULL);
 	}
 	return (0);
@@ -69,17 +74,16 @@ int	loop(t_list *envp)
 int	main(int argc, char **argv, char **envp)
 {
 	t_list	*envl;
-	struct sigaction sa;
+	struct sigaction sa[4];
 
 	(void)argc;
 	(void)argv;
-	ft_bzero(&sa, sizeof(sa));
-	sa.sa_handler = s_int_handler;
-	sigaction(SIGINT, &sa, NULL);
-	sa.sa_handler = s_backslash_handler;
-	sigaction(SIGQUIT, &sa, NULL);
+	sa[0].sa_handler = s_int_handler;
+	sigaction(SIGINT, &sa[0], &sa[1]);
+	sa[2].sa_handler = s_backslash_handler;
+	sigaction(SIGQUIT, &sa[2], &sa[3]);
 	envl = lst_from_char(envp);
 	ft_lstadd_front(&envl, ft_lstnew(ft_strdup("?=0")));
-	loop(envl);
+	loop(envl, sa);
 	ft_lstclear(&envl, free);
 }
