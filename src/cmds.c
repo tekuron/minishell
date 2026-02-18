@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/02/18 17:03:56 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/18 19:07:38 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,15 @@ void	free_cmd(char *line, t_command *cmd, int cont, char *err)
 {
 	if (line != NULL)
 		free(line);
-	if (line != NULL)
+	if (cmd != NULL)
 		t_command_free(cmd);
-	if (!cont)
+	if (!cont && err)
 	{
 		perror(err);
 		exit(EXIT_FAILURE);
 	}
+	if (!cont)
+		exit(0);
 }
 
 
