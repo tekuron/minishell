@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/02/18 12:21:51 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/18 13:03:31 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef	enum e_exit
 
 typedef enum e_redir
 {
+	ERROR,
 	REDIR_IN,
 	REDIR_OUT,
 	REDIR_APPEND,

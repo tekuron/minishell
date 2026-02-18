@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 17:24:40 by danz              #+#    #+#             */
-/*   Updated: 2026/02/18 12:29:05 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/18 13:19:41 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ static void	remove_quotes(t_list *lst)
 					j++;
 				ft_memmove(&str[j], &str[j + 1], len - j);
 				ft_memmove(&str[i], &str[i + 1], len - i - 1);
-				lst->content = ft_realloc(lst->content, len, len - 2);
+				lst->content = ft_realloc(lst->content, len + 1, len - 1);
+				i = -1;
 			}
 			i++;
 		}

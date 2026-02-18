@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 18:25:59 by danz              #+#    #+#             */
-/*   Updated: 2026/02/17 21:03:20 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/18 13:05:18 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@ static t_redir	get_redir(char *str)
 		return (REDIR_OUT);
 	if (!ft_strncmp(str, "<<", 3))
 		return (REDIR_HEREDOC);
-	return (REDIR_APPEND);
+	if (!ft_strncmp(str, ">>", 3))
+		return (REDIR_APPEND);
+	return (ERROR);
 }
 
 static void get_redirs(t_list *cmd, t_command *ret)

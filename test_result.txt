@@ -1,134 +1,99 @@
-[1;32mଠ [6;36m minishell [0mls
-ls
+[1;32mଠ [6;36m minishell [0mecho "''"
+echo
+''
 0
-[1;32mଠ [6;36m minishell [0mecho hello
+[1;32mଠ [6;36m minishell [0mecho '""'
+echo
+""
+0
+[1;32mଠ [6;36m minishell [0mecho ""''""
+echo
+''""
+0
+[1;32mଠ [6;36m minishell [0mecho " " ' '
+echo
+ 
+ 
+0
+[1;32mଠ [6;36m minishell [0mls|grep a|wc -l
+ls|grep
+a|wc
+-l
+0
+[1;32mଠ [6;36m minishell [0m>out1 >out2 >out3 echo a
+echo
+a
+2 out1
+2 out2
+2 out3
+0
+[1;32mଠ [6;36m minishell [0m<in1 <in2 cat
+cat
+1 in1
+1 in2
+0
+[1;32mଠ [6;36m minishell [0mecho hello >"file name"
 echo
 hello
+2 file name
 0
-[1;32mଠ [6;36m minishell [0mecho "hello world"
+[1;32mଠ [6;36m minishell [0mcat <'other file'
+cat
+1 other file
+0
+[1;32mଠ [6;36m minishell [0mecho $"USER"
 echo
-hello world
+USER
 0
-[1;32mଠ [6;36m minishell [0mecho 'hello world'
+[1;32mଠ [6;36m minishell [0mecho "$NONEXISTENT"after
 echo
-hello world
+after
 0
-[1;32mଠ [6;36m minishell [0mecho "hello 'world'"
+[1;32mଠ [6;36m minishell [0mecho before"$NONEXISTENT"
 echo
-hello 'world'
+before
 0
-[1;32mଠ [6;36m minishell [0mecho 'hello "world"'
+[1;32mଠ [6;36m minishell [0mecho "$USER"'$USER'
 echo
-hello "world"
+danz'danz'
 0
-[1;32mଠ [6;36m minishell [0mecho ""
+[1;32mଠ [6;36m minishell [0mecho $USER="value"
 echo
-
+danz=value
 0
-[1;32mଠ [6;36m minishell [0mecho ''
+[1;32mଠ [6;36m minishell [0m>"" echo a
 echo
-
+a
+2 
 0
-[1;32mଠ [6;36m minishell [0mls -l | grep a
+[1;32mଠ [6;36m minishell [0m> "$NONEXISTENT" echo a
+echo
+a
+2 
+0
+[1;32mଠ [6;36m minishell [0mls | | grep a
 ls
--l
+1
 1
 grep
 a
 0
-[1;32mଠ [6;36m minishell [0mcat file | grep word | wc -l
-cat
-file
+[1;32mଠ [6;36m minishell [0m| ls
 1
-grep
-word
-1
-wc
--l
+ls
 0
-[1;32mଠ [6;36m minishell [0mecho a > out
-echo
-a
-1 out
-0
-[1;32mଠ [6;36m minishell [0mcat < in
-cat
-0 in
-0
-[1;32mଠ [6;36m minishell [0mecho b >> out
-echo
-b
+[1;32mଠ [6;36m minishell [0mls > > out
+ls
+out
+2 >
 2 out
 0
-[1;32mଠ [6;36m minishell [0m<< EOF cat
+[1;32mଠ [6;36m minishell [0m<< "EOF" cat
 cat
-3 EOF
+4 EOF
 0
-[1;32mଠ [6;36m minishell [0m> out echo a
-echo
-a
-1 out
-0
-[1;32mଠ [6;36m minishell [0mecho a>out
-echo
-a>out
-0
-[1;32mଠ [6;36m minishell [0mecho $USER
-echo
-danz
-0
-[1;32mଠ [6;36m minishell [0mecho "$USER"
-echo
-danz�Y
-0
-[1;32mଠ [6;36m minishell [0mecho '$USER'
-echo
-$USER
-0
-[1;32mଠ [6;36m minishell [0mecho $USER$HOME
-echo
-danz/home/danz
-0
-[1;32mଠ [6;36m minishell [0mecho $NONEXISTENT
-echo
-
-0
-[1;32mଠ [6;36m minishell [0mecho abc$USER
-echo
-abcdanz
-0
-[1;32mଠ [6;36m minishell [0mecho "$USER"def
-echo
-danzdef
-0
-[1;32mଠ [6;36m minishell [0mecho $
-echo
-$
-0
-[1;32mଠ [6;36m minishell [0mecho $?
-echo
-?
-0
-[1;32mଠ [6;36m minishell [0mecho $USER > file | cat < file
-echo
-danz
-1 file
-1
+[1;32mଠ [6;36m minishell [0m<< 'EOF' cat
 cat
-0 file
+4 EOF
 0
-[1;32mଠ [6;36m minishell [0mls -la > outfile | grep "algo" >> outfile2 < infile
-ls
--la
-1 outfile
-1
-grep
-algo
-2 outfile2
-0 infile
-0
-[1;32mଠ [6;36m minishell [0mls     -l      -a
-ls
--l
--a
-0
+[1;32mଠ [6;36m minishell [0m
