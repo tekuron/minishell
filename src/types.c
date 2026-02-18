@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 17:27:15 by danz              #+#    #+#             */
-/*   Updated: 2026/02/17 20:25:48 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/18 18:52:42 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,11 @@ void	t_command_free(t_command *cmd)
 {
 	t_command	*cur;
 	t_io		*cur_io;
-	int			i;
 
 	cur = cmd;
 	while (cur)
 	{
-		i = 0;
-		while (cmd->command[i])
-			free(cmd->command[i++]);
-		free(cmd->command);
+		free_strs(cmd->command);
 		cur_io = cmd->redirs;
 		while (cur_io)
 		{

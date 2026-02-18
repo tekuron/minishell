@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 14:24:17 by danzamor          #+#    #+#             */
-/*   Updated: 2026/02/17 20:09:32 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/18 18:49:28 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,19 @@ t_list	*lst_from_char(char **wds)
 int	is_redir(char *str)
 {
 	if ((!ft_strncmp(str, "<", 2))
-	|| (!ft_strncmp(str, ">", 2))
-	|| (!ft_strncmp(str, "<<", 3))
-	|| (!ft_strncmp(str, ">>", 3)))
+		|| (!ft_strncmp(str, ">", 2))
+		|| (!ft_strncmp(str, "<<", 3))
+		|| (!ft_strncmp(str, ">>", 3)))
 		return (1);
 	return (0);
+}
+
+void	free_strs(char **strs)
+{
+	int i;
+
+	i = 0;
+	while (strs[i])
+		free(strs[i++]);
+	free(strs);
 }
