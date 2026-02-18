@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 17:24:40 by danz              #+#    #+#             */
-/*   Updated: 2026/02/18 13:19:41 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/18 18:53:19 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 static void	remove_quotes(t_list *lst)
 {
-	size_t	len;
 	size_t	i;
 	size_t	j;
 	char	*str;
@@ -23,7 +22,6 @@ static void	remove_quotes(t_list *lst)
 	{
 		i = 0;
 		str = (char *)lst->content;
-		len = ft_strlen(str);
 		while (str[i])
 		{
 			if (str[i] == '\'' || str[i] == '\"')
@@ -31,12 +29,12 @@ static void	remove_quotes(t_list *lst)
 				j = i + 1;
 				while (str[j] != str[i])
 					j++;
-				ft_memmove(&str[j], &str[j + 1], len - j);
-				ft_memmove(&str[i], &str[i + 1], len - i - 1);
-				lst->content = ft_realloc(lst->content, len + 1, len - 1);
-				i = -1;
+				ft_memmove(&str[j], &str[j + 1], ft_strlen(&str[j]));
+				ft_memmove(&str[i], &str[i + 1], ft_strlen(&str[i]));
+				i = j - 1;
 			}
-			i++;
+			else
+				i++;
 		}
 		lst = lst->next;
 	}
@@ -59,15 +57,11 @@ t_command	*get_cmd(char *line, t_list *envp)
 	t_command	*ret;
 	char		**wds;
 	t_list		*cmd;
-	int i;
 
-	i = 0;
 	wds = split_cmd(line);
 	cmd = prep_cmd(wds, envp);
 	ret = save_cmds(cmd);
-	while (wds[i])
-		free(wds[i++]);
-	free(wds);
+	free_strs(wds);
 	ft_lstclear(&cmd, free);
 	return (ret);
 }

@@ -6,21 +6,21 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 14:49:15 by danzamor          #+#    #+#             */
-/*   Updated: 2026/02/18 13:04:21 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/18 17:56:10 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	word_len(char *str)
+int	word_len(char *str)
 {
 	int	i;
 
 	i = 0;
-	if (str[i] == '>' || str[i] == '<')
-		return (1 + (str[i + 1] == '>' || str[i + 1] == '<'));
+	if (str[i] == '>' || str[i] == '<' || str[i] == '|')
+		return (1 + (str[i + 1] == '>' || str[i + 1] == '<') * (str[i] != '|'));
 	while (str[i] && str[i] != ' ' && !(str[i] >= 9 && str[i] <= 13)
-		&& str[i] != '<' && str[i] != '>')
+		&& str[i] != '<' && str[i] != '>' && str[i] != '|')
 	{
 		if (str[i] == '\'')
 		{

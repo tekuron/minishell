@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 18:25:59 by danz              #+#    #+#             */
-/*   Updated: 2026/02/18 13:05:18 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/18 18:30:38 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static t_redir	get_redir(char *str)
 	return (ERROR);
 }
 
-static void get_redirs(t_list *cmd, t_command *ret)
+static void	get_redirs(t_list *cmd, t_command *ret)
 {
 	t_io	*new;
 	t_redir	rd;
@@ -42,8 +42,8 @@ static void get_redirs(t_list *cmd, t_command *ret)
 static t_command	*get_cmds(t_list *cmd, int i)
 {
 	t_command	*ret;
-	char	**cur_content;
-	int j;
+	char		**cur_content;
+	int			j;
 
 	cur_content = malloc((i + 1) * sizeof(char *));
 	if (!cur_content)
@@ -51,12 +51,11 @@ static t_command	*get_cmds(t_list *cmd, int i)
 	j = i;
 	while (i && cmd)
 	{
-		if (is_redir(cmd->content))
-			if (cmd->next)
-			{
-				cmd = cmd->next->next;
-				continue ;
-			}
+		if (is_redir(cmd->content) && cmd->next)
+		{
+			cmd = cmd->next->next;
+			continue ;
+		}
 		if (!cmd || !strncmp(cmd->content, "|", 2))
 			break ;
 		cur_content[j - i] = ft_strdup(cmd->content);
