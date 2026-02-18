@@ -1,36 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   split_cmd.c                                        :+:      :+:    :+:   */
+/*   cmd_split.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 14:49:15 by danzamor          #+#    #+#             */
-/*   Updated: 2026/02/17 10:58:42 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/18 12:12:11 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	word_len(char *str, int mode)
+static int	word_len(char *str)
 {
 	int	i;
 
 	i = 0;
-	if (!mode)
+	while (str[i] && str[i] != ' ' && !(str[i] >= 9 && str[i] <= 13))
 	{
-		while (str[i] && str[i] != ' ' && !(str[i] >= 9 && str[i] <= 13))
+		if (str[i] == '\'')
+		{
 			i++;
-	}
-	else if (mode == 1)
-	{
-		while (str[i] && str[i] != '\'')
+			while (str[i] && str[i] != '\'')
+				i++;
+		}
+		if (str[i] == '\"')
+		{
 			i++;
-	}
-	else if (mode == 2)
-	{
-		while (str[i] && str[i] != '\"')
-			i++;
+			while (str[i] && str[i] != '\"')
+				i++;
+		}
+		i++;
 	}
 	return (i);
 }
@@ -44,18 +45,10 @@ static int	word_count(char *str)
 	ret = 0;
 	while (str[i])
 	{
-		if (str[i] == '\'' || str[i] == '\"')
+		if (str[i] != ' ' && !(str[i] >= 9 && str[i] <= 13))
 		{
 			ret++;
-			i++;
-			i += 1 + word_len(str + i, 1 * (str[i - 1] == '\'')
-					+ 2 * (str[i - 1] == '\"'));
-		}
-		else if (str[i] != ' ' && !(str[i] >= 9 && str[i] <= 13))
-		{
-			ret++;
-			while (str[i] && str[i] != ' ' && !(str[i] >= 9 && str[i] <= 13))
-				i++;
+			i += word_len(str + i);
 		}
 		else
 			i++;
@@ -69,25 +62,20 @@ static void	save_words(char **ret, char *str)
 	int	word;
 	int	len;
 
-	i = -1;
+	i = 0;
 	word = 0;
-	while (str[++i])
+	while (str[i])
 	{
-		if (str[i] == '\'' || str[i] == '\"')
+		if (str[i] != ' ' && !(str[i] >= 9 && str[i] <= 13))
 		{
-			len = 2 + word_len(str + i + 1, 1 * (str[i] == '\'')
-					+ 2 * (str[i] == '\"'));
+			len = word_len(str + i);
 			ret[word] = malloc((len + 1) * sizeof(char));
-			i += ft_strlcpy(ret[word], str + i, len + 1) * 0 + len - 1;
+			ft_strlcpy(ret[word], str + i, len + 1);
+			i += len;
 			word++;
 		}
-		else if (str[i] != ' ' && !(str[i] >= 9 && str[i] <= 13))
-		{
-			len = word_len(str + i, 0);
-			ret[word] = malloc((len + 1) * sizeof(char));
-			i += ft_strlcpy(ret[word], str + i, len + 1) * 0 + len - 1;
-			word++;
-		}
+		else
+			i++;
 	}
 }
 
