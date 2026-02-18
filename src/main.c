@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/02/17 23:12:39 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/18 12:16:47 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,20 +30,20 @@ int	loop(t_list *envp)
 		if (!append_to_history(line))
 				continue ;
 		cmd = get_cmd(line, envp);
-		// while (cmd)
-		// {
-		// 	while (*(cmd->command))
-		// 		printf("%s\n", *(cmd->command++));
-		// 	while (cmd->redirs)
-		// 	{
-		// 		printf("%i %s\n", cmd->redirs->rd, cmd->redirs->path);
-		// 		cmd->redirs = cmd->redirs->next;
-		// 	}
-		// 	printf("%i\n", cmd->pipe);
-		// 	cmd = cmd->next;
-		// }
 		if (!cmd)
 			free_cmd(line, NULL, STOP, EXIT_FAILURE);
+		while (cmd)
+		{
+			while (*(cmd->command))
+				printf("%s\n", *(cmd->command++));
+			while (cmd->redirs)
+			{
+				printf("%i %s\n", cmd->redirs->rd, cmd->redirs->path);
+				cmd->redirs = cmd->redirs->next;
+			}
+			printf("%i\n", cmd->pipe);
+			cmd = cmd->next;
+		}
 		// exec_cmd(cmd, envp);
 		free_cmd(line, cmd, CONT, -1);
 	}

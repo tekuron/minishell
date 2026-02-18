@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/02/17 23:12:13 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/18 12:21:51 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ t_command	*t_command_new(char **cmd);
 void		t_command_append(t_command *top, t_command *new);
 void		t_command_free(t_command *cmd);
 void		free_cmd(char *line, t_command *cmd, int cont, int ex_status);
+
 char		*prompt(int last_exit);
 t_command	*get_cmd(char *line, t_list *envp);
 void		*ft_realloc(void *ptr, size_t size, size_t new_size);

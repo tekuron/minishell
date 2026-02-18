@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 17:24:40 by danz              #+#    #+#             */
-/*   Updated: 2026/02/17 20:11:18 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/18 12:29:05 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,27 @@
 static void	remove_quotes(t_list *lst)
 {
 	size_t	len;
+	size_t	i;
+	size_t	j;
+	char	*str;
 
 	while (lst)
 	{
-		if (((char *)lst->content)[0] == '\''
-			|| ((char *)lst->content)[0] == '\"')
+		i = 0;
+		str = (char *)lst->content;
+		len = ft_strlen(str);
+		while (str[i])
 		{
-			len = ft_strlen((char *)lst->content);
-			((char *)lst->content)[len - 1] = 0;
-			ft_memmove(lst->content, (char *)lst->content + 1, len - 1);
-			lst->content = ft_realloc(lst->content, len, len - 2);
+			if (str[i] == '\'' || str[i] == '\"')
+			{
+				j = i + 1;
+				while (str[j] != str[i])
+					j++;
+				ft_memmove(&str[j], &str[j + 1], len - j);
+				ft_memmove(&str[i], &str[i + 1], len - i - 1);
+				lst->content = ft_realloc(lst->content, len, len - 2);
+			}
+			i++;
 		}
 		lst = lst->next;
 	}
