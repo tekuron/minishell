@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/02/18 16:59:47 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/18 17:03:14 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	sa.sa_handler = s_int_handler;
 	sigaction(SIGINT, &sa, NULL);
+	sa.sa_handler = s_backslash_handler;
+	sigaction(SIGQUIT, &sa, NULL);
 	envl = lst_from_char(envp);
 	loop(envl);
 	ft_lstclear(&envl, free);

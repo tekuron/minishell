@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/02/18 16:59:05 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/18 17:03:56 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,10 @@ int	exec_command(t_command *cmd, char *envp)
 	pid_t	*ids;
 	int		*pipes;
 
+	(void) cmd;
+	(void) envp;
+	(void) pipes;
+	(void) ids;
 	/*
 	Create pipes (n - 1)
 	Fork:
@@ -44,6 +48,7 @@ int	exec_command(t_command *cmd, char *envp)
 	Wait
 	Restore signals	
 	*/
+	return (1);
 }
 
 int	append_to_history(char *line)
