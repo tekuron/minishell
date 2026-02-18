@@ -1,99 +1,73 @@
+[1;32mଠ [6;36m minishell [0mecho $?
+[1;32mଠ [6;36m minishell [0mecho "hello world"
+[1;32mଠ [6;36m minishell [0mecho 'hello world'
 [1;32mଠ [6;36m minishell [0mecho "''"
-echo
-''
-0
 [1;32mଠ [6;36m minishell [0mecho '""'
-echo
-""
-0
 [1;32mଠ [6;36m minishell [0mecho ""''""
-echo
-''""
-0
+[1;32mଠ [6;36m minishell [0mecho "hello"world
+[1;32mଠ [6;36m minishell [0mecho 'hello'world
+[1;32mଠ [6;36m minishell [0mecho "hello"'world'
 [1;32mଠ [6;36m minishell [0mecho " " ' '
-echo
- 
- 
-0
-[1;32mଠ [6;36m minishell [0mls|grep a|wc -l
-ls|grep
-a|wc
--l
-0
-[1;32mଠ [6;36m minishell [0m>out1 >out2 >out3 echo a
-echo
-a
-2 out1
-2 out2
-2 out3
-0
-[1;32mଠ [6;36m minishell [0m<in1 <in2 cat
-cat
-1 in1
-1 in2
-0
-[1;32mଠ [6;36m minishell [0mecho hello >"file name"
-echo
-hello
-2 file name
-0
-[1;32mଠ [6;36m minishell [0mcat <'other file'
-cat
-1 other file
-0
-[1;32mଠ [6;36m minishell [0mecho $"USER"
-echo
-USER
-0
-[1;32mଠ [6;36m minishell [0mecho "$NONEXISTENT"after
-echo
-after
-0
-[1;32mଠ [6;36m minishell [0mecho before"$NONEXISTENT"
-echo
-before
-0
+[1;32mଠ [6;36m minishell [0mecho "  '  " '  "  '
+[1;32mଠ [6;36m minishell [0mecho ""
+[1;32mଠ [6;36m minishell [0mecho ''
+[1;32mଠ [6;36m minishell [0mecho $USER
+[1;32mଠ [6;36m minishell [0mecho "$USER"
+[1;32mଠ [6;36m minishell [0mecho '$USER'
 [1;32mଠ [6;36m minishell [0mecho "$USER"'$USER'
-echo
-danz'danz'
-0
-[1;32mଠ [6;36m minishell [0mecho $USER="value"
-echo
-danz=value
-0
-[1;32mଠ [6;36m minishell [0m>"" echo a
-echo
-a
-2 
-0
-[1;32mଠ [6;36m minishell [0m> "$NONEXISTENT" echo a
-echo
-a
-2 
-0
-[1;32mଠ [6;36m minishell [0mls | | grep a
-ls
-1
-1
-grep
-a
-0
-[1;32mଠ [6;36m minishell [0m| ls
-1
-ls
-0
-[1;32mଠ [6;36m minishell [0mls > > out
-ls
-out
-2 >
-2 out
-0
+[1;32mଠ [6;36m minishell [0mecho "'$USER'"
+[1;32mଠ [6;36m minishell [0mecho '"$USER"'
+[1;32mଠ [6;36m minishell [0mecho $USER$HOME
+[1;32mଠ [6;36m minishell [0mecho $USER$NONEXISTENT$USER
+[1;32mଠ [6;36m minishell [0mecho "$USER"def
+[1;32mଠ [6;36m minishell [0mecho abc$USER
+[1;32mଠ [6;36m minishell [0mecho "$NONEXISTENT"after
+[1;32mଠ [6;36m minishell [0mecho before"$NONEXISTENT"
+[1;32mଠ [6;36m minishell [0mecho $
+[1;31mଠ [6;36m minishell [0mecho $USER="value"
+[1;32mଠ [6;36m minishell [0mecho a > out
+[1;32mଠ [6;36m minishell [0mecho b >> out
+[1;32mଠ [6;36m minishell [0mcat < out
+[1;32mଠ [6;36m minishell [0m> out1 > out2 > out3 echo multi-redirection
+[1;32mଠ [6;36m minishell [0m< out cat
+[1;32mଠ [6;36m minishell [0mecho a>out_pegado
+[1;32mଠ [6;36m minishell [0mecho b>>out_pegado
+[1;32mଠ [6;36m minishell [0mcat<out_pegado
+[1;32mଠ [6;36m minishell [0m>file_at_start echo hello
+[1;32mଠ [6;36m minishell [0mecho hello >"file name with spaces"
+[1;32mଠ [6;36m minishell [0m>"" echo empty_filename
+[1;32mଠ [6;36m minishell [0m> $NONEXISTENT echo ambiguous_test
+[1;32mଠ [6;36m minishell [0mls|grep a|wc -l
+[1;32mଠ [6;36m minishell [0mls -la|grep a
+[1;31mଠ [6;36m minishell [0mls>out|grep a
+[1;31mଠ [6;36m minishell [0m>out|echo pipe_with_empty_start
+[1;32mଠ [6;36m minishell [0mcat < out | grep a > out2
+[1;32mଠ [6;36m minishell [0mls -la > outfile | grep "algo" >> outfile2 < infile
+[1;32mଠ [6;36m minishell [0mcat << EOF > file_from_heredoc
+[1;32mଠ [6;36m minishell [0m<< EOF cat
 [1;32mଠ [6;36m minishell [0m<< "EOF" cat
-cat
-4 EOF
-0
 [1;32mଠ [6;36m minishell [0m<< 'EOF' cat
-cat
-4 EOF
-0
+[1;32mଠ [6;36m minishell [0mcat << EOF">file_literal"
+[1;32mଠ [6;36m minishell [0mcat << EOF | grep a
+[1;31mଠ [6;36m minishell [0m|
+[1;31mଠ [6;36m minishell [0m| ls
+[1;31mଠ [6;36m minishell [0mls |
+[1;31mଠ [6;36m minishell [0mls | | grep a
+[1;31mଠ [6;36m minishell [0mls >
+[1;31mଠ [6;36m minishell [0mls <
+[1;31mଠ [6;36m minishell [0mls > > out
+[1;31mଠ [6;36m minishell [0m<
+[1;31mଠ [6;36m minishell [0m>
+[1;31mଠ [6;36m minishell [0m<<<
+[1;31mଠ [6;36m minishell [0m>>>
+[1;31mଠ [6;36m minishell [0m||
+[1;31mଠ [6;36m minishell [0mecho $USER"$USER"'$USER'
+[1;32mଠ [6;36m minishell [0mls       -l          -a
+[1;32mଠ [6;36m minishell [0mls|grep|wc
+[1;32mଠ [6;36m minishell [0mecho "hello > world" | grep ">"
+[1;32mଠ [6;36m minishell [0mexport VAR="ls -la"
+[1;32mଠ [6;36m minishell [0m"$VAR"
+[1;32mଠ [6;36m minishell [0mecho "$VAR"
+[1;32mଠ [6;36m minishell [0mecho '$VAR'
+[1;32mଠ [6;36m minishell [0mecho hello$NONEXISTENT world
 [1;32mଠ [6;36m minishell [0m

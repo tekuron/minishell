@@ -1,21 +1,72 @@
+echo $?
+echo "hello world"
+echo 'hello world'
 echo "''"
 echo '""'
 echo ""''""
+echo "hello"world
+echo 'hello'world
+echo "hello"'world'
 echo " " ' '
-ls|grep a|wc -l
->out1 >out2 >out3 echo a
-<in1 <in2 cat
-echo hello >"file name"
-cat <'other file'
-echo $"USER"
+echo "  '  " '  "  '
+echo ""
+echo ''
+echo $USER
+echo "$USER"
+echo '$USER'
+echo "$USER"'$USER'
+echo "'$USER'"
+echo '"$USER"'
+echo $USER$HOME
+echo $USER$NONEXISTENT$USER
+echo "$USER"def
+echo abc$USER
 echo "$NONEXISTENT"after
 echo before"$NONEXISTENT"
-echo "$USER"'$USER'
+echo $
 echo $USER="value"
->"" echo a
-> "$NONEXISTENT" echo a
-ls | | grep a
-| ls
-ls > > out
+echo a > out
+echo b >> out
+cat < out
+> out1 > out2 > out3 echo multi-redirection
+< out cat
+echo a>out_pegado
+echo b>>out_pegado
+cat<out_pegado
+>file_at_start echo hello
+echo hello >"file name with spaces"
+>"" echo empty_filename
+> $NONEXISTENT echo ambiguous_test
+ls|grep a|wc -l
+ls -la|grep a
+ls>out|grep a
+>out|echo pipe_with_empty_start
+cat < out | grep a > out2
+ls -la > outfile | grep "algo" >> outfile2 < infile
+cat << EOF > file_from_heredoc
+<< EOF cat
 << "EOF" cat
 << 'EOF' cat
+cat << EOF">file_literal"
+cat << EOF | grep a
+|
+| ls
+ls |
+ls | | grep a
+ls >
+ls <
+ls > > out
+<
+>
+<<<
+>>>
+||
+echo $USER"$USER"'$USER'
+ls       -l          -a
+ls|grep|wc
+echo "hello > world" | grep ">"
+export VAR="ls -la"
+"$VAR"
+echo "$VAR"
+echo '$VAR'
+echo hello$NONEXISTENT world
