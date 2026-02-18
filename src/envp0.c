@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 14:18:02 by danzamor          #+#    #+#             */
-/*   Updated: 2026/02/17 20:59:41 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/18 18:53:40 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,23 @@
 static int	has_env(t_list *node)
 {
 	char	*str;
+	int		db_qt;
 
 	str = node->content;
-	if (*str == '\'')
-		return (0);
+	db_qt = 0;
 	while (*str)
+	{
+		if (*str == '\"')
+			db_qt = !db_qt;
+		if (!db_qt && *str == '\'')
+		{
+			str++;
+			while (*str != '\'')
+				str++;
+		}
 		if (*str++ == '$' && *(str))
 			return (1);
+	}
 	return (0);
 }
 
@@ -75,7 +85,7 @@ static t_list	*lst_env(t_list *node, t_list *envp)
 	if (!split_env)
 		return (NULL);
 	ret = lst_from_char(split_env);
-	free(split_env);
+	free_strs(split_env);
 	return (ret);
 }
 
