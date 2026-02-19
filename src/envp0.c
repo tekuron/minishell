@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp0.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 14:18:02 by danzamor          #+#    #+#             */
-/*   Updated: 2026/02/18 18:53:40 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/19 16:18:24 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ char	*envcat(char *str, char *env)
 		len++;
 	slen = len + (str[len] == '$');
 	while (str[slen] && (ft_isalnum(str[slen]) || str[slen] == '_'))
+		slen++;
+	if (str[slen] == '?')
 		slen++;
 	ret = malloc(len + ft_strlen(str + slen) + ft_strlen(env) + 1);
 	if (!ret)

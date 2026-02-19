@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2026/02/18 23:03:05 by danz             ###   ########.fr       */
-=======
-/*   Updated: 2026/02/18 23:31:29 by dplazas-         ###   ########.fr       */
->>>>>>> ba764d0 (Structure of pipes and redirections)
+/*   Updated: 2026/02/19 16:16:13 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +35,13 @@ void	debug(t_command *cmd)
 	}
 }
 
-int	loop(t_list *envp, struct sigaction sa[4]) //Change declaration
+int	loop(t_list *envp, struct sigaction sa[4]) 
 {
 	int			exit_code;
 	t_command	*cmd;
 	char		*line;
 
 	exit_code = 0;
-	(void)cmd;
 	(void) sa;
 	while (1)
 	{
@@ -64,6 +59,7 @@ int	loop(t_list *envp, struct sigaction sa[4]) //Change declaration
 		cmd = get_cmd(line, envp);
 		if (!cmd)
 			free_cmd(line, NULL, STOP, "malloc");
+		debug(cmd);
 		exit_code = 0;
 		// exec_command(cmd, envp, sa); //Change envp (char ** execve argument)
 		free_cmd(line, cmd, CONT, NULL);

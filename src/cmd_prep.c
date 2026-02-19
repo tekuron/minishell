@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_prep.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 17:24:40 by danz              #+#    #+#             */
-/*   Updated: 2026/02/18 22:39:02 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/19 15:51:07 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ t_command	*get_cmd(char *line, t_list *envp)
 	free_strs(wds);
 	if (!cmd)
 		return (NULL);
-	ret = save_cmds(cmd);
+	ret = save_cmds(cmd, 0);
 	ft_lstclear(&cmd, free);
 	return (ret);
 }

@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2026/02/18 22:57:32 by danz             ###   ########.fr       */
-=======
-/*   Updated: 2026/02/18 23:29:47 by dplazas-         ###   ########.fr       */
->>>>>>> ba764d0 (Structure of pipes and redirections)
+/*   Updated: 2026/02/19 15:50:53 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

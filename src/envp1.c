@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp1.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 11:39:33 by danz              #+#    #+#             */
-/*   Updated: 2026/02/17 17:36:17 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/19 16:21:11 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ char	*ft_getenv(char *var, t_list *envp)
 		return (NULL);
 	var++;
 	while (ft_isalnum(var[len]) || var[len] == '_')
+		len++;
+	if (var[len] == '?')
 		len++;
 	while (envp)
 	{
