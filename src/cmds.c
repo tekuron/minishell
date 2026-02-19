@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/02/18 23:32:03 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/19 23:51:44 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,24 +70,27 @@ char	*try_access(t_command *cmd)
 	return (NULL);
 }
 
-void	prepare_and_execute(t_command *cmd, char **envp, int **pipes, int pair[2]) //pair (total and id)
+void	prepare_and_execute(t_command *cmd, t_list **envp, int **pipes, int pair[2]) //pair (total and id)
 {
 	char	*route;
-	
+	char	**real_envp;
+	(void) envp;
+	real_envp = NULL;
 	piping(pipes, pair[0], pair[1]);
 	free_pipes(pipes, pair[1] - 1);
 	redirecting(cmd);
 	route = try_access(cmd);
 	if (!route)
 		free_cmd(NULL, cmd, STOP, "");
-	if (execve(route, cmd->command, envp) == -1)
+	//real_envp = t_list_to_char(envp);
+	if (execve(route, cmd->command, real_envp) == -1)
 	{
 		free_cmd(NULL, cmd, STOP, "execve"); //Check bash for convention
 		exit(127);
 	}
 }
 
-int	exec_command(t_command *cmd, char **envp, struct sigaction sa[4])
+int	exec_command(t_command *cmd, t_list **envp, struct sigaction sa[4])
 {
 	int		**pipes;
 	pid_t	*ids;
