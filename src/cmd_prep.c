@@ -3,25 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_prep.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 17:24:40 by danz              #+#    #+#             */
-/*   Updated: 2026/02/19 15:51:07 by danzamor         ###   ########.fr       */
+/*   Updated: 2026/02/20 16:23:30 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	remove_quotes(t_list *lst)
+static void	remove_quotes(char **text)
 {
 	size_t	i;
 	size_t	j;
 	char	*str;
 
-	while (lst)
+	while (*text)
 	{
 		i = 0;
-		str = (char *)lst->content;
+		str = *text;
 		while (str[i])
 		{
 			if (str[i] == '\'' || str[i] == '\"')
@@ -36,7 +36,7 @@ static void	remove_quotes(t_list *lst)
 			else
 				i++;
 		}
-		lst = lst->next;
+		text++;
 	}
 }
 
@@ -48,13 +48,13 @@ static t_list	*prep_cmd(char **wds, t_list *envp)
 	if (!ret)
 		return (NULL);
 	insert_env(&ret, envp);
-	remove_quotes(ret);
 	return (ret);
 }
 
 t_command	*get_cmd(char *line, t_list *envp)
 {
 	t_command	*ret;
+	t_command	*cur;
 	char		**wds;
 	t_list		*cmd;
 
@@ -66,6 +66,14 @@ t_command	*get_cmd(char *line, t_list *envp)
 	if (!cmd)
 		return (NULL);
 	ret = save_cmds(cmd, 0);
+	if (!ret)
+		return (NULL);
+	cur = ret;
+	while (cur)
+	{
+		remove_quotes(cur->command);
+		cur = cur->next;
+	}
 	ft_lstclear(&cmd, free);
 	return (ret);
 }
