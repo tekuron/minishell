@@ -6,13 +6,13 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/02/19 22:45:15 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/21 18:55:09 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-volatile sig_atomic_t	current_mode = INPUT_MODE;
+volatile sig_atomic_t	g_sig = 0;
 
 void	debug(t_command *cmd)
 {
@@ -46,8 +46,6 @@ int	loop(t_list *envp, struct sigaction sa[4])
 	while (1)
 	{
 		line = readline(prompt(exit_code));
-		if (!line)
-			free_cmd(NULL, NULL, STOP, NULL);
 		if (!append_to_history(line))
 			continue ;
 		if (check_cmd(line))
@@ -74,9 +72,10 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	sa[0].sa_handler = s_int_handler;
-	sigaction(SIGINT, &sa[0], &sa[1]);
+	
+	sa[0].sa_handler = s_int_handler_input;
 	sa[2].sa_handler = s_backslash_handler;
+	sigaction(SIGINT, &sa[0], &sa[1]);
 	sigaction(SIGQUIT, &sa[2], &sa[3]);
 	envl = lst_from_char(envp);
 	ft_lstadd_front(&envl, ft_lstnew(ft_strdup("?=0")));

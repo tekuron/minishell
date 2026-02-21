@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils0.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 14:24:17 by danzamor          #+#    #+#             */
-/*   Updated: 2026/02/20 16:48:20 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/21 18:50:55 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,29 @@ t_list	*lst_from_char(char **wds)
 	return (ret);
 }
 
+char	**t_list_to_char(t_list *envp)
+{
+	char	**env;
+	int		i;
+
+	env = malloc(sizeof(char *) * (ft_lstsize(envp) + 1));
+	if (!env)
+		return (NULL);
+	i = 0;
+	while (envp)
+	{
+		env[i] = malloc(sizeof(char) * (ft_strlen((char *)envp->content)));
+		if (!env[i])
+			return ((void) free_strs(env), NULL);
+		ft_memmove((void *)env[i], (void *)envp->content, 
+					ft_strlen(envp->content) + 1);
+		i++;
+		envp = envp->next;
+	}
+	env[i] = NULL;
+	return (env);
+}
+
 int	is_redir(char *str)
 {
 	if ((!ft_strncmp(str, "<", 2))
@@ -54,3 +77,11 @@ void	free_strs(char **strs)
 		free(strs[i++]);
 	free(strs);
 }
+
+void	clean_and_set(pid_t *ids, struct sigaction sa[4])
+{
+	free(ids);
+	sigaction(SIGINT, &sa[1], NULL);
+	sigaction(SIGQUIT, &sa[3], NULL);
+}
+

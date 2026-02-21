@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/02/19 15:50:53 by danzamor         ###   ########.fr       */
+/*   Updated: 2026/02/21 18:54:29 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,22 @@ typedef enum e_redir
 	REDIR_HEREDOC
 }	t_redir;
 
+typedef enum e_builtins
+{
+	ECHO_BI = 1,
+	PWD_BI = 2,
+	EXPORT_BI = 3,
+	CD_BI = 4,
+	UNSET_BI = 5,
+	ENV_BI = 6,
+	EXIT_BI = 7
+}	t_builtins;
+
 typedef struct s_io
 {
 	t_redir		rd;
 	char		*path;
+	int			heredoc_fd;
 	struct s_io	*next;
 }	t_io;
 
@@ -95,9 +107,15 @@ char		*ft_getenv(char *var, t_list *envp);
 t_command	*save_cmds(t_list *cmd, t_command *ret);
 int			is_redir(char *str);
 int			append_to_history(char *line);
-void		s_int_handler(int sig);
+void	s_int_handler_input(int sig);
 void		s_backslash_handler(int sig);
 void	piping(int **pipes, int total, int id);
 void	redirecting(t_command *cmd);
-
+void	clean_and_set(pid_t *ids, struct sigaction sa[4]);
+void	s_int_handler_heredoc(int sig);
+char	*try_access(t_command *cmd);
+int		try_builtin(t_command *cmd, t_list *envp);
+int		**create_pipes(t_command *cmd, int *ptr_total);
+int		heredoc_handling(t_command *cmd);
+char	**t_list_to_char(t_list *envp);
 #endif
