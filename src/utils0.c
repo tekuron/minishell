@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 14:24:17 by danzamor          #+#    #+#             */
-/*   Updated: 2026/02/21 18:50:55 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/22 19:35:54 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,10 +78,14 @@ void	free_strs(char **strs)
 	free(strs);
 }
 
-void	clean_and_set(pid_t *ids, struct sigaction sa[4])
+void	initialize_signals(struct sigaction *sa, int total)
 {
-	free(ids);
-	sigaction(SIGINT, &sa[1], NULL);
-	sigaction(SIGQUIT, &sa[3], NULL);
-}
+	int	i;
 
+	i = 0;
+	while (i < total)
+	{
+		sa[i] = (struct sigaction){0};
+		i++;
+	}
+}

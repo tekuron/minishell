@@ -6,91 +6,103 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/02/21 18:53:33 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/22 21:48:36 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 extern volatile sig_atomic_t g_sig;
 
-void	handle_child(t_command *cmd, t_list *envp, int **pipes, int pair[2]) //pair (total and id)
+void	handle_child(t_process *data, t_list *envp, int total) //pair (total and id)
 {
 	char	*route;
 	char	**real_envp;
-	(void) envp;
 
-	piping(pipes, pair[0], pair[1]);
-	free_pipes(pipes, pair[1] - 1);
-	redirecting(cmd);
-	route = try_access(cmd);
-	if (!route)
-		free_cmd(NULL, cmd, STOP, "");
-	real_envp = t_list_to_char(envp);
-	if (execve(route, cmd->command, real_envp) == -1)
+	if (!piping(data->pipes, total, data->process) || !redirecting(data->cmd))
 	{
-		free_cmd(NULL, cmd, STOP, "execve"); //Check bash for convention
+		free_pipes(data->pipes, total);
+		free(data->ids);
+		ft_lstclear(&envp, free);
+		free_cmd(NULL, data->cmd, STOP, "minishell");
+	}
+	free_pipes(data->pipes, total - 1);
+	route = try_access(data->cmd);
+	if (!route)
+		free_cmd(NULL, data->cmd, STOP, "");
+	real_envp = t_list_to_char(envp->next);
+	if (execve(route, data->cmd->command, real_envp) == -1)
+	{
+		free_strs(real_envp);
+		free_cmd(route, data->cmd, STOP, "execve"); //Check bash for convention
 		exit(127);
 	}
 }
 
-pid_t	*forking(t_command *cmd, t_list *envp, struct sigaction sa[4], int *total)
+int forking(t_list *envp, t_process *data, int total)
 {
-	pid_t	*ids;
-	int		**pipes;
-	int		total_and_id[2];
+	int	i;
 	
-	pipes = create_pipes(cmd, &total_and_id[0]);
-	if (!pipes)
-		return (NULL); //handle faillure and perror pipes
-	ids = malloc(sizeof(pid_t) * total_and_id[0]);
-	if (!ids)
-		return (NULL); //free and close pipes and handle malloc failure
-	total_and_id[1] = -1;
-	while (++total_and_id[1] < total_and_id[0])
-	{
-		ids[total_and_id[1]] = fork();
-		if (ids[total_and_id[1]] < 0)
-		{
-			//return (NULL, handle_failure(ids, total_and_id, total, pipes));
-		}
-		else if (ids[total_and_id[1]] == 0)
-		{
-			clean_and_set(ids, sa);
-			handle_child(cmd, envp, pipes, total_and_id);
-		}
-	}
-	free_pipes(pipes, total_and_id[0] - 1);
-	*total = total_and_id[0];
-	return (ids);
-}
-
-
-int	exec_command(t_command *cmd, t_list *envp, struct sigaction sa[4])
-{
-	pid_t	*ids;
-	int		i;
-	int		total;
-	int		status;
-	
-	heredoc_handling(cmd);
-	try_builtin(cmd, envp);
-	ids = forking(cmd, envp, sa, &total);
-	if (!ids)
-	{
-		//handle_failure, use total to set err_code
-	}
 	i = 0;
 	while (i < total)
 	{
-		waitpid(ids[i], &status, 0);
+		data->process = i;
+		data->ids[i] = fork();
+		if (data->ids[i] < 0)
+			return (0);
+		if (data->ids[i] == 0)
+		{
+			free(data->ids);
+			sigaction(SIGINT, &data->old_sigint, NULL);
+			sigaction(SIGQUIT, &data->old_sigquit, NULL);
+			handle_child(data, envp, total);
+		}
+		data->cmd = data->cmd->next;
 		i++;
 	}
-	free(ids);
+	data->process = total;
+	free_pipes(data->pipes, data->process - 1);
+	return (1);
+}
+
+int	wait_for_children(t_process *data)
+{
+	int	i;
+	int	status;
+	
+	i = 0;
+	while (i < data->process)
+	{
+		waitpid(data->ids[i], &status, 0);
+		i++;
+	}
+	free(data->ids);
 	if(WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	else if (WIFSIGNALED(status))
 		return (128 + WTERMSIG(status));
 	return (-1);
+
+}
+
+int	exec_command(t_command *cmd, t_list *envp, struct sigaction sa[4])
+{
+	t_process	data;
+	
+	data = (t_process){0};
+	data.old_sigint = sa[1];
+	data.old_sigquit = sa[3];
+	data.cmd = cmd;
+	data.process = t_command_size(cmd);
+	data.pipes = create_pipes(data.process - 1);
+	if (!data.pipes)
+		return (-1); //handle with perror
+	data.ids = malloc(sizeof(pid_t) * data.process);
+	if (!data.ids)
+		return (-2); //handle with perror and free pipes
+	heredoc_handling(data.cmd);
+	try_builtin(data.cmd, envp);
+	forking(envp, &data, data.process);
+	return (wait_for_children(&data));
 }
 
 /*

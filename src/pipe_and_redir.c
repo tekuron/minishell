@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 22:46:29 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/02/21 18:50:08 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/22 21:21:19 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,15 @@ int	heredoc_handling(t_command *cmd)
 	int					pipes[2];
 	int					line;
 
+	initialize_signals(sa, 2);
 	sa[0].sa_handler = s_int_handler_heredoc;
 	while (cmd)
 	{
+		if (!cmd->redirs)
+		{
+			cmd = cmd->next;
+			continue ;
+		}
 		cmd->redirs->heredoc_fd = -1;
 		line = 0;
 		if (cmd->redirs->rd == REDIR_HEREDOC)
@@ -68,23 +74,16 @@ int	heredoc_handling(t_command *cmd)
 	return (1);
 }
 
-int	**create_pipes(t_command *cmd, int *ptr_total)
+int	**create_pipes(int total)
 {
 	int	**pipes;
-	int	total;
 	int	i;
 
 	i = -1;
-	total = 0;
-	while (cmd)
-	{
-		cmd = cmd->next;
-		total++;
-	}
-	pipes = malloc(sizeof(int *) * total);
+	pipes = malloc(sizeof(int *) * (total + 1));
 	if (!pipes)
 		return (NULL);
-	while (++i < total - 1)
+	while (++i < total)
 	{
 		pipes[i] = malloc(sizeof(int) * 2);
 		if (!pipes[i] || pipe(pipes[i]) == -1)
@@ -93,14 +92,13 @@ int	**create_pipes(t_command *cmd, int *ptr_total)
 			return (NULL); // Handle perror's string
 		}
 	}
-	pipes[total - 1] = NULL;
-	*ptr_total = total;
+	pipes[total] = NULL;
 	return (pipes);
 }
 
 
 
-void	redirecting(t_command *cmd)
+int	redirecting(t_command *cmd)
 {
 	t_io	*aux;
 	int		fd;
@@ -112,39 +110,35 @@ void	redirecting(t_command *cmd)
 		if (aux->rd == REDIR_IN)
 			fd = open(aux->path, O_RDONLY);
 		else if (aux->rd == REDIR_OUT)
-			fd = open(aux->path, O_CREAT | O_WRONLY | O_TRUNC);
+			fd = open(aux->path, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		else if (aux->rd == REDIR_APPEND)
-			fd = open (aux->path, O_CREAT | O_WRONLY | O_APPEND);
+			fd = open (aux->path, O_CREAT | O_WRONLY | O_APPEND, 0644);
 		else if (aux->rd == REDIR_HEREDOC)
 			fd = cmd->redirs->heredoc_fd;
 		if (fd < 0)
-		{
-			//handle
-		}
+			return (0);
 		dup_out = dup2(fd, (aux->rd == REDIR_OUT || aux->rd == REDIR_APPEND));
 		close(fd);
-		if (dup_out == -1)
-		{
-			//handle
-		}
+		if (dup_out < 0)
+			return (0);
 		aux = aux->next;
 	}
+	return (1);
 }
 
-void	piping(int **pipes, int total, int id)
+int	piping(int **pipes, int total, int id)
 {
+	if (total < 1)
+		return (-1);
 	if (id != 0)
 	{
 		if (dup2(pipes[id - 1][0], STDIN_FILENO) == -1)
-		{
-			//handle_failure();
-		}
+			return (0);
 	}
 	if (id != total - 1)
 	{
-		if (dup2(pipes[id - 1][1], STDOUT_FILENO) == -1)
-		{
-			//handle_failure();
-		}
+		if (dup2(pipes[id][1], STDOUT_FILENO) == -1)
+			return (0);
 	}
+	return (1);
 }

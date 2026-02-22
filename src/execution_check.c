@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 15:35:13 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/02/21 18:52:49 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/22 21:17:06 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,10 @@ char	*try_access(t_command *cmd)
 	int		i;
 
 	i = 0;
-	if (access(cmd->command[0], X_OK))
+	if (access(cmd->command[0], X_OK) == 0)
 		return (cmd->command[0]);
 	paths = ft_split(getenv("PATH"), ':');
-	while (paths && path[i])
+	while (paths && paths[i])
 	{
 		partial_path = ft_strjoin(paths[i], "/");
 		if (!partial_path)

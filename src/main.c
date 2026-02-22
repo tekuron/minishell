@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/02/21 18:55:09 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/22 21:23:56 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,13 @@ int	loop(t_list *envp, struct sigaction sa[4])
 			free_cmd(line, NULL, STOP, "malloc");
 		debug(cmd);
 		exit_code = 0;
-		// exec_command(cmd, envp, sa); //Change envp (char ** execve argument)
+		exec_command(cmd, envp, sa); //Change envp (char ** execve argument)
 		free_cmd(line, cmd, CONT, NULL);
 	}
 	return (0);
 }
+
+
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -72,7 +74,7 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	
+	initialize_signals(sa, 4);
 	sa[0].sa_handler = s_int_handler_input;
 	sa[2].sa_handler = s_backslash_handler;
 	sigaction(SIGINT, &sa[0], &sa[1]);

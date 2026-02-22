@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/02/21 18:54:29 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/22 20:24:13 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,6 @@ typedef enum e_exit
 	STOP,
 	CONT
 }		t_exit;
-
-typedef enum e_mode
-{
-	INPUT_MODE,
-	EXECUTION_MODE,
-	HEREDOC_MODE
-}		t_mode;
 
 typedef enum e_redir
 {
@@ -89,6 +82,17 @@ typedef struct s_command
 	struct s_command	*next;
 }	t_command;
 
+typedef	struct s_process
+{
+	struct sigaction	old_sigquit;
+	struct sigaction 	old_sigint;
+	t_command			*cmd;
+	pid_t				*ids;
+	int					**pipes;
+	int					process;
+}		t_process;
+
+
 t_command	*t_command_new(char **cmd);
 void		t_command_append(t_command *top, t_command *new);
 void		t_command_free(t_command *cmd);
@@ -109,13 +113,18 @@ int			is_redir(char *str);
 int			append_to_history(char *line);
 void	s_int_handler_input(int sig);
 void		s_backslash_handler(int sig);
-void	piping(int **pipes, int total, int id);
-void	redirecting(t_command *cmd);
+int		piping(int **pipes, int total, int id);
+int		redirecting(t_command *cmd);
 void	clean_and_set(pid_t *ids, struct sigaction sa[4]);
 void	s_int_handler_heredoc(int sig);
 char	*try_access(t_command *cmd);
 int		try_builtin(t_command *cmd, t_list *envp);
-int		**create_pipes(t_command *cmd, int *ptr_total);
+int		**create_pipes(int total);
 int		heredoc_handling(t_command *cmd);
 char	**t_list_to_char(t_list *envp);
+int	exec_command(t_command *cmd, t_list *envp, struct sigaction sa[4]);
+void	initialize_signals(struct sigaction *sa, int total);
+int		t_command_size(t_command *cmd);
+
+
 #endif

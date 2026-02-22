@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 20:14:28 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/02/18 20:26:18 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/22 21:43:11 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,12 @@ void	free_cmd(char *line, t_command *cmd, int cont, char *err)
 		free(line);
 	if (cmd != NULL)
 		t_command_free(cmd);
-	if (!cont && err)
+	if (err && cont == STOP)
 	{
 		perror(err);
 		exit(EXIT_FAILURE);
 	}
-	if (!cont)
-		exit(0);
+	else if (cont == STOP)
+		exit(EXIT_SUCCESS);
+			
 }
