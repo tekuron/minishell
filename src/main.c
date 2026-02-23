@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/02/23 13:18:22 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/23 16:46:45 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	loop(t_list *envp, struct sigaction sa[4])
 			free_cmd(line, NULL, STOP, "malloc");
 		debug(cmd);
 		exit_code = 0;
-		exec_command(cmd, envp, sa); //Change envp (char ** execve argument)
+		exec_command(cmd, envp, sa);
 		free_cmd(line, cmd, CONT, NULL);
 	}
 	return (0);

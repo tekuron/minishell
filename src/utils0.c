@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 14:24:17 by danzamor          #+#    #+#             */
-/*   Updated: 2026/02/22 19:35:54 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/23 16:38:25 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,9 @@ char	**t_list_to_char(t_list *envp)
 	i = 0;
 	while (envp)
 	{
-		env[i] = malloc(sizeof(char) * (ft_strlen((char *)envp->content)));
+		env[i] = ft_strdup((char *)envp->content);
 		if (!env[i])
 			return ((void) free_strs(env), NULL);
-		ft_memmove((void *)env[i], (void *)envp->content, 
-					ft_strlen(envp->content) + 1);
 		i++;
 		envp = envp->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 22:46:29 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/02/22 21:21:19 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/23 16:50:17 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,9 @@ int	write_to_pipe(int pipes[2], t_command *cmd, int lines_num)
 		return (0);
 	}
 	write(pipes[1], line, ft_strlen(line));
+	write(pipes[1], "\n", 1);
 	free(line);
+	close(pipes[1]);
 	return (1);
 }
 

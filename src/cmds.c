@@ -6,14 +6,14 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/02/22 21:48:36 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/23 16:46:13 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 extern volatile sig_atomic_t g_sig;
 
-void	handle_child(t_process *data, t_list *envp, int total) //pair (total and id)
+void	handle_child(t_process *data, t_list *envp, int total)
 {
 	char	*route;
 	char	**real_envp;
@@ -28,12 +28,17 @@ void	handle_child(t_process *data, t_list *envp, int total) //pair (total and id
 	free_pipes(data->pipes, total - 1);
 	route = try_access(data->cmd);
 	if (!route)
-		free_cmd(NULL, data->cmd, STOP, "");
+	{			
+		write(2, "minishell: ", 12);
+		write(2, data->cmd->command[0], ft_strlen(data->cmd->command[0]));
+		write(2, ": command not found...\n", 24);
+		free_cmd(NULL, data->cmd, STOP, NULL);
+	}
 	real_envp = t_list_to_char(envp->next);
 	if (execve(route, data->cmd->command, real_envp) == -1)
 	{
 		free_strs(real_envp);
-		free_cmd(route, data->cmd, STOP, "execve"); //Check bash for convention
+		free_cmd(route, data->cmd, STOP, "execve");
 		exit(127);
 	}
 }
@@ -60,7 +65,7 @@ int forking(t_list *envp, t_process *data, int total)
 		i++;
 	}
 	data->process = total;
-	free_pipes(data->pipes, data->process - 1);
+	free_pipes(data->pipes, total - 1);
 	return (1);
 }
 
