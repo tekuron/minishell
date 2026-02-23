@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp0.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 14:18:02 by danzamor          #+#    #+#             */
-/*   Updated: 2026/02/19 16:18:24 by danzamor         ###   ########.fr       */
+/*   Updated: 2026/02/23 13:16:55 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ void	insert_env(t_list **lst, t_list *envp)
 	while (cur)
 	{
 		next = cur->next;
-		if (has_env(cur))
+		if (has_env(cur) && ft_strncmp(prev->content, "<<", 3))
 		{
 			new = lst_env(cur, envp);
 			if (prev)

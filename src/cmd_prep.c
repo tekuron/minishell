@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 17:24:40 by danz              #+#    #+#             */
-/*   Updated: 2026/02/20 16:23:30 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/23 13:21:49 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,31 @@ static t_list	*prep_cmd(char **wds, t_list *envp)
 	return (ret);
 }
 
+static void	all_quotes(t_command *lst)
+{
+	t_io 	*cur_io;
+	char	*path_qts[2];
+
+	path_qts[1] = NULL;
+	while (lst)
+	{
+		remove_quotes(lst->command);
+		cur_io = lst->redirs;
+		while (cur_io)
+		{
+			path_qts[0] = cur_io->path;
+			if (ft_strchr(path_qts[0], '\"') || ft_strchr(path_qts[0], '\''))
+				cur_io->has_qts = TRUE;
+			remove_quotes(path_qts);
+			cur_io = cur_io->next;
+		}
+		lst = lst->next;
+	}
+}
+
 t_command	*get_cmd(char *line, t_list *envp)
 {
 	t_command	*ret;
-	t_command	*cur;
 	char		**wds;
 	t_list		*cmd;
 
@@ -68,12 +89,7 @@ t_command	*get_cmd(char *line, t_list *envp)
 	ret = save_cmds(cmd, 0);
 	if (!ret)
 		return (NULL);
-	cur = ret;
-	while (cur)
-	{
-		remove_quotes(cur->command);
-		cur = cur->next;
-	}
+	all_quotes(ret);
 	ft_lstclear(&cmd, free);
 	return (ret);
 }
