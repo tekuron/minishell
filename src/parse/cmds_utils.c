@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   cmds_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 20:14:28 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/02/22 21:43:11 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/24 10:32:03 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-void free_pipes(int **pipes, int total)
+void	free_pipes(int **pipes, int total)
 {
 	int	i;
 
@@ -45,5 +45,4 @@ void	free_cmd(char *line, t_command *cmd, int cont, char *err)
 	}
 	else if (cont == STOP)
 		exit(EXIT_SUCCESS);
-			
 }

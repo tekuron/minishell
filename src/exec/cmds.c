@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/02/23 16:46:13 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/24 10:32:33 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-extern volatile sig_atomic_t g_sig;
+
+extern volatile sig_atomic_t	g_sig;
 
 void	handle_child(t_process *data, t_list *envp, int total)
 {
@@ -28,7 +29,7 @@ void	handle_child(t_process *data, t_list *envp, int total)
 	free_pipes(data->pipes, total - 1);
 	route = try_access(data->cmd);
 	if (!route)
-	{			
+	{
 		write(2, "minishell: ", 12);
 		write(2, data->cmd->command[0], ft_strlen(data->cmd->command[0]));
 		write(2, ": command not found...\n", 24);
@@ -43,10 +44,10 @@ void	handle_child(t_process *data, t_list *envp, int total)
 	}
 }
 
-int forking(t_list *envp, t_process *data, int total)
+int	forking(t_list *envp, t_process *data, int total)
 {
 	int	i;
-	
+
 	i = 0;
 	while (i < total)
 	{
@@ -73,7 +74,7 @@ int	wait_for_children(t_process *data)
 {
 	int	i;
 	int	status;
-	
+
 	i = 0;
 	while (i < data->process)
 	{
@@ -81,18 +82,17 @@ int	wait_for_children(t_process *data)
 		i++;
 	}
 	free(data->ids);
-	if(WIFEXITED(status))
+	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	else if (WIFSIGNALED(status))
 		return (128 + WTERMSIG(status));
 	return (-1);
-
 }
 
 int	exec_command(t_command *cmd, t_list *envp, struct sigaction sa[4])
 {
 	t_process	data;
-	
+
 	data = (t_process){0};
 	data.old_sigint = sa[1];
 	data.old_sigquit = sa[3];

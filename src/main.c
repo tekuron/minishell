@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/02/24 10:22:28 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/24 10:33:47 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	debug(t_command *cmd)
 	}
 }
 
-int	loop(t_list *envp, struct sigaction sa[4]) 
+int	loop(t_list *envp, struct sigaction sa[4])
 {
 	int			exit_code;
 	t_command	*cmd;
@@ -67,8 +67,8 @@ int	loop(t_list *envp, struct sigaction sa[4])
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_list	*envl;
-	struct sigaction sa[4];
+	t_list				*envl;
+	struct sigaction	sa[4];
 
 	(void)argc;
 	(void)argv;

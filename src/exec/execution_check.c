@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_check.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 15:35:13 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/02/22 21:17:06 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/24 10:30:19 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,17 @@
 int	is_builtin(t_command *cmd)
 {
 	if (ft_strncmp(cmd->command[0], "echo", 5) == 0)
-			return (ECHO_BI);
+		return (ECHO_BI);
 	else if (ft_strncmp(cmd->command[0], "cd", 3) == 0)
-			return (CD_BI);
+		return (CD_BI);
 	else if (ft_strncmp(cmd->command[0], "export", 7) == 0)
-			return (EXPORT_BI);
+		return (EXPORT_BI);
 	else if (ft_strncmp(cmd->command[0], "unset", 6) == 0)
-			return (UNSET_BI);
+		return (UNSET_BI);
 	else if (ft_strncmp(cmd->command[0], "exit", 5) == 0)
-			return (EXIT_BI);
+		return (EXIT_BI);
 	else if (ft_strncmp(cmd->command[0], "env", 4) == 0)
-			return (ENV_BI);
+		return (ENV_BI);
 	return (0);
 }
 
@@ -62,14 +62,14 @@ int	try_builtin(t_command *cmd, t_list *envp)
 		{
 			redirecting(cmd); //handle failure of dup2 and open
 			execute_builtin(cmd, envp, builtin);
-		}	
+		}
 	}
 	return (0);
 }
 
 char	*try_access(t_command *cmd)
 {
-	char 	*path;
+	char	*path;
 	char	*partial_path;
 	char	**paths;
 	int		i;

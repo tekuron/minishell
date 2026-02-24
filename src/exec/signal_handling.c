@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handling.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 22:26:11 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/02/21 13:17:29 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/24 10:27:12 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern sig_atomic_t g_sig;
+extern sig_atomic_t	g_sig;
 
 void	s_int_handler_input(int sig)
 {

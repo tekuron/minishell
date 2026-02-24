@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 17:24:40 by danz              #+#    #+#             */
-/*   Updated: 2026/02/23 13:21:49 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/24 10:25:24 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static t_list	*prep_cmd(char **wds, t_list *envp)
 
 static void	all_quotes(t_command *lst)
 {
-	t_io 	*cur_io;
+	t_io	*cur_io;
 	char	*path_qts[2];
 
 	path_qts[1] = NULL;

@@ -3,21 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_and_redir.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 22:46:29 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/02/23 16:50:17 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/24 10:31:40 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-extern volatile sig_atomic_t g_sig;
+
+extern volatile sig_atomic_t	g_sig;
 
 int	write_to_pipe(int pipes[2], t_command *cmd, int lines_num)
 {
 	char	*line;
 	int		length;
-	
+
 	line = readline(">");
 	if (!line)
 	{
@@ -62,7 +63,7 @@ int	heredoc_handling(t_command *cmd)
 			sigaction(SIGINT, &sa[0], &sa[1]);
 			pipe(pipes);
 			cmd->redirs->heredoc_fd = pipes[0];
-			while(!g_sig && write_to_pipe(pipes, cmd, ++line));
+			while (!g_sig && write_to_pipe(pipes, cmd, ++line));
 			sigaction(SIGINT, &sa[1], NULL);
 			if (g_sig)
 			{
@@ -98,16 +99,14 @@ int	**create_pipes(int total)
 	return (pipes);
 }
 
-
-
 int	redirecting(t_command *cmd)
 {
 	t_io	*aux;
 	int		fd;
 	int		dup_out;
-	
+
 	aux = cmd->redirs;
-	while(aux)
+	while (aux)
 	{
 		if (aux->rd == REDIR_IN)
 			fd = open(aux->path, O_RDONLY);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils0.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 14:24:17 by danzamor          #+#    #+#             */
-/*   Updated: 2026/02/23 16:38:25 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/24 10:24:54 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	is_redir(char *str)
 
 void	free_strs(char **strs)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (!strs)
