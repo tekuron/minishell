@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/02/24 10:33:47 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/24 17:44:45 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,18 +35,20 @@ void	debug(t_command *cmd)
 	}
 }
 
-int	loop(t_list *envp, struct sigaction sa[4])
+int	loop(t_list *envp, struct sigaction sa[4], int interactive)
 {
 	int			exit_code;
 	t_command	*cmd;
 	char		*line;
 
 	exit_code = 0;
-	(void) sa;
 	while (1)
 	{
-		line = readline(prompt(exit_code));
-		if (!append_to_history(line))
+		if (interactive)
+			line = readline(prompt(exit_code));
+		else
+			line = readline("");
+		if (interactive && !append_to_history(line))
 			continue ;
 		if (check_cmd(line))
 		{
@@ -69,9 +71,11 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_list				*envl;
 	struct sigaction	sa[4];
-
+	int					interactive;
+	
 	(void)argc;
 	(void)argv;
+	interactive = isatty(STDIN_FILENO);
 	initialize_signals(sa, 4);
 	sa[0].sa_handler = s_int_handler_input;
 	sa[2].sa_handler = s_backslash_handler;
@@ -79,6 +83,6 @@ int	main(int argc, char **argv, char **envp)
 	sigaction(SIGQUIT, &sa[2], &sa[3]);
 	envl = lst_from_char(envp);
 	ft_lstadd_front(&envl, ft_lstnew(ft_strdup("?=0")));
-	loop(envl, sa);
+	loop(envl, sa, interactive);
 	ft_lstclear(&envl, free);
 }
