@@ -18,7 +18,7 @@ YELLOW = \033[0;33m
 BLUE = \033[0;34m
 CYAN = \033[0;36m
 
-SRCS = $(shell find $(SRC_DIR) -name "*.c")
+SRCS = $(shell find $(SRC_DIR) -wholename "*/*.c")
 
 OBJS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 
