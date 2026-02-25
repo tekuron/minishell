@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/02/24 10:32:33 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/25 21:53:35 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,9 @@ void	handle_child(t_process *data, t_list *envp, int total)
 	route = try_access(data->cmd);
 	if (!route)
 	{
-		write(2, "minishell: ", 12);
-		write(2, data->cmd->command[0], ft_strlen(data->cmd->command[0]));
-		write(2, ": command not found...\n", 24);
-		free_cmd(NULL, data->cmd, STOP, NULL);
+		printf("minishell: %s: command not found...\n", data->cmd->command[0]);
+		free_cmd(NULL, data->cmd, CONT, NULL);
+		exit(127);
 	}
 	real_envp = t_list_to_char(envp->next);
 	if (execve(route, data->cmd->command, real_envp) == -1)
@@ -70,29 +69,53 @@ int	forking(t_list *envp, t_process *data, int total)
 	return (1);
 }
 
-int	wait_for_children(t_process *data)
+void	change_exit(t_list *envp, int exit_status)
+{
+	char	last_exit[10];
+	int		i;
+
+	i = 0;
+	if (!envp)
+		return ;
+	if (exit_status == 0)
+	{
+		ft_memmove(envp->content, (void *)"?=0", 4);
+		return ;
+	}
+	while (exit_status != 0 && i < 10)
+	{
+		last_exit[i] = exit_status % 10;
+		exit_status /= 10;
+		i++;
+	}
+	ft_memmove((void *)((char *)envp->content + 2), (void *)last_exit, i);
+}
+
+int	wait_for_children(t_process *data, t_list *envp)
 {
 	int	i;
 	int	status;
+	int	last_exit;
 
-	i = 0;
-	while (i < data->process)
-	{
+	i = -1;
+	last_exit = -1;
+	while (++i < data->process)
 		waitpid(data->ids[i], &status, 0);
-		i++;
-	}
 	free(data->ids);
 	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
+		last_exit = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
-		return (128 + WTERMSIG(status));
-	return (-1);
+		last_exit = 128 + WTERMSIG(status);
+	change_exit(envp, last_exit);
+	return (last_exit);
 }
 
 int	exec_command(t_command *cmd, t_list *envp, struct sigaction sa[4])
 {
 	t_process	data;
 
+	heredoc_handling(cmd);
+	try_builtin(cmd, envp);
 	data = (t_process){0};
 	data.old_sigint = sa[1];
 	data.old_sigquit = sa[3];
@@ -104,34 +127,14 @@ int	exec_command(t_command *cmd, t_list *envp, struct sigaction sa[4])
 	data.ids = malloc(sizeof(pid_t) * data.process);
 	if (!data.ids)
 		return (-2); //handle with perror and free pipes
-	heredoc_handling(data.cmd);
-	try_builtin(data.cmd, envp);
 	forking(envp, &data, data.process);
-	return (wait_for_children(&data));
+	return (wait_for_children(&data, envp));
 }
-
-/*
-pipes()
-Fork:
-	Child:
-		-Set signals (SIGINT and SIGQUT) to default
-		-Handle the pipes
-		-Apply proper redirections
-		-Execve
-	Parent:
-		-Close fds
-Wait
-Restore signals	
-*/
 
 int	append_to_history(char *line)
 {
-	if (!line)
-	{
-		printf("exit\n");
-		exit(0);
-	}
-	else if (!*line)
+
+	if (!*line)
 	{
 		free(line);
 		return (0);

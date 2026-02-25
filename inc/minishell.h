@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/02/25 12:20:23 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/25 22:05:32 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,12 @@ typedef	struct s_process
 	int					process;
 }		t_process;
 
+typedef	struct s_shell
+{
+	t_list	*envp;
+	int		last_exit;
+	int		interactive;
+}		t_shell;
 
 t_command	*t_command_new(char **cmd);
 void		t_command_append(t_command *top, t_command *new);
@@ -117,7 +123,6 @@ void	s_int_handler_input(int sig);
 void		s_backslash_handler(int sig);
 int		piping(int **pipes, int total, int id);
 int		redirecting(t_command *cmd);
-void	clean_and_set(pid_t *ids, struct sigaction sa[4]);
 void	s_int_handler_heredoc(int sig);
 char	*try_access(t_command *cmd);
 int		try_builtin(t_command *cmd, t_list *envp);
@@ -128,5 +133,8 @@ int	exec_command(t_command *cmd, t_list *envp, struct sigaction sa[4]);
 void	initialize_signals(struct sigaction *sa, int total);
 int		t_command_size(t_command *cmd);
 void	*ft_realloc(void *ptr, size_t size, size_t new_size);
+void	change_exit(t_list *envp, int exit_status);
+char	*display_prompt(t_shell *shell);
+
 
 #endif

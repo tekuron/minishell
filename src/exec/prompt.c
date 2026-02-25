@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/01 18:09:05 by danz              #+#    #+#             */
-/*   Updated: 2026/02/18 17:51:53 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/25 22:05:45 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,25 @@
 #define BCYAN "\e[6;36m"
 #define CRESET "\e[0m"
 #define PROMPT_SIZE 37
+
+char	*display_prompt(t_shell *shell)
+{
+	char	*line;
+
+	if (shell->interactive)
+		line = readline(prompt(shell->last_exit));
+	else
+		line = readline("");
+	if (!line)
+	{
+		write(1, "exit\n", 6);
+		ft_lstclear(&shell->envp, free);
+		exit(shell->last_exit);
+	}
+	if (shell->interactive && !append_to_history(line))
+		return (NULL);
+	return (line);
+}
 
 char	*prompt(int last_exit)
 {

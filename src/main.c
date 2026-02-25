@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/02/24 17:44:45 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/25 22:01:23 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,34 +35,53 @@ void	debug(t_command *cmd)
 	}
 }
 
-int	loop(t_list *envp, struct sigaction sa[4], int interactive)
+void	parse_and_exec(char *line, t_shell *shell, struct sigaction sa[4])
 {
-	int			exit_code;
 	t_command	*cmd;
+	
+	if (check_cmd(line))
+	{
+		shell->last_exit = 2;
+		free_cmd(line, NULL, CONT, NULL);
+		return ;
+	}
+	cmd = get_cmd(line, shell->envp);
+	if (!cmd)
+		free_cmd(line, NULL, STOP, "malloc");
+	debug(cmd);
+	shell->last_exit = exec_command(cmd, shell->envp, sa);
+	free_cmd(line, cmd, CONT, NULL);
+}
+
+char	*display_prompt(t_shell *shell)
+{
+	char	*line;
+
+	if (shell->interactive)
+		line = readline(prompt(shell->last_exit));
+	else
+		line = readline("");
+	if (!line)
+	{
+		write(1, "exit\n", 6);
+		ft_lstclear(&shell->envp, free);
+		exit(shell->last_exit);
+	}
+	if (shell->interactive && !append_to_history(line))
+		return (NULL);
+	return (line);
+}
+
+int	loop(t_shell shell, struct sigaction sa[4])
+{
 	char		*line;
 
-	exit_code = 0;
 	while (1)
 	{
-		if (interactive)
-			line = readline(prompt(exit_code));
-		else
-			line = readline("");
-		if (interactive && !append_to_history(line))
+		line = display_prompt(&shell);
+		if (!line)
 			continue ;
-		if (check_cmd(line))
-		{
-			exit_code = 2;
-			free_cmd(line, NULL, CONT, NULL);
-			continue ;
-		}
-		cmd = get_cmd(line, envp);
-		if (!cmd)
-			free_cmd(line, NULL, STOP, "malloc");
-		debug(cmd);
-		exit_code = 0;
-		exec_command(cmd, envp, sa);
-		free_cmd(line, cmd, CONT, NULL);
+		parse_and_exec(line, &shell, sa);
 	}
 	return (0);
 }
@@ -71,18 +90,26 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_list				*envl;
 	struct sigaction	sa[4];
-	int					interactive;
+	t_shell				shell;
+	char				*status;
 	
 	(void)argc;
 	(void)argv;
-	interactive = isatty(STDIN_FILENO);
 	initialize_signals(sa, 4);
 	sa[0].sa_handler = s_int_handler_input;
 	sa[2].sa_handler = s_backslash_handler;
 	sigaction(SIGINT, &sa[0], &sa[1]);
 	sigaction(SIGQUIT, &sa[2], &sa[3]);
+	status = malloc(sizeof(char) * 14);
+	if (!status)
+		return (EXIT_FAILURE);
 	envl = lst_from_char(envp);
+	ft_memmove(status, "?=0\0", 4);
 	ft_lstadd_front(&envl, ft_lstnew(ft_strdup("?=0")));
-	loop(envl, sa, interactive);
+	shell.envp = envl;
+	shell.interactive = isatty(STDIN_FILENO);
+	shell.last_exit = 0;
+	loop(shell, sa);
 	ft_lstclear(&envl, free);
+	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_check.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 15:35:13 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/02/24 10:30:19 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/25 21:53:05 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,16 +52,20 @@ int	execute_builtin(t_command *cmd, t_list *envp, int builtin)
 int	try_builtin(t_command *cmd, t_list *envp)
 {
 	int	builtin;
+	int	exit_status;
 
-	if (!envp)
-		return (-1); //handle envp error
 	if (!cmd->next)
 	{
 		builtin = is_builtin(cmd);
 		if (builtin)
 		{
-			redirecting(cmd); //handle failure of dup2 and open
-			execute_builtin(cmd, envp, builtin);
+			if (!redirecting(cmd))
+			{
+				ft_lstclear(&envp, free);
+				free_cmd(NULL, cmd, STOP, "minishell");
+			}
+			exit_status = execute_builtin(cmd, envp, builtin);
+			change_exit(envp, exit_status);
 		}
 	}
 	return (0);
