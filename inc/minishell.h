@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/02/23 13:21:41 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/25 12:20:23 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # include <termios.h>
 # include <term.h>
 # include "libft.h"
+# include "ft_printf_bonus.h"
 
 typedef enum e_bool
 {
@@ -126,6 +127,6 @@ char	**t_list_to_char(t_list *envp);
 int	exec_command(t_command *cmd, t_list *envp, struct sigaction sa[4]);
 void	initialize_signals(struct sigaction *sa, int total);
 int		t_command_size(t_command *cmd);
-
+void	*ft_realloc(void *ptr, size_t size, size_t new_size);
 
 #endif
