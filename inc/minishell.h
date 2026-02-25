@@ -84,6 +84,11 @@ typedef struct s_command
 	struct s_command	*next;
 }	t_command;
 
+t_command	*t_command_new(char **cmd);
+void		t_command_append(t_command *top, t_command *new);
+void		t_command_free(t_command *cmd);
+void		free_cmd(char *line, t_command *cmd, int cont, char *err);
+
 typedef	struct s_process
 {
 	struct sigaction	old_sigquit;
@@ -101,10 +106,6 @@ typedef	struct s_shell
 	int		interactive;
 }		t_shell;
 
-t_command	*t_command_new(char **cmd);
-void		t_command_append(t_command *top, t_command *new);
-void		t_command_free(t_command *cmd);
-void		free_cmd(char *line, t_command *cmd, int cont, char *err);
 void		free_pipes(int **pipes, int total);
 char		*prompt(int last_exit);
 t_command	*get_cmd(char *line, t_list *envp);
