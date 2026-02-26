@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_and_redir.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 22:46:29 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/02/24 10:31:40 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/26 22:09:55 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,13 @@ int	write_to_pipe(int pipes[2], t_command *cmd, int lines_num)
 	return (1);
 }
 
+
+
 int	heredoc_handling(t_command *cmd)
 {
-	struct sigaction	sa[2];
 	int					pipes[2];
 	int					line;
 
-	initialize_signals(sa, 2);
-	sa[0].sa_handler = s_int_handler_heredoc;
 	while (cmd)
 	{
 		if (!cmd->redirs)
@@ -60,11 +59,11 @@ int	heredoc_handling(t_command *cmd)
 		line = 0;
 		if (cmd->redirs->rd == REDIR_HEREDOC)
 		{
-			sigaction(SIGINT, &sa[0], &sa[1]);
+			set_signals(HEREDOC);
 			pipe(pipes);
 			cmd->redirs->heredoc_fd = pipes[0];
 			while (!g_sig && write_to_pipe(pipes, cmd, ++line));
-			sigaction(SIGINT, &sa[1], NULL);
+			set_signals(SHELL);
 			if (g_sig)
 			{
 				g_sig = 0;
@@ -104,7 +103,7 @@ int	redirecting(t_command *cmd)
 	t_io	*aux;
 	int		fd;
 	int		dup_out;
-
+	
 	aux = cmd->redirs;
 	while (aux)
 	{

@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 15:35:13 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/02/25 21:53:05 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/26 16:56:19 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int	is_builtin(t_command *cmd)
 {
+	if (!cmd->command || !cmd->command[0])
+		return (-1); //Add check in try_builtin
 	if (ft_strncmp(cmd->command[0], "echo", 5) == 0)
 		return (ECHO_BI);
 	else if (ft_strncmp(cmd->command[0], "cd", 3) == 0)
@@ -54,10 +56,11 @@ int	try_builtin(t_command *cmd, t_list *envp)
 	int	builtin;
 	int	exit_status;
 
+	builtin = 0;
 	if (!cmd->next)
 	{
 		builtin = is_builtin(cmd);
-		if (builtin)
+		if (builtin && builtin != -1)
 		{
 			if (!redirecting(cmd))
 			{
@@ -66,12 +69,13 @@ int	try_builtin(t_command *cmd, t_list *envp)
 			}
 			exit_status = execute_builtin(cmd, envp, builtin);
 			change_exit(envp, exit_status);
+			return (exit_status);
 		}
 	}
 	return (0);
 }
 
-char	*try_access(t_command *cmd)
+char	*try_access(t_command *cmd, t_list *envp)
 {
 	char	*path;
 	char	*partial_path;
@@ -81,7 +85,7 @@ char	*try_access(t_command *cmd)
 	i = 0;
 	if (access(cmd->command[0], X_OK) == 0)
 		return (cmd->command[0]);
-	paths = ft_split(getenv("PATH"), ':');
+	paths = ft_split(ft_getenv("$PATH", envp), ':');
 	while (paths && paths[i])
 	{
 		partial_path = ft_strjoin(paths[i], "/");

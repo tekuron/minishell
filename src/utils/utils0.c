@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils0.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 14:24:17 by danzamor          #+#    #+#             */
-/*   Updated: 2026/02/24 10:24:54 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/26 22:10:08 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,14 +76,3 @@ void	free_strs(char **strs)
 	free(strs);
 }
 
-void	initialize_signals(struct sigaction *sa, int total)
-{
-	int	i;
-
-	i = 0;
-	while (i < total)
-	{
-		sa[i] = (struct sigaction){0};
-		i++;
-	}
-}

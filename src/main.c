@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/02/25 22:01:23 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/26 22:10:14 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	debug(t_command *cmd)
 	}
 }
 
-void	parse_and_exec(char *line, t_shell *shell, struct sigaction sa[4])
+void	parse_and_exec(char *line, t_shell *shell)
 {
 	t_command	*cmd;
 	
@@ -49,30 +49,11 @@ void	parse_and_exec(char *line, t_shell *shell, struct sigaction sa[4])
 	if (!cmd)
 		free_cmd(line, NULL, STOP, "malloc");
 	debug(cmd);
-	shell->last_exit = exec_command(cmd, shell->envp, sa);
+	shell->last_exit = exec_command(cmd, shell->envp);
 	free_cmd(line, cmd, CONT, NULL);
 }
 
-char	*display_prompt(t_shell *shell)
-{
-	char	*line;
-
-	if (shell->interactive)
-		line = readline(prompt(shell->last_exit));
-	else
-		line = readline("");
-	if (!line)
-	{
-		write(1, "exit\n", 6);
-		ft_lstclear(&shell->envp, free);
-		exit(shell->last_exit);
-	}
-	if (shell->interactive && !append_to_history(line))
-		return (NULL);
-	return (line);
-}
-
-int	loop(t_shell shell, struct sigaction sa[4])
+int	loop(t_shell shell)
 {
 	char		*line;
 
@@ -81,7 +62,7 @@ int	loop(t_shell shell, struct sigaction sa[4])
 		line = display_prompt(&shell);
 		if (!line)
 			continue ;
-		parse_and_exec(line, &shell, sa);
+		parse_and_exec(line, &shell);
 	}
 	return (0);
 }
@@ -89,17 +70,12 @@ int	loop(t_shell shell, struct sigaction sa[4])
 int	main(int argc, char **argv, char **envp)
 {
 	t_list				*envl;
-	struct sigaction	sa[4];
 	t_shell				shell;
 	char				*status;
 	
 	(void)argc;
 	(void)argv;
-	initialize_signals(sa, 4);
-	sa[0].sa_handler = s_int_handler_input;
-	sa[2].sa_handler = s_backslash_handler;
-	sigaction(SIGINT, &sa[0], &sa[1]);
-	sigaction(SIGQUIT, &sa[2], &sa[3]);
+	set_signals(START);
 	status = malloc(sizeof(char) * 14);
 	if (!status)
 		return (EXIT_FAILURE);
@@ -109,7 +85,7 @@ int	main(int argc, char **argv, char **envp)
 	shell.envp = envl;
 	shell.interactive = isatty(STDIN_FILENO);
 	shell.last_exit = 0;
-	loop(shell, sa);
+	loop(shell);
 	ft_lstclear(&envl, free);
 	return (0);
 }

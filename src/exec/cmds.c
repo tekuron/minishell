@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/02/25 21:53:35 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/26 22:09:08 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,12 @@ void	handle_child(t_process *data, t_list *envp, int total)
 		free_cmd(NULL, data->cmd, STOP, "minishell");
 	}
 	free_pipes(data->pipes, total - 1);
-	route = try_access(data->cmd);
+	route = try_access(data->cmd, envp->next);
 	if (!route)
 	{
 		printf("minishell: %s: command not found...\n", data->cmd->command[0]);
 		free_cmd(NULL, data->cmd, CONT, NULL);
+		ft_lstclear(&envp, free);
 		exit(127);
 	}
 	real_envp = t_list_to_char(envp->next);
@@ -39,6 +40,7 @@ void	handle_child(t_process *data, t_list *envp, int total)
 	{
 		free_strs(real_envp);
 		free_cmd(route, data->cmd, STOP, "execve");
+		ft_lstclear(&envp, free);
 		exit(127);
 	}
 }
@@ -57,8 +59,7 @@ int	forking(t_list *envp, t_process *data, int total)
 		if (data->ids[i] == 0)
 		{
 			free(data->ids);
-			sigaction(SIGINT, &data->old_sigint, NULL);
-			sigaction(SIGQUIT, &data->old_sigquit, NULL);
+			set_signals(EXECUTION);
 			handle_child(data, envp, total);
 		}
 		data->cmd = data->cmd->next;
@@ -88,7 +89,8 @@ void	change_exit(t_list *envp, int exit_status)
 		exit_status /= 10;
 		i++;
 	}
-	ft_memmove((void *)((char *)envp->content + 2), (void *)last_exit, i);
+	last_exit[i] = '\0';
+	ft_memmove((void *)((char *)envp->content + 2), (void *)last_exit, i); // ?= +2 => Status\0
 }
 
 int	wait_for_children(t_process *data, t_list *envp)
@@ -110,15 +112,18 @@ int	wait_for_children(t_process *data, t_list *envp)
 	return (last_exit);
 }
 
-int	exec_command(t_command *cmd, t_list *envp, struct sigaction sa[4])
+int	exec_command(t_command *cmd, t_list *envp)
 {
 	t_process	data;
-
-	heredoc_handling(cmd);
-	try_builtin(cmd, envp);
+	int			ret_value;
+	
+	ret_value = heredoc_handling(cmd);
+	if (!ret_value)
+		return (130);
+	ret_value = try_builtin(cmd, envp);
+	if (ret_value)
+		return (ret_value);
 	data = (t_process){0};
-	data.old_sigint = sa[1];
-	data.old_sigquit = sa[3];
 	data.cmd = cmd;
 	data.process = t_command_size(cmd);
 	data.pipes = create_pipes(data.process - 1);
