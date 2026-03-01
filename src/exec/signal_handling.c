@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 22:26:11 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/01 13:23:37 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/01 15:55:11 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,18 @@ extern volatile sig_atomic_t	g_sig;
 void	s_int_handler_input(int sig)
 {
 	(void) sig;
+	if (!g_sig)
+		write(1, "^C", 2);
 	g_sig = 1;
-	write(1, "^C", 2);
 }
 
 void	s_int_handler_heredoc(int sig)
 {
 	(void) sig;
 	g_sig = 1;
-	write(1, "^C", 2);
+	if (!g_sig)
+		write(1, "^C", 2);
+	g_sig = 1;
 }
 
 void	s_backslash_handler(int sig)
@@ -72,7 +75,7 @@ void	set_signals(int	mode)
 		assign_signal(SIGQUIT, s_backslash_handler, NULL);
 	}
 	else if (mode == HEREDOC)
-		assign_signal(SIGINT, s_int_handler_heredoc, &sigint_default);
+		assign_signal(SIGINT, s_int_handler_heredoc, NULL);
 	else if (mode == EXECUTION)
 	{
 		sigaction(SIGINT, &sigint_default, NULL);

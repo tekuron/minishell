@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 22:46:29 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/01 11:40:20 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/01 17:56:42 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,14 +51,12 @@ int	write_to_pipe(int pipes[2], t_io *redir, int lines_num, t_list *envp)
 	if (!line)
 	{
 		printf("warning: here-document at line\
-%i delimited by end-of-file (wanted '%s')\n", lines_num, redir->path);
-		close(pipes[1]);
+ %i delimited by end-of-file (wanted '%s')\n", lines_num, redir->path);
 		return (0);
 	}
 	length = ft_strlen(redir->path);
 	if (ft_strncmp(redir->path, line, length + 1) == 0)
 	{
-		close(pipes[1]);
 		free(line);
 		return (0);
 	}
@@ -76,7 +74,7 @@ int	prepare_heredoc(int	pipes[2], t_io *redir, t_list *envp)
 	set_signals(HEREDOC);
 	pipe(pipes);
 	redir->heredoc_fd = pipes[0];
-	while (!g_sig && write_to_pipe(pipes, redir, ++line, envp));
+	while (!g_sig && write_to_pipe(pipes, redir, line++, envp));
 	if (g_sig)
 	{
 		g_sig = 0;
@@ -114,6 +112,7 @@ int	heredoc_handling(t_command *cmd, t_list *envp)
 		}
 		cmd = cmd->next;
 	}
+
 	return (1);
 }
 

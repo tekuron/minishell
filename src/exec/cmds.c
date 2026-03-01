@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/03/01 12:50:23 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/01 18:55:47 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,34 +14,64 @@
 
 extern volatile sig_atomic_t	g_sig;
 
+int	is_dir(char *path)
+{
+	struct stat sb;
+
+	if (!path)
+		return (0);
+	if (stat(path, &sb) == -1)
+		return (-1);
+	return ((sb.st_mode & S_IFMT) == S_IFDIR);
+}
+
+void	failure_handling(t_list *envp, t_command *cmd, char *route, int phase)
+{
+	int	eof_case;
+
+	eof_case = !cmd->command || !*cmd->command;
+	if (phase == 2)
+	{
+		if (is_dir(cmd->command[0]) == 1 || !ft_strncmp(cmd->command[0], ".", 2)
+			|| !ft_strncmp(cmd->command[0], "..", 3))
+			printf("Permision denied: %s\n", cmd->command[0]);
+		else
+			printf("minishell: %s: command not found...\n", cmd->command[0]);
+	}
+	free_cmd(route, cmd, CONT, NULL);
+	ft_lstclear(&envp, free);
+	if (phase == 1)
+	{
+		if (eof_case)
+			exit (EXIT_SUCCESS);
+		else
+			exit(EXIT_FAILURE);
+	}
+	else
+		exit(127);
+}
+
 void	handle_child(t_process *data, t_list *envp, int total)
 {
 	char	*route;
 	char	**real_envp;
 
-	if (!piping(data->pipes, total, data->process) || !redirecting(data->cmd))
+	if (!piping(data->pipes, total, data->process) || !redirecting(data->cmd)
+		|| !data->cmd->command || !*data->cmd->command)
 	{
-		free_pipes(data->pipes, total);
-		free(data->ids);
-		ft_lstclear(&envp, free);
-		free_cmd(NULL, data->cmd, STOP, "minishell");
+		free_pipes(data->pipes, total - 1);
+		failure_handling(envp, data->cmd, NULL, 1);
 	}
 	free_pipes(data->pipes, total - 1);
 	route = try_access(data->cmd, envp->next);
 	if (!route)
-	{
-		printf("minishell: %s: command not found...\n", data->cmd->command[0]);
-		free_cmd(NULL, data->cmd, CONT, NULL);
-		ft_lstclear(&envp, free);
-		exit(127);
-	}
+
+		failure_handling(envp, data->cmd, NULL, 2);
 	real_envp = t_list_to_char(envp->next);
 	if (execve(route, data->cmd->command, real_envp) == -1)
 	{
 		free_strs(real_envp);
-		ft_lstclear(&envp, free);
-		free_cmd(route, data->cmd, CONT, "execve");
-		exit(127);
+		failure_handling(envp, data->cmd, route, 3);
 	}
 }
 
@@ -104,13 +134,19 @@ int	wait_for_children(t_process *data, t_list *envp)
 	i = -1;
 	last_exit = -1;
 	while (++i < data->process)
-		waitpid(data->ids[i], &status, 0);
+	{
+		while (waitpid(data->ids[i], &status, 0) == -1 && errno == EINTR);
+	}
 	free(data->ids);
 	if (WIFEXITED(status))
 		last_exit = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
 		last_exit = 128 + WTERMSIG(status);
 	change_exit(envp, last_exit);
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGQUIT)
+		write(1, "Quit\n", 5);
+	else if (WIFSIGNALED(status) && WTERMSIG(status) == SIGKILL)
+		write(1, "\n", 1);
 	set_signals(SHELL);
 	return (last_exit);
 }
@@ -135,7 +171,7 @@ int	exec_command(t_command *cmd, t_list *envp)
 	data.ids = malloc(sizeof(pid_t) * data.process);
 	if (!data.ids)
 	{
-		free(data.ids);
+		free_pipes(data.pipes, data.process - 1);
 		return (-2);
 	} //handle with perror and free pipes
 	if (!forking(envp, &data, data.process))

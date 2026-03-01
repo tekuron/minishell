@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/02/28 13:12:38 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/01 18:22:05 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # include <string.h>
 # include <termios.h>
 # include <term.h>
+# include <errno.h>
 # include "libft.h"
 # include "ft_printf_bonus.h"
 
@@ -146,6 +147,7 @@ void	change_exit(t_list *envp, int exit_status);
 char	*display_prompt(t_shell *shell);
 void	set_signals(int	mode);
 void	ft_swap(char *str, int length);
+int		is_dir(char *path);
 
 
 #endif
