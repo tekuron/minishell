@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/03/01 12:06:13 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/01 12:50:23 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ int	forking(t_list *envp, t_process *data, int total)
 	int	i;
 
 	i = 0;
+	set_signals(IGNORE);
 	while (i < total)
 	{
 		data->process = i;
@@ -110,6 +111,7 @@ int	wait_for_children(t_process *data, t_list *envp)
 	else if (WIFSIGNALED(status))
 		last_exit = 128 + WTERMSIG(status);
 	change_exit(envp, last_exit);
+	set_signals(SHELL);
 	return (last_exit);
 }
 
@@ -132,8 +134,15 @@ int	exec_command(t_command *cmd, t_list *envp)
 		return (-1); //handle with perror
 	data.ids = malloc(sizeof(pid_t) * data.process);
 	if (!data.ids)
-		return (-2); //handle with perror and free pipes
-	forking(envp, &data, data.process);
+	{
+		free(data.ids);
+		return (-2);
+	} //handle with perror and free pipes
+	if (!forking(envp, &data, data.process))
+	{
+		set_signals(SHELL);
+		return (-3);
+	}
 	return (wait_for_children(&data, envp));
 }
 

@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/01 18:09:05 by danz              #+#    #+#             */
-/*   Updated: 2026/02/28 12:51:20 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/01 13:23:20 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 #define BCYAN "\e[6;36m"
 #define CRESET "\e[0m"
 #define PROMPT_SIZE 37
+
+extern volatile sig_atomic_t	g_sig;
 
 char	*display_prompt(t_shell *shell)
 {
@@ -34,7 +36,7 @@ char	*display_prompt(t_shell *shell)
 		rl_clear_history();
 		exit(shell->last_exit);
 	}
-	if (shell->interactive && !append_to_history(line))
+	if (shell->interactive && !g_sig && !append_to_history(line))
 		return (NULL);
 	return (line);
 }

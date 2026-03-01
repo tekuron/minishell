@@ -6,26 +6,26 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 22:26:11 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/01 11:08:36 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/01 13:23:37 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern sig_atomic_t	g_sig;
+extern volatile sig_atomic_t	g_sig;
 
 void	s_int_handler_input(int sig)
 {
 	(void) sig;
 	g_sig = 1;
-	write(1, "\n", 1);
+	write(1, "^C", 2);
 }
 
 void	s_int_handler_heredoc(int sig)
 {
 	(void) sig;
 	g_sig = 1;
-	write(1, "\n", 1);
+	write(1, "^C", 2);
 }
 
 void	s_backslash_handler(int sig)
@@ -44,10 +44,13 @@ void	assign_signal(int signal, void (*f )(int), t_sa *sa_old)
 	sigaction(signal, &sa, sa_old);
 }
 
-int	exit_readline(void)
+int	exit_prompt(void)
 {
 	if (g_sig)
+	{
+		rl_replace_line("", 0);
 		rl_done = 1;
+	}
 	return (0);
 }
 
@@ -60,7 +63,7 @@ void	set_signals(int	mode)
 	{
 		assign_signal(SIGINT, s_int_handler_input, &sigint_default);
 		assign_signal(SIGQUIT, s_backslash_handler, &sigquit_default);
-		rl_event_hook = exit_readline;
+		rl_event_hook = exit_prompt;
 		rl_catch_signals = 0;
 	}
 	else if (mode == SHELL)
