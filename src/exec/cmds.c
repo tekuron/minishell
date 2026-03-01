@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/02/28 13:13:48 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/01 12:06:13 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	change_exit(t_list *envp, int exit_status)
 	}
 	last_exit[i] = '\0';
 	ft_swap(last_exit, i);
-	ft_memmove((void *)((char *)envp->content + 2), (void *)last_exit, i + 1); // ?= +2 => Status\0
+	ft_memmove((void *)((char *)envp->content + 2), (void *)last_exit, i); // ?= +2 => Status\0
 }
 
 int	wait_for_children(t_process *data, t_list *envp)

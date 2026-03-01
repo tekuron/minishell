@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/03/01 11:54:37 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/01 12:17:28 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,12 +86,12 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	set_signals(START);
-	status = malloc(sizeof(char) * 14);
+	status = malloc(sizeof(char) * 15);
 	if (!status)
 		return (EXIT_FAILURE);
 	envl = lst_from_char(envp);
-	ft_memmove(status, "?=0\0", 4);
-	ft_lstadd_front(&envl, ft_lstnew(ft_strdup("?=0")));
+	ft_memmove(status, "?=0", 4);
+	ft_lstadd_front(&envl, ft_lstnew(status));
 	shell.envp = envl;
 	shell.interactive = isatty(STDIN_FILENO);
 	shell.last_exit = 0;
