@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 20:14:28 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/02/24 10:32:03 by danz             ###   ########.fr       */
+/*   Updated: 2026/02/28 12:38:15 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,6 @@ void	free_cmd(char *line, t_command *cmd, int cont, char *err)
 	}
 	else if (cont == STOP)
 		exit(EXIT_SUCCESS);
+	else if (err)
+		perror(err);
 }

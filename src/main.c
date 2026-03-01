@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/02/26 22:10:14 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/01 11:16:46 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	parse_and_exec(char *line, t_shell *shell)
 	shell->last_exit = exec_command(cmd, shell->envp);
 	free_cmd(line, cmd, CONT, NULL);
 }
-
+	
 int	loop(t_shell shell)
 {
 	char		*line;
@@ -60,6 +60,15 @@ int	loop(t_shell shell)
 	while (1)
 	{
 		line = display_prompt(&shell);
+		if (g_sig)
+		{
+			g_sig = 0;
+			free(line);
+			rl_replace_line("", 0);
+			rl_on_new_line();
+			shell.last_exit = 130;
+			continue ;
+		}
 		if (!line)
 			continue ;
 		parse_and_exec(line, &shell);

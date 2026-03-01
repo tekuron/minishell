@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/02/26 22:15:04 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/28 13:12:38 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ typedef enum e_mode
 	START,
 	SHELL,
 	EXECUTION,
-	HEREDOC
+	HEREDOC,
+	IGNORE
 }		t_mode;
 
 typedef enum e_builtins
@@ -136,7 +137,7 @@ void	s_int_handler_heredoc(int sig);
 char	*try_access(t_command *cmd, t_list *envp);
 int		try_builtin(t_command *cmd, t_list *envp);
 int		**create_pipes(int total);
-int		heredoc_handling(t_command *cmd);
+int		heredoc_handling(t_command *cmd, t_list *envp);
 char	**t_list_to_char(t_list *envp);
 int		exec_command(t_command *cmd, t_list *envp);
 int		t_command_size(t_command *cmd);
@@ -144,5 +145,7 @@ void	*ft_realloc(void *ptr, size_t size, size_t new_size);
 void	change_exit(t_list *envp, int exit_status);
 char	*display_prompt(t_shell *shell);
 void	set_signals(int	mode);
+void	ft_swap(char *str, int length);
+
 
 #endif

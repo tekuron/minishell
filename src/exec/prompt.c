@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/01 18:09:05 by danz              #+#    #+#             */
-/*   Updated: 2026/02/26 16:44:28 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/28 12:51:20 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ char	*display_prompt(t_shell *shell)
 		line = readline("");
 	if (!line)
 	{
-		write(1, "exit\n", 6);
+		if (shell->interactive)
+			write(1, "exit\n", 6);
 		ft_lstclear(&shell->envp, free);
 		rl_clear_history();
 		exit(shell->last_exit);

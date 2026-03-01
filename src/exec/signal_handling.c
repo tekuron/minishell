@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 22:26:11 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/02/26 22:23:39 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/01 11:08:36 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,6 @@ void	s_int_handler_input(int sig)
 	(void) sig;
 	g_sig = 1;
 	write(1, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
 }
 
 void	s_int_handler_heredoc(int sig)
@@ -29,9 +26,6 @@ void	s_int_handler_heredoc(int sig)
 	(void) sig;
 	g_sig = 1;
 	write(1, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
 }
 
 void	s_backslash_handler(int sig)
@@ -45,7 +39,16 @@ void	assign_signal(int signal, void (*f )(int), t_sa *sa_old)
 
 	sa = (struct sigaction){0};
 	sa.sa_handler = f;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
 	sigaction(signal, &sa, sa_old);
+}
+
+int	exit_readline(void)
+{
+	if (g_sig)
+		rl_done = 1;
+	return (0);
 }
 
 void	set_signals(int	mode)
@@ -57,6 +60,8 @@ void	set_signals(int	mode)
 	{
 		assign_signal(SIGINT, s_int_handler_input, &sigint_default);
 		assign_signal(SIGQUIT, s_backslash_handler, &sigquit_default);
+		rl_event_hook = exit_readline;
+		rl_catch_signals = 0;
 	}
 	else if (mode == SHELL)
 	{
@@ -70,4 +75,7 @@ void	set_signals(int	mode)
 		sigaction(SIGINT, &sigint_default, NULL);
 		sigaction(SIGQUIT, &sigquit_default, NULL);
 	}
+	else if (mode == IGNORE)
+		assign_signal(SIGINT, s_backslash_handler, NULL);
 }
+

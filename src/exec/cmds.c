@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/02/26 22:09:08 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/02/28 13:13:48 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ void	handle_child(t_process *data, t_list *envp, int total)
 	if (execve(route, data->cmd->command, real_envp) == -1)
 	{
 		free_strs(real_envp);
-		free_cmd(route, data->cmd, STOP, "execve");
 		ft_lstclear(&envp, free);
+		free_cmd(route, data->cmd, CONT, "execve");
 		exit(127);
 	}
 }
@@ -80,17 +80,18 @@ void	change_exit(t_list *envp, int exit_status)
 		return ;
 	if (exit_status == 0)
 	{
-		ft_memmove(envp->content, (void *)"?=0", 4);
+		ft_memmove(envp->content, (void *)"?=0\0", 4);
 		return ;
 	}
 	while (exit_status != 0 && i < 10)
 	{
-		last_exit[i] = exit_status % 10;
+		last_exit[i] = exit_status % 10 + '0';
 		exit_status /= 10;
 		i++;
 	}
 	last_exit[i] = '\0';
-	ft_memmove((void *)((char *)envp->content + 2), (void *)last_exit, i); // ?= +2 => Status\0
+	ft_swap(last_exit, i);
+	ft_memmove((void *)((char *)envp->content + 2), (void *)last_exit, i + 1); // ?= +2 => Status\0
 }
 
 int	wait_for_children(t_process *data, t_list *envp)
@@ -117,7 +118,7 @@ int	exec_command(t_command *cmd, t_list *envp)
 	t_process	data;
 	int			ret_value;
 	
-	ret_value = heredoc_handling(cmd);
+	ret_value = heredoc_handling(cmd, envp);
 	if (!ret_value)
 		return (130);
 	ret_value = try_builtin(cmd, envp);

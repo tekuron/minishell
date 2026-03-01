@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 22:46:29 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/02/26 22:09:55 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/01 11:40:20 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,35 @@
 
 extern volatile sig_atomic_t	g_sig;
 
-int	write_to_pipe(int pipes[2], t_command *cmd, int lines_num)
+void	write_line(char *content, int pipe_fd, int expands, t_list *envp)
+{
+	int	i;
+	char	*expansion;
+
+	i = 0;
+	if (!expands)
+		write(pipe_fd, content, ft_strlen(content));
+	else
+	{
+		while (content[i])
+		{
+			while (content[i] && content[i] != '$')
+				write(pipe_fd, &content[i++], 1);
+			if (content[i] == '$')
+			{
+				expansion = ft_getenv(content + i, envp);
+				if (expansion)
+					write(pipe_fd, expansion, ft_strlen(expansion));
+			}
+			while (content[i] && content[i] != ' ' 
+					&& !(content[i] >= 9 && content[i] <= 13))
+				i++;
+		}
+	}
+	write(pipe_fd, "\n", 1);
+}
+
+int	write_to_pipe(int pipes[2], t_io *redir, int lines_num, t_list *envp)
 {
 	char	*line;
 	int		length;
@@ -23,53 +51,66 @@ int	write_to_pipe(int pipes[2], t_command *cmd, int lines_num)
 	if (!line)
 	{
 		printf("warning: here-document at line\
-		%i delimited by end-of-file (wanted '%s')\n", lines_num, cmd->redirs->path);
+%i delimited by end-of-file (wanted '%s')\n", lines_num, redir->path);
 		close(pipes[1]);
 		return (0);
 	}
-	length = ft_strlen(cmd->redirs->path);
-	if (ft_strncmp(cmd->redirs->path, line, length + 1) == 0)
+	length = ft_strlen(redir->path);
+	if (ft_strncmp(redir->path, line, length + 1) == 0)
 	{
 		close(pipes[1]);
 		free(line);
 		return (0);
 	}
-	write(pipes[1], line, ft_strlen(line));
-	write(pipes[1], "\n", 1);
+	write_line(line, pipes[1], !redir->has_qts, envp);
 	free(line);
-	close(pipes[1]);
 	return (1);
 }
 
 
-
-int	heredoc_handling(t_command *cmd)
+int	prepare_heredoc(int	pipes[2], t_io *redir, t_list *envp)
 {
-	int					pipes[2];
-	int					line;
+	int	line;
+
+	line = 0;
+	set_signals(HEREDOC);
+	pipe(pipes);
+	redir->heredoc_fd = pipes[0];
+	while (!g_sig && write_to_pipe(pipes, redir, ++line, envp));
+	if (g_sig)
+	{
+		g_sig = 0;
+		close(pipes[1]);
+		set_signals(SHELL);
+		return (0);
+	}
+	close(pipes[1]);
+	set_signals(SHELL);
+	return (1);
+}
+
+int	heredoc_handling(t_command *cmd, t_list *envp)
+{
+	int		pipes[2];
+	t_io	*redir;
 
 	while (cmd)
 	{
-		if (!cmd->redirs)
+		redir = cmd->redirs;
+		if (!redir)
 		{
 			cmd = cmd->next;
 			continue ;
 		}
-		cmd->redirs->heredoc_fd = -1;
-		line = 0;
-		if (cmd->redirs->rd == REDIR_HEREDOC)
+		redir->heredoc_fd = -1;
+		while (redir)
 		{
-			set_signals(HEREDOC);
-			pipe(pipes);
-			cmd->redirs->heredoc_fd = pipes[0];
-			while (!g_sig && write_to_pipe(pipes, cmd, ++line));
-			set_signals(SHELL);
-			if (g_sig)
+			if (redir->rd == REDIR_HEREDOC)
 			{
-				g_sig = 0;
-				//close_pipes
-				return (0);
+				if (!prepare_heredoc(pipes, redir, envp))
+					return (0);
 			}
+			redir = redir->next;
 		}
 		cmd = cmd->next;
 	}
@@ -103,7 +144,7 @@ int	redirecting(t_command *cmd)
 	t_io	*aux;
 	int		fd;
 	int		dup_out;
-	
+
 	aux = cmd->redirs;
 	while (aux)
 	{
@@ -114,7 +155,7 @@ int	redirecting(t_command *cmd)
 		else if (aux->rd == REDIR_APPEND)
 			fd = open (aux->path, O_CREAT | O_WRONLY | O_APPEND, 0644);
 		else if (aux->rd == REDIR_HEREDOC)
-			fd = cmd->redirs->heredoc_fd;
+			fd = aux->heredoc_fd;
 		if (fd < 0)
 			return (0);
 		dup_out = dup2(fd, (aux->rd == REDIR_OUT || aux->rd == REDIR_APPEND));

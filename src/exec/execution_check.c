@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 15:35:13 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/02/26 16:56:19 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/01 10:50:02 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,19 @@ int	try_builtin(t_command *cmd, t_list *envp)
 	return (0);
 }
 
+char	**get_paths(t_list *envp)
+{
+	char	*path_env;
+	char	**paths;
+	path_env = ft_getenv("$PATH", envp);
+	if (!path_env)
+		return (NULL);
+	paths = ft_split(path_env, ':');
+	if (!paths)
+		return (NULL);
+	return (paths);
+}
+
 char	*try_access(t_command *cmd, t_list *envp)
 {
 	char	*path;
@@ -85,7 +98,7 @@ char	*try_access(t_command *cmd, t_list *envp)
 	i = 0;
 	if (access(cmd->command[0], X_OK) == 0)
 		return (cmd->command[0]);
-	paths = ft_split(ft_getenv("$PATH", envp), ':');
+	paths = get_paths(envp);
 	while (paths && paths[i])
 	{
 		partial_path = ft_strjoin(paths[i], "/");
@@ -100,5 +113,6 @@ char	*try_access(t_command *cmd, t_list *envp)
 		free(path);
 		i++;
 	}
+	free_strs(paths);
 	return (NULL);
 }
