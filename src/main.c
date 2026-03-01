@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/03/01 11:16:46 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/01 11:54:37 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ int	loop(t_shell shell)
 			rl_replace_line("", 0);
 			rl_on_new_line();
 			shell.last_exit = 130;
+			change_exit(shell.envp, shell.last_exit);
 			continue ;
 		}
 		if (!line)
