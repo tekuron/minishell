@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 11:11:43 by danz              #+#    #+#             */
-/*   Updated: 2026/02/25 12:43:44 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/02 14:16:05 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,30 +36,33 @@ t_list	*env_find(t_list *lst, char *env)
 		len++;
 	while (lst)
 	{
-		if (ft_strncmp(lst->content, env, len + 1))
+		if (!ft_strncmp(lst->content, env, len + 1))
 			return (lst);
 		lst = lst->next;
 	}
 	return (NULL);
 }
 
-int	env_exp(t_list *envp, t_list *dst, char *new)
+int	env_exp(t_list **envp, t_list *dst, char *new)
 {
-	void	*new_ptr;
-
 	if (dst)
 	{
-		new_ptr = ft_realloc(dst->content, ft_strlen((char *)dst->content), ft_strlen(new));
-		if (!new_ptr)
+		free(dst->content);
+		dst->content = ft_strdup(new);
+		if (!dst->content)
 			return (1);
-		dst->content = new_ptr;
 	}
 	else
-		ft_lstadd_front(envp, ft_lstnew(ft_strdup(new)));
+		ft_lstadd_back(envp, ft_lstnew(ft_strdup(new)));
 	return (0);
 }
 
-int	ft_export(t_command *cmd, t_list *envp)
+void	export_print(t_list *envp)
+{
+	
+}
+
+int	export_builtin(t_command *cmd, t_list **envp)
 {
 	char	**envs;
 	t_list	*cur;
@@ -77,7 +80,7 @@ int	ft_export(t_command *cmd, t_list *envp)
 		}
 		else
 		{
-			cur = env_find(envp, *envs);
+			cur = env_find(*envp, *envs);
 			if (env_exp(envp, cur, *envs))
 				return (-1);
 		}

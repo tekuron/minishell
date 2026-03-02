@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   execution_check.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 15:35:13 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/01 18:25:56 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/02 14:08:37 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "builtins.h"
 
 int	is_builtin(t_command *cmd)
 {
@@ -40,8 +41,8 @@ int	execute_builtin(t_command *cmd, t_list *envp, int builtin)
 	// 	echo_builtin(arr_len(cmd, envp));
 	// else if (ft_strncmp(cmd->command[0], "cd", 3) == 0)
 	// 	cd_builtin(cmd, envp);
-	// else if (ft_strncmp(cmd->command[0], "export", 7) == 0)
-	// 	export_builtin(cmd, envp);
+	if (ft_strncmp(cmd->command[0], "export", 7) == 0)
+		return (export_builtin(cmd, &(envp->next)));
 	// else if (ft_strncmp(cmd->command[0], "unset", 6) == 0)
 	// 	unset_builtin(cmd, envp);
 	// else if (ft_strncmp(cmd->command[0], "exit", 5) == 0)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/03/01 13:29:01 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/02 13:47:37 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	parse_and_exec(char *line, t_shell *shell)
 	cmd = get_cmd(line, shell->envp);
 	if (!cmd)
 		free_cmd(line, NULL, STOP, "malloc");
-	debug(cmd);
+	// debug(cmd);
 	shell->last_exit = exec_command(cmd, shell->envp);
 	free_cmd(line, cmd, CONT, NULL);
 }

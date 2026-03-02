@@ -29,33 +29,33 @@ $(LIB):
 
 $(NAME): $(LIB) $(OBJS)
 	@$(CC) $(CFLAGS) $(INCLUDE) $(OBJS) $(LIB) -lreadline -o $(NAME)
-	@echo -e "$(GREEN)$(PROJECT) built: $(NAME)"
+	@echo "$(GREEN)$(PROJECT) built: $(NAME)"
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@)
-	@echo -e "$(CYAN)Compiling: $<"
+	@echo "$(CYAN)Compiling: $<"
 	@$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
 clean:
 	@$(RM) $(OBJ_DIR)
 	@make clean -C $(LIB_DIR)
-	@echo -e "$(BLUE)$(PROJECT) object files removed"
+	@echo "$(BLUE)$(PROJECT) object files removed"
 
 fclean: clean
 	@$(RM) $(NAME)
 	@make fclean -C $(LIB_DIR)
-	@echo -e "$(BLUE)$(PROJECT) clean (library removed)"
+	@echo "$(BLUE)$(PROJECT) clean (library removed)"
 
 re: fclean all
-	@echo -e "$(GREEN)$(PROJECT) rebuilt"
+	@echo "$(GREEN)$(PROJECT) rebuilt"
 
 pclean:
 	@$(RM) $(OBJ_DIR)
-	@echo -e "$(BLUE)$(PROJECT) non-library object files removed"
+	@echo "$(BLUE)$(PROJECT) non-library object files removed"
 
 pfclean: pclean
 	@$(RM) $(NAME)
-	@echo -e "$(BLUE)$(PROJECT) pclean (library removed)"
+	@echo "$(BLUE)$(PROJECT) pclean (library removed)"
 
 pre: pfclean all
 

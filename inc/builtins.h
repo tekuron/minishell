@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 11:12:12 by danz              #+#    #+#             */
-/*   Updated: 2026/02/25 11:14:07 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/02 14:03:23 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,6 @@
 
 # include "minishell.h"
 
-int	ft_export(t_command *cmd, t_list *envp);
+int	export_builtin(t_command *cmd, t_list **envp);
 
 #endif
