@@ -7,6 +7,7 @@ INCLUDE = -I $(INC_DIR) -I libft/inc
 OBJ_DIR = obj
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -g3
+MAKE_F = make -s --no-print-directory
 RM = rm -rf
 AR = ar rcs
 
@@ -25,7 +26,7 @@ OBJS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 all: $(NAME)
 
 $(LIB):
-	@make -C $(LIB_DIR)
+	@$(MAKE_F) -C $(LIB_DIR)
 
 $(NAME): $(LIB) $(OBJS)
 	@$(CC) $(CFLAGS) $(INCLUDE) $(OBJS) $(LIB) -lreadline -o $(NAME)
@@ -38,13 +39,14 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 clean:
 	@$(RM) $(OBJ_DIR)
-	@make clean -C $(LIB_DIR)
+	@$(MAKE_F) clean -C $(LIB_DIR)
 	@echo "$(BLUE)$(PROJECT) object files removed"
 
 fclean: clean
 	@$(RM) $(NAME)
-	@make fclean -C $(LIB_DIR)
-	@echo "$(BLUE)$(PROJECT) clean (library removed)"
+	@$(RM) libft/libft.a
+	@echo "$(BLUE)libft clean (library removed)"
+	@echo "$(BLUE)$(PROJECT) clean (binary removed)"
 
 re: fclean all
 	@echo "$(GREEN)$(PROJECT) rebuilt"
