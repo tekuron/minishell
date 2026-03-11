@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 11:11:43 by danz              #+#    #+#             */
-/*   Updated: 2026/03/11 12:29:28 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/11 14:24:14 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,30 +51,57 @@ t_list	*env_find(t_list *lst, char *env)
 	return (NULL);
 }
 
+char *env_append(char *dst, char *new)
+{
+	char	*ret;
+	int		i;
+
+	ret = NULL;
+	i = 0;
+	if (dst)
+	{
+		if (!ft_strchr(dst, '='))
+			new = ft_strjoin("=", new);
+		ret = ft_strjoin(dst, new);
+		free(new);
+	}
+	if (ret)
+		return (free(dst), ret);
+	ret = strdup(new);
+	if (!ret)
+		return (NULL);
+	while (ret[i] && ret[i] != '+')
+		i++;
+	while (ret[i])
+		ret[i] = ret[1 + i++];
+	return (ret);
+}
+
 int	env_exp(t_list **envp, t_list *dst, char *new)
 {
-	char	*dup;
-	t_list	*new_node;
+	char *dup;
 
 	if (dst && new[envlen(new)])
 	{
-		dup = ft_strchr(new, '+');
-		if (dup)
-			new = envcat(dst->content, dup + 2);
-		free(dst->content);
-		dst->content = ft_strdup(new); //Arreglar esto
+		if (ft_strchr(new, '+'))
+			dst->content = env_append(dst->content, ft_strchr(new, '+') + 2);
+		else
+		{
+			free(dst->content);
+			dst->content = ft_strdup(new);
+		}
 		if (!dst->content)
 			return (1);
 	}
 	else if (!dst)
 	{
-		dup = ft_strdup(new);
+		dup = env_append(NULL, new);
 		if (!dup)
 			return (1);
-		new_node = ft_lstnew(dup);
-		if (!new_node)
+		dst = ft_lstnew(dup);
+		if (!dst)
 			return (free(dup), 1);
-		ft_lstadd_back(envp, new_node);
+		ft_lstadd_back(envp, dst);
 	}
 	return (0);
 }
