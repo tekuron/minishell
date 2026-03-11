@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/03/01 18:22:05 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/11 12:18:47 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,27 +127,29 @@ int			word_len(char *str);
 char		**split_cmd(char *str);
 void		insert_env(t_list **lst, t_list *envp);
 char		*ft_getenv(char *var, t_list *envp);
+char		*envcat(char *str, char *env);
+size_t		envlen(char *env);
 t_command	*save_cmds(t_list *cmd, t_command *ret);
 int			is_redir(char *str);
 int			append_to_history(char *line);
-void	s_int_handler_input(int sig);
+void		s_int_handler_input(int sig);
 void		s_backslash_handler(int sig);
-int		piping(int **pipes, int total, int id);
-int		redirecting(t_command *cmd);
-void	s_int_handler_heredoc(int sig);
-char	*try_access(t_command *cmd, t_list *envp);
-int		try_builtin(t_command *cmd, t_list *envp);
-int		**create_pipes(int total);
-int		heredoc_handling(t_command *cmd, t_list *envp);
-char	**t_list_to_char(t_list *envp);
-int		exec_command(t_command *cmd, t_list *envp);
-int		t_command_size(t_command *cmd);
-void	*ft_realloc(void *ptr, size_t size, size_t new_size);
-void	change_exit(t_list *envp, int exit_status);
-char	*display_prompt(t_shell *shell);
-void	set_signals(int	mode);
-void	ft_swap(char *str, int length);
-int		is_dir(char *path);
+int			piping(int **pipes, int total, int id);
+int			redirecting(t_command *cmd);
+void		s_int_handler_heredoc(int sig);
+char		*try_access(t_command *cmd, t_list *envp);
+int			try_builtin(t_command *cmd, t_list *envp);
+int			**create_pipes(int total);
+int			heredoc_handling(t_command *cmd, t_list *envp);
+char		**t_list_to_char(t_list *envp);
+int			exec_command(t_command *cmd, t_list *envp);
+int			t_command_size(t_command *cmd);
+void		*ft_realloc(void *ptr, size_t size, size_t new_size);
+void		change_exit(t_list *envp, int exit_status);
+char		*display_prompt(t_shell *shell);
+void		set_signals(int	mode);
+void		ft_swap(char *str, int length);
+int			is_dir(char *path);
 
 
 #endif

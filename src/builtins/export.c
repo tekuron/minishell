@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 11:11:43 by danz              #+#    #+#             */
-/*   Updated: 2026/03/02 14:16:05 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/11 12:29:28 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 
 int	env_is_valid(char *env)
 {
+	int	ok;
+
+	ok = 1;
 	if (!env)
 		return (0);
 	if ((*env <= '9' && *env >= '0') || *env == '=')
@@ -21,22 +24,27 @@ int	env_is_valid(char *env)
 	while (*env && *env != '=')
 	{
 		if (!ft_isalnum(*env) && *env != '_')
-			return (0);
+		{
+			ok = 0;
+			break ;
+		}
 		env++;
 	}
-	return (1);
+	if (*env == '+' && *(env + 1) == '=')
+		ok = 1;
+	return (ok);
 }
 
 t_list	*env_find(t_list *lst, char *env)
 {
 	size_t	len;
 
-	len = 0;
-	while (env[len] && env[len] != '=')
-		len++;
+	len = envlen(env);;
 	while (lst)
 	{
-		if (!ft_strncmp(lst->content, env, len + 1))
+		if (!ft_strncmp(lst->content, env, len)
+			&& (((char *)lst->content)[len] == '='
+			|| !((char *)lst->content)[len]))
 			return (lst);
 		lst = lst->next;
 	}
@@ -45,21 +53,30 @@ t_list	*env_find(t_list *lst, char *env)
 
 int	env_exp(t_list **envp, t_list *dst, char *new)
 {
-	if (dst)
+	char	*dup;
+	t_list	*new_node;
+
+	if (dst && new[envlen(new)])
 	{
+		dup = ft_strchr(new, '+');
+		if (dup)
+			new = envcat(dst->content, dup + 2);
 		free(dst->content);
-		dst->content = ft_strdup(new);
+		dst->content = ft_strdup(new); //Arreglar esto
 		if (!dst->content)
 			return (1);
 	}
-	else
-		ft_lstadd_back(envp, ft_lstnew(ft_strdup(new)));
+	else if (!dst)
+	{
+		dup = ft_strdup(new);
+		if (!dup)
+			return (1);
+		new_node = ft_lstnew(dup);
+		if (!new_node)
+			return (free(dup), 1);
+		ft_lstadd_back(envp, new_node);
+	}
 	return (0);
-}
-
-void	export_print(t_list *envp)
-{
-	
 }
 
 int	export_builtin(t_command *cmd, t_list **envp)
