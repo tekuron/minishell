@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 22:26:11 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/01 15:55:11 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/23 16:11:33 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ void	s_int_handler_input(int sig)
 void	s_int_handler_heredoc(int sig)
 {
 	(void) sig;
-	g_sig = 1;
 	if (!g_sig)
 		write(1, "^C", 2);
 	g_sig = 1;

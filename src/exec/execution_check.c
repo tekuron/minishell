@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_check.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 15:35:13 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/02 14:08:37 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/23 19:29:37 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ int	is_builtin(t_command *cmd)
 		return (EXIT_BI);
 	else if (ft_strncmp(cmd->command[0], "env", 4) == 0)
 		return (ENV_BI);
+	else if (ft_strncmp(cmd->command[0], "pwd", 4) == 0)
+		return (PWD_BI);
 	return (0);
 }
 
@@ -37,22 +39,24 @@ int	execute_builtin(t_command *cmd, t_list *envp, int builtin)
 	(void) cmd;
 	(void) envp;
 	(void) builtin;
-	// if (builtin == ECHO)
-	// 	echo_builtin(arr_len(cmd, envp));
-	// else if (ft_strncmp(cmd->command[0], "cd", 3) == 0)
-	// 	cd_builtin(cmd, envp);
-	if (ft_strncmp(cmd->command[0], "export", 7) == 0)
-		return (export_builtin(cmd, &(envp->next)));
-	// else if (ft_strncmp(cmd->command[0], "unset", 6) == 0)
-	// 	unset_builtin(cmd, envp);
-	// else if (ft_strncmp(cmd->command[0], "exit", 5) == 0)
-	// 	exit_builtin(cmd, envp);
-	// else if (ft_strncmp(cmd->command[0], "env", 4) == 0)
-	// 	env_builtin(cmd, envp);
+	// if (builtin == ECHO_BI)
+	// 	return (echo_builtin(cmd, envp));
+	if (builtin == CD_BI)
+		return(cd_builtin(cmd, envp));
+	// else if (builtin == EXPORT_BI)
+	// 	return (export_builtin(cmd, &(envp->next)));
+	// else if (builtin == UNSET_BI)
+	// 	return (unset_builtin(cmd, envp));
+	// else if (builtin == EXIT_BI)
+	// 	return (exit_builtin(cmd, envp));
+	else if (builtin == ENV_BI)
+		return (env_builtin(cmd, envp));
+	else if (builtin == PWD_BI)
+		return (pwd_builtin(cmd, envp));
 	return (1);
 }
 
-int	try_builtin(t_command *cmd, t_list *envp)
+int	try_builtin(t_command *cmd, t_list *envp, int *status)
 {
 	int	builtin;
 	int	exit_status;
@@ -70,10 +74,11 @@ int	try_builtin(t_command *cmd, t_list *envp)
 			}
 			exit_status = execute_builtin(cmd, envp, builtin);
 			change_exit(envp, exit_status);
-			return (exit_status);
+			*status = exit_status;
+			return (builtin);
 		}
 	}
-	return (0);
+	return (-1);
 }
 
 char	**get_paths(t_list *envp)

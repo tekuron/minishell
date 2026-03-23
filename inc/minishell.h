@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/03/11 12:18:47 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/23 18:19:00 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,12 @@ typedef enum e_builtins
 	EXIT_BI = 7
 }	t_builtins;
 
+typedef struct s_pair
+{
+	int	cont;
+	int	status;
+}		t_pair;
+
 typedef struct s_io
 {
 	t_redir		rd;
@@ -138,7 +144,7 @@ int			piping(int **pipes, int total, int id);
 int			redirecting(t_command *cmd);
 void		s_int_handler_heredoc(int sig);
 char		*try_access(t_command *cmd, t_list *envp);
-int			try_builtin(t_command *cmd, t_list *envp);
+int			try_builtin(t_command *cmd, t_list *envp, int *status);
 int			**create_pipes(int total);
 int			heredoc_handling(t_command *cmd, t_list *envp);
 char		**t_list_to_char(t_list *envp);
@@ -150,6 +156,7 @@ char		*display_prompt(t_shell *shell);
 void		set_signals(int	mode);
 void		ft_swap(char *str, int length);
 int			is_dir(char *path);
+int			arr_len(char **strs);
 
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/03/01 18:55:47 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/23 18:18:13 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ void	change_exit(t_list *envp, int exit_status)
 	}
 	last_exit[i] = '\0';
 	ft_swap(last_exit, i);
-	ft_memmove((void *)((char *)envp->content + 2), (void *)last_exit, i); // ?= +2 => Status\0
+	ft_memmove((void *)((char *)envp->content + 2), (void *)last_exit, i);
 }
 
 int	wait_for_children(t_process *data, t_list *envp)
@@ -145,7 +145,7 @@ int	wait_for_children(t_process *data, t_list *envp)
 	change_exit(envp, last_exit);
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGQUIT)
 		write(1, "Quit\n", 5);
-	else if (WIFSIGNALED(status) && WTERMSIG(status) == SIGKILL)
+	else if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 		write(1, "\n", 1);
 	set_signals(SHELL);
 	return (last_exit);
@@ -154,14 +154,14 @@ int	wait_for_children(t_process *data, t_list *envp)
 int	exec_command(t_command *cmd, t_list *envp)
 {
 	t_process	data;
-	int			ret_value;
+	t_pair		pair;
 	
-	ret_value = heredoc_handling(cmd, envp);
-	if (!ret_value)
+	pair.cont = heredoc_handling(cmd, envp);
+	if (!pair.cont)
 		return (130);
-	ret_value = try_builtin(cmd, envp);
-	if (ret_value)
-		return (ret_value);
+	pair.cont = try_builtin(cmd, envp, &pair.status);
+	if (pair.cont >= 0)
+		return (pair.status);
 	data = (t_process){0};
 	data.cmd = cmd;
 	data.process = t_command_size(cmd);
@@ -184,7 +184,6 @@ int	exec_command(t_command *cmd, t_list *envp)
 
 int	append_to_history(char *line)
 {
-
 	if (!*line)
 	{
 		free(line);

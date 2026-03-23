@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/22 19:43:22 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/02/28 11:02:22 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/23 16:25:05 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,14 @@ void	ft_swap(char *str, int length)
 		i++;
 		j--;
 	}
+}
+
+int	arr_len(char **strs)
+{
+	int	length;
+
+	length = 0;
+	while (strs && strs[length])
+		length++;
+	return (length);
 }
