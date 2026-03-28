@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 17:37:06 by danz              #+#    #+#             */
-/*   Updated: 2026/02/18 23:04:55 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/28 12:42:35 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,16 @@ static int	set_vars(char *str, int *pipe, int *redir, int word)
 			return (1);
 		*pipe = 1;
 	}
-	if (*str == '<' || *str == '>')
+	else if (*str == '<' || *str == '>')
 	{
 		if (*pipe || *redir)
 			return (1);
 		*redir = 1;
+	}
+	else
+	{
+		*pipe = 0;
+		*redir = 0;
 	}
 	if (*(str + 1) == 0 && (*pipe || *redir))
 		return (1);
@@ -47,11 +52,7 @@ int	check_cmd(char *str)
 		if (*str != ' ' && !(*str >= 9 && *str <= 13))
 		{
 			if (!(*str == '|' || *str == '<' || *str == '>'))
-			{
-				pipe = 0;
-				redir = 0;
 				word = 1;
-			}
 			str += word_len(str);
 		}
 		else

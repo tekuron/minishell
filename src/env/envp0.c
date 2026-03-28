@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 14:18:02 by danzamor          #+#    #+#             */
-/*   Updated: 2026/02/23 13:16:55 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/28 12:52:45 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,13 @@ char	*envcat(char *str, char *env)
 	return (ret);
 }
 
-static t_list	*lst_env(t_list *node, t_list *envp)
+static t_list	*lst_env(t_list *node, t_shell *shell)
 {
 	char	**split_env;
 	char	*env;
 	t_list	*ret;
 
-	env = envcat(node->content, ft_getenv(node->content, envp));
+	env = envcat(node->content, ft_getenv(node->content, shell));
 	if (!env)
 		return (NULL);
 	if (env[0] != '\"' && env[0])
@@ -97,7 +97,7 @@ static void	insert_env_mod(t_list **prev, t_list **next, t_list **cur)
 	*cur = *next;
 }
 
-void	insert_env(t_list **lst, t_list *envp)
+void	insert_env(t_list **lst, t_shell *shell)
 {
 	t_list	*prev;
 	t_list	*next;
@@ -109,9 +109,9 @@ void	insert_env(t_list **lst, t_list *envp)
 	while (cur)
 	{
 		next = cur->next;
-		if (has_env(cur) && ft_strncmp(prev->content, "<<", 3))
+		if (has_env(cur) && (!prev || ft_strncmp(prev->content, "<<", 3)))
 		{
-			new = lst_env(cur, envp);
+			new = lst_env(cur, shell);
 			if (prev)
 				prev->next = new;
 			else

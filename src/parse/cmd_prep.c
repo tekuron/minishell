@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 17:24:40 by danz              #+#    #+#             */
-/*   Updated: 2026/02/24 10:25:24 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/28 12:53:39 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,14 @@ static void	remove_quotes(char **text)
 	}
 }
 
-static t_list	*prep_cmd(char **wds, t_list *envp)
+static t_list	*prep_cmd(char **wds, t_shell *shell)
 {
 	t_list	*ret;
 
 	ret = lst_from_char(wds);
 	if (!ret)
 		return (NULL);
-	insert_env(&ret, envp);
+	insert_env(&ret, shell);
 	return (ret);
 }
 
@@ -73,7 +73,7 @@ static void	all_quotes(t_command *lst)
 	}
 }
 
-t_command	*get_cmd(char *line, t_list *envp)
+t_command	*get_cmd(char *line, t_shell *shell)
 {
 	t_command	*ret;
 	char		**wds;
@@ -82,7 +82,7 @@ t_command	*get_cmd(char *line, t_list *envp)
 	wds = split_cmd(line);
 	if (!wds)
 		return (NULL);
-	cmd = prep_cmd(wds, envp);
+	cmd = prep_cmd(wds, shell);
 	free_strs(wds);
 	if (!cmd)
 		return (NULL);

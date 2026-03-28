@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 11:11:43 by danz              #+#    #+#             */
-/*   Updated: 2026/03/11 14:24:14 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/28 12:29:06 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,10 @@ char *env_append(char *dst, char *new)
 	while (ret[i] && ret[i] != '+')
 		i++;
 	while (ret[i])
-		ret[i] = ret[1 + i++];
+	{
+		ret[i] = ret[i + 1];
+		i++;
+	}
 	return (ret);
 }
 

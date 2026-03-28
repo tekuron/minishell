@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/03/28 11:53:43 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/28 12:50:58 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,15 +132,15 @@ void		set_signal_status(int sig);
 int			get_signal_status(void);
 void		free_pipes(int **pipes, int total);
 char		*prompt(int last_exit);
-t_command	*get_cmd(char *line, t_list *envp);
+t_command	*get_cmd(char *line, t_shell *shell);
 void		*ft_realloc(void *ptr, size_t size, size_t new_size);
 void		free_strs(char **strs);
 t_list		*lst_from_char(char **wds);
 int			check_cmd(char *str);
 int			word_len(char *str);
 char		**split_cmd(char *str);
-void		insert_env(t_list **lst, t_list *envp);
-char		*ft_getenv(char *var, t_list *envp);
+void		insert_env(t_list **lst, t_shell *shell);
+char		*ft_getenv(char *var, t_shell *shell);
 char		*envcat(char *str, char *env);
 size_t		envlen(char *env);
 t_command	*save_cmds(t_list *cmd, t_command *ret);
