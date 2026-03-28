@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/25 11:11:43 by danz              #+#    #+#             */
-/*   Updated: 2026/03/28 12:29:06 by danz             ###   ########.fr       */
+/*   Created: 2026/03/28 13:33:10 by danz              #+#    #+#             */
+/*   Updated: 2026/03/28 13:36:56 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,27 @@
 
 int	env_is_valid(char *env)
 {
-	int	ok;
+	int	i;
 
-	ok = 1;
-	if (!env)
+	i = 0;
+	if (!env || (!ft_isalpha(env[i]) && env[i] != '_'))
 		return (0);
-	if ((*env <= '9' && *env >= '0') || *env == '=')
-		return (0);
-	while (*env && *env != '=')
+	while (env[i] && env[i] != '=')
 	{
-		if (!ft_isalnum(*env) && *env != '_')
-		{
-			ok = 0;
-			break ;
-		}
-		env++;
+		if (env[i] == '+' && env[i + 1] == '=')
+			return (1);
+		if (!ft_isalnum(env[i]) && env[i] != '_')
+			return (0);
+		i++;
 	}
-	if (*env == '+' && *(env + 1) == '=')
-		ok = 1;
-	return (ok);
+	return (1);
 }
 
 t_list	*env_find(t_list *lst, char *env)
 {
 	size_t	len;
 
-	len = envlen(env);;
+	len = envlen(env);
 	while (lst)
 	{
 		if (!ft_strncmp(lst->content, env, len)
@@ -51,60 +46,58 @@ t_list	*env_find(t_list *lst, char *env)
 	return (NULL);
 }
 
-char *env_append(char *dst, char *new)
+static char	*get_new_content(char *current, char *input)
 {
-	char	*ret;
-	int		i;
+	char	*plus;
+	char	*res;
+	char	*tmp;
 
-	ret = NULL;
-	i = 0;
-	if (dst)
+	plus = ft_strchr(input, '+');
+	if (current && plus)
 	{
-		if (!ft_strchr(dst, '='))
-			new = ft_strjoin("=", new);
-		ret = ft_strjoin(dst, new);
-		free(new);
+		if (!ft_strchr(current, '='))
+			tmp = ft_strjoin(current, "=");
+		else
+			tmp = ft_strdup(current);
+		res = ft_strjoin(tmp, plus + 2);
+		free(tmp);
+		return (res);
 	}
-	if (ret)
-		return (free(dst), ret);
-	ret = strdup(new);
-	if (!ret)
-		return (NULL);
-	while (ret[i] && ret[i] != '+')
-		i++;
-	while (ret[i])
+	if (!current && plus)
 	{
-		ret[i] = ret[i + 1];
-		i++;
+		tmp = ft_substr(input, 0, plus - input);
+		res = ft_strjoin(tmp, plus + 1);
+		free(tmp);
+		return (res);
 	}
-	return (ret);
+	return (ft_strdup(input));
 }
 
 int	env_exp(t_list **envp, t_list *dst, char *new)
 {
-	char *dup;
+	char	*new_content;
+	char	*current_val;
+	t_list	*new_node;
 
-	if (dst && new[envlen(new)])
+	if (dst && !ft_strchr(new, '='))
+		return (0);
+	current_val = NULL;
+	if (dst)
+		current_val = dst->content;
+	new_content = get_new_content(current_val, new);
+	if (!new_content)
+		return (1);
+	if (dst)
 	{
-		if (ft_strchr(new, '+'))
-			dst->content = env_append(dst->content, ft_strchr(new, '+') + 2);
-		else
-		{
-			free(dst->content);
-			dst->content = ft_strdup(new);
-		}
-		if (!dst->content)
-			return (1);
+		free(dst->content);
+		dst->content = new_content;
 	}
-	else if (!dst)
+	else
 	{
-		dup = env_append(NULL, new);
-		if (!dup)
-			return (1);
-		dst = ft_lstnew(dup);
-		if (!dst)
-			return (free(dup), 1);
-		ft_lstadd_back(envp, dst);
+		new_node = ft_lstnew(new_content);
+		if (!new_node)
+			return (free(new_content), 1);
+		ft_lstadd_back(envp, new_node);
 	}
 	return (0);
 }
@@ -112,10 +105,11 @@ int	env_exp(t_list **envp, t_list *dst, char *new)
 int	export_builtin(t_command *cmd, t_list **envp)
 {
 	char	**envs;
-	t_list	*cur;
 	int		ret;
 
 	envs = cmd->command + 1;
+	if (!*envs)
+		return (0);
 	ret = 0;
 	while (*envs)
 	{
@@ -125,12 +119,8 @@ int	export_builtin(t_command *cmd, t_list **envp)
 				*envs);
 			ret = 1;
 		}
-		else
-		{
-			cur = env_find(*envp, *envs);
-			if (env_exp(envp, cur, *envs))
-				return (-1);
-		}
+		else if (env_exp(envp, env_find(*envp, *envs), *envs))
+			return (-1);
 		envs++;
 	}
 	return (ret);

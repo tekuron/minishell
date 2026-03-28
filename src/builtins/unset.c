@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 13:31:26 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/28 12:50:06 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/28 13:37:51 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ static int	validate_args(t_command *cmd)
 		return (0);
 	if (ft_strchr(cmd->command[0], '='))
 		return (0);
+	return 1;
 }
 
 static void	remove_from_env(t_list **envp, char *str)

@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 15:35:13 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/28 13:20:49 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/28 13:39:30 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ int	execute_builtin(t_command *cmd, t_list **envp, int builtin)
 	// 	return (echo_builtin(cmd, *envp));
 	if (builtin == CD_BI)
 		return(cd_builtin(cmd, *envp));
-	// else if (builtin == EXPORT_BI)
-	// 	return (export_builtin(cmd, envp));
+	else if (builtin == EXPORT_BI)
+		return (export_builtin(cmd, envp));
 	else if (builtin == UNSET_BI)
 		return (unset_builtin(cmd, envp));
 	else if (builtin == EXIT_BI)
