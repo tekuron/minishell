@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 11:12:12 by danz              #+#    #+#             */
-/*   Updated: 2026/03/28 20:18:56 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/28 20:19:40 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "minishell.h"
 
 int	export_builtin(t_command *cmd, t_list **envp);
+void	export_print(t_list *envp);
 int	cd_builtin(t_command *cmd, t_shell *shell);
 int	exit_builtin(t_command *cmd, t_list **envp);
 int	echo_builtin(t_command *cmd);
