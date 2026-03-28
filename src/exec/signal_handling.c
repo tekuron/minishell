@@ -6,13 +6,13 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 22:26:11 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/23 16:11:33 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/28 11:54:25 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern volatile sig_atomic_t	g_sig;
+volatile sig_atomic_t	g_sig;
 
 void	s_int_handler_input(int sig)
 {
@@ -33,6 +33,16 @@ void	s_int_handler_heredoc(int sig)
 void	s_backslash_handler(int sig)
 {
 	(void) sig;
+}
+
+void	set_signal_status(int sig)
+{
+	g_sig = sig;
+}
+
+int		get_signal_status(void)
+{
+	return (g_sig);
 }
 
 void	assign_signal(int signal, void (*f )(int), t_sa *sa_old)

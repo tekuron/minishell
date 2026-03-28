@@ -6,13 +6,11 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/03/28 10:09:06 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/28 12:09:45 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-volatile sig_atomic_t	g_sig = 0;
 
 void	debug(t_command *cmd)
 {
@@ -50,6 +48,7 @@ void	parse_and_exec(char *line, t_shell *shell)
 		free_cmd(line, NULL, STOP, "malloc");
 	// debug(cmd);
 	shell->last_exit = exec_command(cmd, shell->envp);
+	//printf("Exit: %i\n", shell->last_exit);
 	free_cmd(line, cmd, CONT, NULL);
 }
 	
@@ -60,14 +59,14 @@ int	loop(t_shell shell)
 	while (1)
 	{
 		line = display_prompt(&shell);
-		if (g_sig)
+		if (get_signal_status())
 		{
-			g_sig = 0;
+			set_signal_status(0);
 			free(line);
 			rl_replace_line("", 0);
 			rl_on_new_line();
 			shell.last_exit = 130;
-			change_exit(*(shell.envp), shell.last_exit);
+			// change_exit(*(shell.envp), shell.last_exit);
 			continue ;
 		}
 		if (!line)
@@ -81,17 +80,17 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_list				*envl;
 	t_shell				shell;
-	char				*status;
+	// char				*status;
 	
 	(void)argc;
 	(void)argv;
 	set_signals(START);
-	status = malloc(sizeof(char) * 15);
-	if (!status)
-		return (EXIT_FAILURE);
+	// status = malloc(sizeof(char) * 15);
+	// if (!status)
+	// 	return (EXIT_FAILURE);
 	envl = lst_from_char(envp);
-	ft_memmove(status, "?=0", 4);
-	ft_lstadd_front(&envl, ft_lstnew(status));
+	// ft_memmove(status, "?=0", 4);
+	// ft_lstadd_front(&envl, ft_lstnew(status));
 	shell.envp = &envl;
 	shell.interactive = isatty(STDIN_FILENO);
 	shell.last_exit = 0;

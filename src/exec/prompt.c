@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/01 18:09:05 by danz              #+#    #+#             */
-/*   Updated: 2026/03/28 09:32:21 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/28 11:41:40 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 #define CRESET "\e[0m"
 #define PROMPT_SIZE 37
 
-extern volatile sig_atomic_t	g_sig;
 
 char	*display_prompt(t_shell *shell)
 {
@@ -36,7 +35,7 @@ char	*display_prompt(t_shell *shell)
 		rl_clear_history();
 		exit(shell->last_exit);
 	}
-	if (shell->interactive && !g_sig && !append_to_history(line))
+	if (shell->interactive && !get_signal_status() && !append_to_history(line))
 		return (NULL);
 	return (line);
 }

@@ -6,13 +6,11 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/03/28 10:03:35 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/28 12:10:59 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-extern volatile sig_atomic_t	g_sig;
 
 int	is_dir(char *path)
 {
@@ -55,7 +53,7 @@ int	run_command(char *route, t_command *cmd, t_list **envp, char **real_envp)
 {
 	t_pair	pair;
 
-	pair.cont = try_builtin(cmd, envp, &pair.status, 2);
+	pair.cont = try_builtin(cmd, envp, &pair.status, MULTIPLE);
 	if (pair.cont >= 0)
 	{
 		ft_lstclear(envp, free);
@@ -81,7 +79,7 @@ void	handle_child(t_process *data, t_list **envp, int total)
 	route = try_access(data->cmd, (*envp)->next);
 	if (!route)
 		failure_handling(envp, data->cmd, NULL, 2);
-	real_envp = t_list_to_char((*envp)->next);
+	real_envp = t_list_to_char(*envp);
 	if (run_command(route, data->cmd, envp, real_envp) == -1)
 	{
 		free_strs(real_envp);
@@ -139,7 +137,7 @@ void	change_exit(t_list *envp, int exit_status)
 	ft_memmove((void *)((char *)envp->content + 2), (void *)last_exit, i);
 }
 
-int	wait_for_children(t_process *data, t_list *envp)
+int	wait_for_children(t_process *data)
 {
 	int	i;
 	int	status;
@@ -156,13 +154,30 @@ int	wait_for_children(t_process *data, t_list *envp)
 		last_exit = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
 		last_exit = 128 + WTERMSIG(status);
-	change_exit(envp, last_exit);
+	//change_exit(envp, last_exit);
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGQUIT)
 		write(1, "Quit\n", 5);
 	else if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 		write(1, "\n", 1);
 	set_signals(SHELL);
 	return (last_exit);
+}
+
+int	errors_detected(t_process data)
+{
+	if (!data.pipes)
+	{
+		if (data.ids)
+			free(data.ids);
+		return (-1);
+	}
+	if (!data.ids)
+	{
+		if (data.pipes)
+			free(data.pipes);
+		return (-2);
+	}
+	return (1);
 }
 
 int	exec_command(t_command *cmd, t_list **envp)
@@ -173,27 +188,23 @@ int	exec_command(t_command *cmd, t_list **envp)
 	pair.cont = heredoc_handling(cmd, *envp);
 	if (!pair.cont)
 		return (130);
-	pair.cont = try_builtin(cmd, envp, &pair.status, 1);
+	pair.cont = try_builtin(cmd, envp, &pair.status, SINGLE);
 	if (pair.cont >= 0)
 		return (pair.status);
 	data = (t_process){0};
 	data.cmd = cmd;
 	data.process = t_command_size(cmd);
 	data.pipes = create_pipes(data.process - 1);
-	if (!data.pipes)
-		return (-1); //handle with perror
 	data.ids = malloc(sizeof(pid_t) * data.process);
-	if (!data.ids)
-	{
-		free_pipes(data.pipes, data.process - 1);
-		return (-2);
-	} //handle with perror and free pipes
+	pair.status = errors_detected(data);
+	if (pair.status < 0)
+		return (pair.status); //handle with perror and free pipes
 	if (!forking(envp, &data, data.process))
 	{
 		set_signals(SHELL);
 		return (-3);
 	}
-	return (wait_for_children(&data, *envp));
+	return (wait_for_children(&data));
 }
 
 int	append_to_history(char *line)

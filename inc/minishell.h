@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/03/28 09:56:42 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/28 11:53:43 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,12 @@ typedef enum e_mode
 	IGNORE
 }		t_mode;
 
+typedef enum e_commands
+{
+	SINGLE, 
+	MULTIPLE
+}		t_commands;
+
 typedef enum e_builtins
 {
 	ECHO_BI = 1,
@@ -122,6 +128,8 @@ typedef	struct s_shell
 	int		interactive;
 }		t_shell;
 
+void		set_signal_status(int sig);
+int			get_signal_status(void);
 void		free_pipes(int **pipes, int total);
 char		*prompt(int last_exit);
 t_command	*get_cmd(char *line, t_list *envp);

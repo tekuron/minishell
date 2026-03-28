@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 15:35:13 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/28 10:05:35 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/28 11:36:08 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	try_builtin(t_command *cmd, t_list **envp, int *status, int phase)
 	int	exit_status;
 
 	builtin = 0;
-	if (!cmd->next || phase == 2)
+	if (!cmd->next || phase == MULTIPLE)
 	{
 		builtin = is_builtin(cmd);
 		if (builtin && builtin != -1)
@@ -73,7 +73,7 @@ int	try_builtin(t_command *cmd, t_list **envp, int *status, int phase)
 				free_cmd(NULL, cmd, STOP, "minishell");
 			}
 			exit_status = execute_builtin(cmd, envp, builtin);
-			change_exit(*envp, exit_status);
+			//change_exit(*envp, exit_status);
 			*status = exit_status;
 			return (builtin);
 		}

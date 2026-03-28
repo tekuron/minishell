@@ -6,13 +6,11 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 22:46:29 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/01 17:56:42 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/28 11:41:12 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-extern volatile sig_atomic_t	g_sig;
 
 void	write_line(char *content, int pipe_fd, int expands, t_list *envp)
 {
@@ -74,10 +72,10 @@ int	prepare_heredoc(int	pipes[2], t_io *redir, t_list *envp)
 	set_signals(HEREDOC);
 	pipe(pipes);
 	redir->heredoc_fd = pipes[0];
-	while (!g_sig && write_to_pipe(pipes, redir, line++, envp));
-	if (g_sig)
+	while (!get_signal_status() && write_to_pipe(pipes, redir, line++, envp));
+	if (get_signal_status())
 	{
-		g_sig = 0;
+		set_signal_status(0);
 		close(pipes[1]);
 		set_signals(SHELL);
 		return (0);
