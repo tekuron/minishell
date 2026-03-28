@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 13:30:40 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/28 19:36:16 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/28 20:37:09 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ t_list *find_node(char *target, t_list *envp)
 	length = ft_strlen(target);
 	while (envp)
 	{
-		if (envp->content 
+			if (envp->content 
 			&& ft_strncmp(target, (char *)envp->content, length) == 0
 			&& ((char *)envp->content)[length] == '=')
 			return (envp);
@@ -35,8 +35,8 @@ void	change_pwds(t_list *envp, char *oldpwd_ch)
 	t_list *newpwd;
 	char	*curr_dir;
 	
-	oldpwd = find_node("OLDPWD=", envp);
-	newpwd = find_node("PWD=", envp);
+	oldpwd = find_node("OLDPWD", envp);
+	newpwd = find_node("PWD", envp);
 	if (oldpwd)
 	{
 		free(oldpwd->content);
@@ -74,7 +74,8 @@ int	cd_builtin(t_command *cmd, t_shell *shell)
 
 	if (arr_len(cmd->command) > 2)
 		return ((void)write(1, "minishell: cd: too many arguments\n", 35), 1);
-	if (arr_len(cmd->command) == 1)
+	if (arr_len(cmd->command) == 1 || (arr_len(cmd->command) == 2 
+		&& !ft_strncmp((char *)cmd->command[1], "~", 2)))
 		addr = ft_getenv("$HOME", shell);
 	else
 	{
@@ -82,8 +83,7 @@ int	cd_builtin(t_command *cmd, t_shell *shell)
 		if (strncmp("-", addr, 2) == 0)
 		{
 			addr = ft_getenv("$OLDPWD", shell);
-			if (addr)
-				printf("%s\n", addr);
+			(void) (addr && write(1, addr, ft_strlen(addr)) && write(1, "\n", 1));
 		}
 	}
 	current_dir = getcwd(NULL, 0);

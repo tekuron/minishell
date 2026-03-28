@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 13:31:26 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/28 20:02:49 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/28 20:25:07 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ static int	validate_args(t_command *cmd)
 			return (0);
 		if (ft_strchr(cmd->command[i], '='))
 			return (0);
+		i++;
 	}
 	return (1);
 }
