@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/28 13:33:10 by danz              #+#    #+#             */
-/*   Updated: 2026/03/28 19:35:42 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/28 20:03:43 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,8 +116,9 @@ int	export_builtin(t_command *cmd, t_list **envp)
 	{
 		if (!env_is_valid(*envs))
 		{
-			ft_printf("minishell: export: `%s': not a valid identifier\n",
-				*envs);
+			write(2, "minishell: export: `", 20);
+			write(2, *envs, envlen(*envs));
+			write(2, "': not a valid identifier\n", 26);
 			ret = 1;
 		}
 		else if (env_exp(envp, env_find(*envp, *envs), *envs))
