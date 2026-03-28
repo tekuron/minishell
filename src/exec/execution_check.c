@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 15:35:13 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/28 12:57:49 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/28 13:20:49 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ char	*try_access(t_command *cmd, t_shell *shell)
 	if (!cmd->command || !*cmd->command || is_dir(cmd->command[0]) == 1)
 		return (NULL);
 	if (access(cmd->command[0], X_OK) == 0)
-		return (cmd->command[0]);
+		return (ft_strdup(cmd->command[0]));
 	paths = get_paths(shell);
 	while (paths && paths[i])
 	{
