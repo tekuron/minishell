@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/03/23 18:19:47 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/28 10:09:06 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	parse_and_exec(char *line, t_shell *shell)
 		free_cmd(line, NULL, CONT, NULL);
 		return ;
 	}
-	cmd = get_cmd(line, shell->envp);
+	cmd = get_cmd(line, *(shell->envp));
 	if (!cmd)
 		free_cmd(line, NULL, STOP, "malloc");
 	// debug(cmd);
@@ -67,7 +67,7 @@ int	loop(t_shell shell)
 			rl_replace_line("", 0);
 			rl_on_new_line();
 			shell.last_exit = 130;
-			change_exit(shell.envp, shell.last_exit);
+			change_exit(*(shell.envp), shell.last_exit);
 			continue ;
 		}
 		if (!line)
@@ -92,7 +92,7 @@ int	main(int argc, char **argv, char **envp)
 	envl = lst_from_char(envp);
 	ft_memmove(status, "?=0", 4);
 	ft_lstadd_front(&envl, ft_lstnew(status));
-	shell.envp = envl;
+	shell.envp = &envl;
 	shell.interactive = isatty(STDIN_FILENO);
 	shell.last_exit = 0;
 	loop(shell);

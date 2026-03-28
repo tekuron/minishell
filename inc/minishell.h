@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/03/23 18:19:00 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/28 09:56:42 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ typedef	struct s_process
 
 typedef	struct s_shell
 {
-	t_list	*envp;
+	t_list	**envp;
 	int		last_exit;
 	int		interactive;
 }		t_shell;
@@ -144,11 +144,11 @@ int			piping(int **pipes, int total, int id);
 int			redirecting(t_command *cmd);
 void		s_int_handler_heredoc(int sig);
 char		*try_access(t_command *cmd, t_list *envp);
-int			try_builtin(t_command *cmd, t_list *envp, int *status);
+int			try_builtin(t_command *cmd, t_list **envp, int *status, int phase);
 int			**create_pipes(int total);
 int			heredoc_handling(t_command *cmd, t_list *envp);
 char		**t_list_to_char(t_list *envp);
-int			exec_command(t_command *cmd, t_list *envp);
+int			exec_command(t_command *cmd, t_list **envp);
 int			t_command_size(t_command *cmd);
 void		*ft_realloc(void *ptr, size_t size, size_t new_size);
 void		change_exit(t_list *envp, int exit_status);

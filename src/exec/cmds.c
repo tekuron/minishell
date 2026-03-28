@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/03/23 18:18:13 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/28 10:03:35 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	is_dir(char *path)
 	return ((sb.st_mode & S_IFMT) == S_IFDIR);
 }
 
-void	failure_handling(t_list *envp, t_command *cmd, char *route, int phase)
+void	failure_handling(t_list **envp, t_command *cmd, char *route, int phase)
 {
 	int	eof_case;
 
@@ -39,7 +39,7 @@ void	failure_handling(t_list *envp, t_command *cmd, char *route, int phase)
 			printf("minishell: %s: command not found...\n", cmd->command[0]);
 	}
 	free_cmd(route, cmd, CONT, NULL);
-	ft_lstclear(&envp, free);
+	ft_lstclear(envp, free);
 	if (phase == 1)
 	{
 		if (eof_case)
@@ -51,7 +51,22 @@ void	failure_handling(t_list *envp, t_command *cmd, char *route, int phase)
 		exit(127);
 }
 
-void	handle_child(t_process *data, t_list *envp, int total)
+int	run_command(char *route, t_command *cmd, t_list **envp, char **real_envp)
+{
+	t_pair	pair;
+
+	pair.cont = try_builtin(cmd, envp, &pair.status, 2);
+	if (pair.cont >= 0)
+	{
+		ft_lstclear(envp, free);
+		free_cmd(route, cmd, CONT, NULL);
+		free_strs(real_envp);
+		exit(pair.status);
+	}
+	return (execve(route, cmd->command, real_envp));
+}
+
+void	handle_child(t_process *data, t_list **envp, int total)
 {
 	char	*route;
 	char	**real_envp;
@@ -63,19 +78,18 @@ void	handle_child(t_process *data, t_list *envp, int total)
 		failure_handling(envp, data->cmd, NULL, 1);
 	}
 	free_pipes(data->pipes, total - 1);
-	route = try_access(data->cmd, envp->next);
+	route = try_access(data->cmd, (*envp)->next);
 	if (!route)
-
 		failure_handling(envp, data->cmd, NULL, 2);
-	real_envp = t_list_to_char(envp->next);
-	if (execve(route, data->cmd->command, real_envp) == -1)
+	real_envp = t_list_to_char((*envp)->next);
+	if (run_command(route, data->cmd, envp, real_envp) == -1)
 	{
 		free_strs(real_envp);
 		failure_handling(envp, data->cmd, route, 3);
 	}
 }
 
-int	forking(t_list *envp, t_process *data, int total)
+int	forking(t_list **envp, t_process *data, int total)
 {
 	int	i;
 
@@ -151,15 +165,15 @@ int	wait_for_children(t_process *data, t_list *envp)
 	return (last_exit);
 }
 
-int	exec_command(t_command *cmd, t_list *envp)
+int	exec_command(t_command *cmd, t_list **envp)
 {
 	t_process	data;
 	t_pair		pair;
 	
-	pair.cont = heredoc_handling(cmd, envp);
+	pair.cont = heredoc_handling(cmd, *envp);
 	if (!pair.cont)
 		return (130);
-	pair.cont = try_builtin(cmd, envp, &pair.status);
+	pair.cont = try_builtin(cmd, envp, &pair.status, 1);
 	if (pair.cont >= 0)
 		return (pair.status);
 	data = (t_process){0};
@@ -179,7 +193,7 @@ int	exec_command(t_command *cmd, t_list *envp)
 		set_signals(SHELL);
 		return (-3);
 	}
-	return (wait_for_children(&data, envp));
+	return (wait_for_children(&data, *envp));
 }
 
 int	append_to_history(char *line)
