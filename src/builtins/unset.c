@@ -6,7 +6,11 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 13:31:26 by dplazas-          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2026/03/28 13:37:51 by danz             ###   ########.fr       */
+=======
+/*   Updated: 2026/03/28 13:24:17 by dplazas-         ###   ########.fr       */
+>>>>>>> 453142e (unset correction and getenv 0 modified)
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +24,11 @@ static int	validate_args(t_command *cmd)
 		return (0);
 	if (ft_strchr(cmd->command[0], '='))
 		return (0);
+<<<<<<< HEAD
 	return 1;
+=======
+	return (1);
+>>>>>>> 453142e (unset correction and getenv 0 modified)
 }
 
 static void	remove_from_env(t_list **envp, char *str)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp1.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 11:39:33 by danz              #+#    #+#             */
-/*   Updated: 2026/03/28 13:09:21 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/28 15:00:27 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 char	*ft_getenv(char *var, t_shell *shell)
 {
 	size_t	len;
-	t_list *envp;
+	t_list	*envp;
 
 	len = 0;
 	envp = *shell->envp;
@@ -23,7 +23,8 @@ char	*ft_getenv(char *var, t_shell *shell)
 		var++;
 	if (!(*var))
 		return (NULL);
-	if (!ft_strncmp(var, "$?", 3))
+	if (!ft_strncmp(var, "$?", 3)
+		|| (!ft_strncmp(var, "$?", 2) && ft_isspace(*(var + 2))))
 		return (shell->exit_env);
 	var++;
 	while (ft_isalnum(var[len]) || var[len] == '_')

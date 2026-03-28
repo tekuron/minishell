@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/03/28 13:15:49 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/28 15:03:47 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,8 @@ int	main(int argc, char **argv, char **envp)
 	shell.envp = &envl;
 	shell.interactive = isatty(STDIN_FILENO);
 	shell.last_exit = 0;
+	shell.exit_env[0] = '0';
+	shell.exit_env[1] = '\0';
 	loop(shell);
 	ft_lstclear(&envl, free);
 	return (0);
