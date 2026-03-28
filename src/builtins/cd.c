@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 13:30:40 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/23 19:12:00 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/28 13:02:04 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	change_pwds(t_list *envp, char *oldpwd_ch)
 	return ((void) free(oldpwd_ch), (void) free(curr_dir));
 }
 
-int	cd_builtin(t_command *cmd, t_list *envp)
+int	cd_builtin(t_command *cmd, t_shell *shell)
 {
 	char	*addr;
 	char	*current_dir;
@@ -64,20 +64,20 @@ int	cd_builtin(t_command *cmd, t_list *envp)
 	if (arr_len(cmd->command) > 2)
 		return ((void)write(1, "minishell: cd: too many arguments\n", 35), 1);
 	if (arr_len(cmd->command) == 1)
-		addr = ft_getenv("$HOME", envp);
+		addr = ft_getenv("$HOME", shell);
 	else
 	{
 		addr = cmd->command[1];
 		if (strncmp("-", addr, 2) == 0)
 		{
-			addr = ft_getenv("$OLDPWD", envp);
+			addr = ft_getenv("$OLDPWD", shell);
 			printf("%s\n", addr);
 		}
 	}
 	current_dir = getcwd(NULL, 0);
 	if (addr && chdir(addr) == 0)
 	{
-		change_pwds(envp, current_dir);
+		change_pwds(*shell->envp, current_dir);
 		return (0);
 	}
 	perror("minishell: cd");

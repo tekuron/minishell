@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/03/28 12:10:59 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/28 13:01:29 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	run_command(char *route, t_command *cmd, t_list **envp, char **real_envp)
 	return (execve(route, cmd->command, real_envp));
 }
 
-void	handle_child(t_process *data, t_list **envp, int total)
+void	handle_child(t_process *data, t_shell *shell, int total)
 {
 	char	*route;
 	char	**real_envp;
@@ -73,21 +73,21 @@ void	handle_child(t_process *data, t_list **envp, int total)
 		|| !data->cmd->command || !*data->cmd->command)
 	{
 		free_pipes(data->pipes, total - 1);
-		failure_handling(envp, data->cmd, NULL, 1);
+		failure_handling(shell->envp, data->cmd, NULL, 1);
 	}
 	free_pipes(data->pipes, total - 1);
-	route = try_access(data->cmd, (*envp)->next);
+	route = try_access(data->cmd, shell);
 	if (!route)
-		failure_handling(envp, data->cmd, NULL, 2);
-	real_envp = t_list_to_char(*envp);
-	if (run_command(route, data->cmd, envp, real_envp) == -1)
+		failure_handling(shell->envp, data->cmd, NULL, 2);
+	real_envp = t_list_to_char(*shell->envp);
+	if (run_command(route, data->cmd, shell->envp, real_envp) == -1)
 	{
 		free_strs(real_envp);
-		failure_handling(envp, data->cmd, route, 3);
+		failure_handling(shell->envp, data->cmd, route, 3);
 	}
 }
 
-int	forking(t_list **envp, t_process *data, int total)
+int	forking(t_shell *shell, t_process *data, int total)
 {
 	int	i;
 
@@ -103,7 +103,7 @@ int	forking(t_list **envp, t_process *data, int total)
 		{
 			free(data->ids);
 			set_signals(EXECUTION);
-			handle_child(data, envp, total);
+			handle_child(data, shell, total);
 		}
 		data->cmd = data->cmd->next;
 		i++;
@@ -180,15 +180,15 @@ int	errors_detected(t_process data)
 	return (1);
 }
 
-int	exec_command(t_command *cmd, t_list **envp)
+int	exec_command(t_command *cmd, t_shell *shell)
 {
 	t_process	data;
 	t_pair		pair;
 	
-	pair.cont = heredoc_handling(cmd, *envp);
+	pair.cont = heredoc_handling(cmd, shell);
 	if (!pair.cont)
 		return (130);
-	pair.cont = try_builtin(cmd, envp, &pair.status, SINGLE);
+	pair.cont = try_builtin(cmd, shell->envp, &pair.status, SINGLE);
 	if (pair.cont >= 0)
 		return (pair.status);
 	data = (t_process){0};
@@ -199,7 +199,7 @@ int	exec_command(t_command *cmd, t_list **envp)
 	pair.status = errors_detected(data);
 	if (pair.status < 0)
 		return (pair.status); //handle with perror and free pipes
-	if (!forking(envp, &data, data.process))
+	if (!forking(shell, &data, data.process))
 	{
 		set_signals(SHELL);
 		return (-3);

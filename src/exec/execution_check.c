@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_check.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 15:35:13 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/28 11:36:08 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/28 12:57:49 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,11 +81,11 @@ int	try_builtin(t_command *cmd, t_list **envp, int *status, int phase)
 	return (-1);
 }
 
-char	**get_paths(t_list *envp)
+char	**get_paths(t_shell *shell)
 {
 	char	*path_env;
 	char	**paths;
-	path_env = ft_getenv("$PATH", envp);
+	path_env = ft_getenv("$PATH", shell);
 	if (!path_env)
 		return (NULL);
 	paths = ft_split(path_env, ':');
@@ -94,7 +94,7 @@ char	**get_paths(t_list *envp)
 	return (paths);
 }
 
-char	*try_access(t_command *cmd, t_list *envp)
+char	*try_access(t_command *cmd, t_shell *shell)
 {
 	char	*path;
 	char	*partial_path;
@@ -106,7 +106,7 @@ char	*try_access(t_command *cmd, t_list *envp)
 		return (NULL);
 	if (access(cmd->command[0], X_OK) == 0)
 		return (cmd->command[0]);
-	paths = get_paths(envp);
+	paths = get_paths(shell);
 	while (paths && paths[i])
 	{
 		partial_path = ft_strjoin(paths[i], "/");

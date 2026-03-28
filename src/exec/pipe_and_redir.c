@@ -6,13 +6,13 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 22:46:29 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/28 12:55:01 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/28 12:56:58 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	write_line(char *content, int pipe_fd, int expands, t_list *envp)
+void	write_line(char *content, int pipe_fd, int expands, t_shell *shell)
 {
 	int	i;
 	char	*expansion;
@@ -28,7 +28,7 @@ void	write_line(char *content, int pipe_fd, int expands, t_list *envp)
 				write(pipe_fd, &content[i++], 1);
 			if (content[i] == '$')
 			{
-				expansion = ft_getenv(content + i, envp);
+				expansion = ft_getenv(content + i, shell);
 				if (expansion)
 					write(pipe_fd, expansion, ft_strlen(expansion));
 			}
@@ -40,7 +40,7 @@ void	write_line(char *content, int pipe_fd, int expands, t_list *envp)
 	write(pipe_fd, "\n", 1);
 }
 
-int	write_to_pipe(int pipes[2], t_io *redir, int lines_num, t_list *envp)
+int	write_to_pipe(int pipes[2], t_io *redir, int lines_num, t_shell *shell)
 {
 	char	*line;
 	int		length;
@@ -58,13 +58,13 @@ int	write_to_pipe(int pipes[2], t_io *redir, int lines_num, t_list *envp)
 		free(line);
 		return (0);
 	}
-	write_line(line, pipes[1], !redir->has_qts, envp);
+	write_line(line, pipes[1], !redir->has_qts, shell);
 	free(line);
 	return (1);
 }
 
 
-int	prepare_heredoc(int	pipes[2], t_io *redir, t_list *envp)
+int	prepare_heredoc(int	pipes[2], t_io *redir, t_shell *shell)
 {
 	int	line;
 
@@ -72,7 +72,7 @@ int	prepare_heredoc(int	pipes[2], t_io *redir, t_list *envp)
 	set_signals(HEREDOC);
 	pipe(pipes);
 	redir->heredoc_fd = pipes[0];
-	while (!get_signal_status() && write_to_pipe(pipes, redir, line++, envp));
+	while (!get_signal_status() && write_to_pipe(pipes, redir, line++, shell));
 	if (get_signal_status())
 	{
 		set_signal_status(0);
@@ -85,7 +85,7 @@ int	prepare_heredoc(int	pipes[2], t_io *redir, t_list *envp)
 	return (1);
 }
 
-int	heredoc_handling(t_command *cmd, t_list *envp)
+int	heredoc_handling(t_command *cmd, t_shell *shell)
 {
 	int		pipes[2];
 	t_io	*redir;
@@ -103,7 +103,7 @@ int	heredoc_handling(t_command *cmd, t_list *envp)
 		{
 			if (redir->rd == REDIR_HEREDOC)
 			{
-				if (!prepare_heredoc(pipes, redir, envp))
+				if (!prepare_heredoc(pipes, redir, shell))
 					return (0);
 			}
 			redir = redir->next;

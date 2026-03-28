@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/03/28 12:53:57 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/28 13:15:49 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,12 @@ void	debug(t_command *cmd)
 void	parse_and_exec(char *line, t_shell *shell)
 {
 	t_command	*cmd;
+	char *exit_env;
 	
 	if (check_cmd(line))
 	{
 		shell->last_exit = 2;
+		ft_strlcpy(shell->exit_env, "2", 2);
 		free_cmd(line, NULL, CONT, NULL);
 		return ;
 	}
@@ -47,7 +49,10 @@ void	parse_and_exec(char *line, t_shell *shell)
 	if (!cmd)
 		free_cmd(line, NULL, STOP, "malloc");
 	// debug(cmd);
-	shell->last_exit = exec_command(cmd, shell->envp);
+	shell->last_exit = exec_command(cmd, shell);
+	exit_env = ft_itoa(shell->last_exit);
+	ft_strlcpy(shell->exit_env, exit_env, 10);
+	free(exit_env);
 	//printf("Exit: %i\n", shell->last_exit);
 	free_cmd(line, cmd, CONT, NULL);
 }

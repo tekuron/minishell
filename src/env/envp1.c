@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 11:39:33 by danz              #+#    #+#             */
-/*   Updated: 2026/03/28 12:51:58 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/28 13:09:21 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*ft_getenv(char *var, t_shell *shell)
 	if (!(*var))
 		return (NULL);
 	if (!ft_strncmp(var, "$?", 3))
-		
+		return (shell->exit_env);
 	var++;
 	while (ft_isalnum(var[len]) || var[len] == '_')
 		len++;
