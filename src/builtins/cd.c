@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 13:30:40 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/28 13:02:04 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/28 19:36:16 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ t_list *find_node(char *target, t_list *envp)
 	while (envp)
 	{
 		if (envp->content 
-			&& ft_strncmp(target, (char *)envp->content, length) == 0)
+			&& ft_strncmp(target, (char *)envp->content, length) == 0
+			&& ((char *)envp->content)[length] == '=')
 			return (envp);
 		envp = envp->next;
 	}
@@ -56,6 +57,16 @@ void	change_pwds(t_list *envp, char *oldpwd_ch)
 	return ((void) free(oldpwd_ch), (void) free(curr_dir));
 }
 
+void	error_msgs(int args, char *addr)
+{
+	if (addr)
+		perror("minishell: cd");
+	else if (args == 1)
+		write(1, "minishell: cd: HOME not set\n", 29);
+	else
+		write(1, "minishell: cd: OLDPWD not set\n", 31);
+}
+
 int	cd_builtin(t_command *cmd, t_shell *shell)
 {
 	char	*addr;
@@ -71,7 +82,8 @@ int	cd_builtin(t_command *cmd, t_shell *shell)
 		if (strncmp("-", addr, 2) == 0)
 		{
 			addr = ft_getenv("$OLDPWD", shell);
-			printf("%s\n", addr);
+			if (addr)
+				printf("%s\n", addr);
 		}
 	}
 	current_dir = getcwd(NULL, 0);
@@ -80,6 +92,6 @@ int	cd_builtin(t_command *cmd, t_shell *shell)
 		change_pwds(*shell->envp, current_dir);
 		return (0);
 	}
-	perror("minishell: cd");
+	error_msgs(arr_len(cmd->command), addr);
 	return (1);
 }

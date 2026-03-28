@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/03/28 14:57:04 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/28 19:03:42 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,7 @@ int			piping(int **pipes, int total, int id);
 int			redirecting(t_command *cmd);
 void		s_int_handler_heredoc(int sig);
 char		*try_access(t_command *cmd, t_shell *shell);
-int			try_builtin(t_command *cmd, t_list **envp, int *status, int phase);
+int			try_builtin(t_command *cmd, t_shell *shell, int *status, int phase);
 int			**create_pipes(int total);
 int			heredoc_handling(t_command *cmd, t_shell *shell);
 char		**t_list_to_char(t_list *envp);

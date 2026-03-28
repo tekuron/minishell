@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/03/28 13:21:42 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/28 19:26:05 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	failure_handling(t_list **envp, t_command *cmd, char *route, int phase)
 			|| !ft_strncmp(cmd->command[0], "..", 3))
 			printf("Permision denied: %s\n", cmd->command[0]);
 		else
+			//perror(cmd->command[0]);
 			printf("minishell: %s: command not found...\n", cmd->command[0]);
 	}
 	free_cmd(route, cmd, CONT, NULL);
@@ -49,14 +50,14 @@ void	failure_handling(t_list **envp, t_command *cmd, char *route, int phase)
 		exit(127);
 }
 
-int	run_command(char *route, t_command *cmd, t_list **envp, char **real_envp)
+int	run_command(char *route, t_command *cmd, t_shell *shell, char **real_envp)
 {
 	t_pair	pair;
 
-	pair.cont = try_builtin(cmd, envp, &pair.status, MULTIPLE);
+	pair.cont = try_builtin(cmd, shell, &pair.status, MULTIPLE);
 	if (pair.cont >= 0)
 	{
-		ft_lstclear(envp, free);
+		ft_lstclear(shell->envp, free);
 		free_cmd(route, cmd, CONT, NULL);
 		free_strs(real_envp);
 		exit(pair.status);
@@ -80,7 +81,7 @@ void	handle_child(t_process *data, t_shell *shell, int total)
 	if (!route)
 		failure_handling(shell->envp, data->cmd, NULL, 2);
 	real_envp = t_list_to_char(*shell->envp);
-	if (run_command(route, data->cmd, shell->envp, real_envp) == -1)
+	if (run_command(route, data->cmd, shell, real_envp) == -1)
 	{
 		free_strs(real_envp);
 		failure_handling(shell->envp, data->cmd, route, 3);
@@ -188,7 +189,7 @@ int	exec_command(t_command *cmd, t_shell *shell)
 	pair.cont = heredoc_handling(cmd, shell);
 	if (!pair.cont)
 		return (130);
-	pair.cont = try_builtin(cmd, shell->envp, &pair.status, SINGLE);
+	pair.cont = try_builtin(cmd, shell, &pair.status, SINGLE);
 	if (pair.cont >= 0)
 		return (pair.status);
 	data = (t_process){0};

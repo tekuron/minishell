@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 15:35:13 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/28 19:47:42 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/28 20:18:10 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,29 +34,28 @@ int	is_builtin(t_command *cmd)
 	return (0);
 }
 
-int	execute_builtin(t_command *cmd, t_list **envp, int builtin)
+int	execute_builtin(t_command *cmd, t_shell *shell, int builtin)
 {
 	(void) cmd;
-	(void) envp;
 	(void) builtin;
 	if (builtin == ECHO_BI)
-		return (echo_builtin(cmd, *envp));
-	else if (builtin == CD_BI)
-		return(cd_builtin(cmd, *envp));
+		return (echo_builtin(cmd));
+	if (builtin == CD_BI)
+		return(cd_builtin(cmd, shell));
 	else if (builtin == EXPORT_BI)
-		return (export_builtin(cmd, envp));
+		return (export_builtin(cmd, shell->envp));
 	else if (builtin == UNSET_BI)
-		return (unset_builtin(cmd, envp));
+		return (unset_builtin(cmd, shell->envp));
 	else if (builtin == EXIT_BI)
-		return (exit_builtin(cmd, envp));
+		return (exit_builtin(cmd, shell->envp));
 	else if (builtin == ENV_BI)
-		return (env_builtin(cmd, *envp));
+		return (env_builtin(cmd, *shell->envp));
 	else if (builtin == PWD_BI)
-		return (pwd_builtin(cmd, *envp));
+		return (pwd_builtin(cmd, *shell->envp));
 	return (1);
 }
 
-int	try_builtin(t_command *cmd, t_list **envp, int *status, int phase)
+int	try_builtin(t_command *cmd, t_shell *shell, int *status, int phase)
 {
 	int	builtin;
 	int	exit_status;
@@ -69,11 +68,10 @@ int	try_builtin(t_command *cmd, t_list **envp, int *status, int phase)
 		{
 			if (!redirecting(cmd))
 			{
-				ft_lstclear(envp, free);
+				ft_lstclear(shell->envp, free);
 				free_cmd(NULL, cmd, STOP, "minishell");
 			}
-			exit_status = execute_builtin(cmd, envp, builtin);
-			//change_exit(*envp, exit_status);
+			exit_status = execute_builtin(cmd, shell, builtin);
 			*status = exit_status;
 			return (builtin);
 		}
