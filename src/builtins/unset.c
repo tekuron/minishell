@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 13:31:26 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/28 20:25:07 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/29 13:20:15 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static int	validate_args(t_command *cmd)
 	return (1);
 }
 
-static void	remove_from_env(t_list **envp, char *str)
+void	remove_from_env(t_list **envp, char *str)
 {
 	t_list	*prev;
 	t_list	*curr;

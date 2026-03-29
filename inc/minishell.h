@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/03/29 12:16:38 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/29 13:20:30 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,6 @@ char		**t_list_to_char(t_list *envp);
 int			exec_command(t_command *cmd, t_shell *shell);
 int			t_command_size(t_command *cmd);
 void		*ft_realloc(void *ptr, size_t size, size_t new_size);
-void		change_exit(t_list *envp, int exit_status);
 char		*display_prompt(t_shell *shell);
 void		set_signals(int	mode);
 void		ft_swap(char *str, int length);
@@ -169,6 +168,7 @@ int			is_dir(char *path);
 int			arr_len(char **strs);
 int			ft_isspace(char c);
 int			atoll_safe(char *str, long long *res);
+void		remove_from_env(t_list **envp, char *str);
 
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 13:30:40 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/29 11:32:02 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/29 13:41:41 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,31 +29,44 @@ t_list *find_node(char *target, t_list *envp)
 	return (NULL);
 }
 
-void	change_pwds(t_list *envp, char *oldpwd_ch)
+void	replace_content(char *name, t_list *node, t_list **envp, char *dir)
+{
+	char *cont;
+	char *supp;
+	
+	cont = NULL;
+	if (dir)
+	{
+		cont = ft_strjoin(name, "=");
+		if (cont != NULL)
+		{
+			supp = cont;
+			cont = ft_strjoin(supp, dir);
+			free(supp);
+		}
+	}
+	if (!dir || !cont)
+		remove_from_env(envp, name);
+	else
+	{
+		free(node->content);
+		node->content = cont;
+	}
+}
+
+void	change_pwds(t_list **envp, char *oldpwd_ch)
 {
 	t_list *oldpwd;
 	t_list *newpwd;
 	char	*curr_dir;
-	
-	oldpwd = find_node("OLDPWD", envp);
-	newpwd = find_node("PWD", envp);
+
+	oldpwd = find_node("OLDPWD", *envp);
+	newpwd = find_node("PWD", *envp);
 	if (oldpwd)
-	{
-		free(oldpwd->content);
-		if (!oldpwd_ch)
-			oldpwd->content = NULL;
-		else
-			oldpwd->content = ft_strjoin("OLDPWD=", oldpwd_ch);
-	}
+		replace_content("OLDPWD", oldpwd, envp, oldpwd_ch);
 	curr_dir = getcwd(NULL, 0);
 	if (newpwd)
-	{
-		free(newpwd->content);
-		if (!curr_dir)
-			newpwd->content = NULL;
-		else
-			newpwd->content = ft_strjoin("PWD=", curr_dir);
-	}
+		replace_content("PWD", newpwd, envp, curr_dir);
 	return ((void) free(oldpwd_ch), (void) free(curr_dir));
 }
 
@@ -105,7 +118,7 @@ int	cd_builtin(t_command *cmd, t_shell *shell)
 	current_dir = getcwd(NULL, 0);
 	if (chdir(addr) == 0)
 	{
-		change_pwds(*shell->envp, current_dir);
+		change_pwds(shell->envp, current_dir);
 		return (0);
 	}
 	perror("minishell: cd");

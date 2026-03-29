@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/03/29 10:59:16 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/29 12:52:13 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,30 +110,6 @@ int	forking(t_shell *shell, t_process *data, int total)
 	data->process = total;
 	free_pipes(data->pipes, total - 1);
 	return (1);
-}
-
-void	change_exit(t_list *envp, int exit_status)
-{
-	char	last_exit[10];
-	int		i;
-
-	i = 0;
-	if (!envp)
-		return ;
-	if (exit_status == 0)
-	{
-		ft_memmove(envp->content, (void *)"?=0\0", 4);
-		return ;
-	}
-	while (exit_status != 0 && i < 10)
-	{
-		last_exit[i] = exit_status % 10 + '0';
-		exit_status /= 10;
-		i++;
-	}
-	last_exit[i] = '\0';
-	ft_swap(last_exit, i);
-	ft_memmove((void *)((char *)envp->content + 2), (void *)last_exit, i);
 }
 
 int	wait_for_children(t_process *data)
