@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/03/29 10:09:51 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/29 10:59:16 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,9 @@ void	failure_handling(t_list **envp, t_command *cmd, char *route, int phase)
 			|| !ft_strncmp(cmd->command[0], "..", 3))
 			printf("Permision denied: %s\n", cmd->command[0]);
 		else
-			//perror(cmd->command[0]);
-			printf("minishell: %s: command not found...\n", cmd->command[0]);
+			printf("minishell: %s: command not found...\n", cmd->command[0]); //Fix permission issues
 	}
-	free_cmd(route, cmd, CONT, NULL);
+	free_cmd(&route, cmd, CONT, NULL);
 	ft_lstclear(envp, free);
 	if (phase == 1)
 	{
@@ -154,7 +153,6 @@ int	wait_for_children(t_process *data)
 		last_exit = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
 		last_exit = 128 + WTERMSIG(status);
-	//change_exit(envp, last_exit);
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGQUIT)
 		write(1, "Quit\n", 5);
 	else if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
@@ -198,7 +196,7 @@ int	exec_command(t_command *cmd, t_shell *shell)
 	data.ids = malloc(sizeof(pid_t) * data.process);
 	pair.status = errors_detected(data);
 	if (pair.status < 0)
-		return (pair.status); //handle with perror and free pipes
+		return (pair.status); //handle with perror
 	if (!forking(shell, &data, data.process))
 	{
 		set_signals(SHELL);

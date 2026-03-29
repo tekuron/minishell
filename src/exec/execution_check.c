@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_check.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 15:35:13 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/28 20:18:10 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/29 12:32:24 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 int	is_builtin(t_command *cmd)
 {
 	if (!cmd->command || !cmd->command[0])
-		return (-1); //Add check in try_builtin
+		return (-1);
 	if (ft_strncmp(cmd->command[0], "echo", 5) == 0)
 		return (ECHO_BI);
 	else if (ft_strncmp(cmd->command[0], "cd", 3) == 0)
@@ -36,8 +36,6 @@ int	is_builtin(t_command *cmd)
 
 int	execute_builtin(t_command *cmd, t_shell *shell, int builtin)
 {
-	(void) cmd;
-	(void) builtin;
 	if (builtin == ECHO_BI)
 		return (echo_builtin(cmd));
 	if (builtin == CD_BI)
@@ -83,6 +81,7 @@ char	**get_paths(t_shell *shell)
 {
 	char	*path_env;
 	char	**paths;
+	
 	path_env = ft_getenv("$PATH", shell);
 	if (!path_env)
 		return (NULL);

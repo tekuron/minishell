@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 13:31:02 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/28 09:36:43 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/29 12:36:09 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,29 +31,44 @@ int	contains_non_digits(char *str)
 	}
 	return (0);
 }
-// Change fds and overflow
-int	exit_builtin(t_command *cmd, t_list **envp)
-{
-	int args;
-	int status;
 
-	status = EXIT_SUCCESS;
-	args = arr_len(cmd->command);
-	write(1, "exit\n", 5);
+long long	check_arguments(t_command *cmd, int	args)
+{
+	long long	res;
+	int			safe;
+	
+	res = 0;
+	safe = 1;
 	if (args > 2)
 	{
-		printf("minishell: exit: too many arguments\n");
+		write(1, "minishell: exit: too many arguments\n", 37);
 		return (1);
 	}
-	else if (args == 2 && contains_non_digits(cmd->command[1]))
+	if (args == 2)
 	{
-		printf("minishell: exit: %s: numeric argument required\n", cmd->command[1]);
-		status = 255; // Check if it is actually 2 or 255.
+		safe = atoll_safe(cmd->command[1], &res);
+		if (contains_non_digits(cmd->command[1]) || !safe)
+		{
+			printf("minishell: exit: %s: numeric argument required\n", cmd->command[1]);
+			return (2);
+		}
+		else
+			return (res);
 	}
-	else if (args == 2)
-		status = ft_atoi(cmd->command[1]); //Check modulo
+	else
+		return (0);
+}
+
+int	exit_builtin(t_command *cmd, t_list **envp)
+{
+	int			args;
+	long long	exit_status;
+	
+	args = arr_len(cmd->command);
+	write(1, "exit\n", 5);
+	exit_status = check_arguments(cmd, args);
 	free_cmd(NULL, cmd, CONT, NULL);
 	ft_lstclear(envp, free);
-	exit((unsigned char) status);
-	return (status);
+	exit((unsigned char) exit_status);
+	return (exit_status);
 }

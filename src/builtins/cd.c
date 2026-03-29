@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 13:30:40 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/29 10:36:28 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/29 11:32:02 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ t_list *find_node(char *target, t_list *envp)
 			return (envp);
 		envp = envp->next;
 	}
-	return (envp);
+	return (NULL);
 }
 
 void	change_pwds(t_list *envp, char *oldpwd_ch)
@@ -52,7 +52,7 @@ void	change_pwds(t_list *envp, char *oldpwd_ch)
 		if (!curr_dir)
 			newpwd->content = NULL;
 		else
-			newpwd->content = (void *)ft_strjoin("PWD=", curr_dir);
+			newpwd->content = ft_strjoin("PWD=", curr_dir);
 	}
 	return ((void) free(oldpwd_ch), (void) free(curr_dir));
 }
@@ -64,7 +64,7 @@ char 	*obtain_address(t_command *cmd, t_shell *shell, int length)
 	if (length > 2)
 	{
 		write(1, "minishell: cd: too many arguments\n", 35);
-		addr = NULL;
+		return (NULL);
 	}
 	if (length == 1 || (length == 2 && !ft_strncmp(cmd->command[1], "~", 2)))
 		addr = ft_getenv("$HOME", shell);
@@ -96,9 +96,9 @@ int	cd_builtin(t_command *cmd, t_shell *shell)
 	addr = obtain_address(cmd, shell, length);
 	if (!addr)
 	{
-		if (length == 1)
+		if (length == 1 || (length == 2 && !ft_strncmp(cmd->command[1], "~", 2)))
 			write(1, "minishell: cd: HOME not set\n", 29);
-		else
+		else if (length == 2)
 			write(1, "minishell: cd: OLDPWD not set\n", 31);
 		return (1);
 	}

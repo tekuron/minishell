@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 20:14:28 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/01 17:31:41 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/29 10:54:00 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,16 @@ void	free_pipes(int **pipes, int total)
 	free(pipes);
 }
 
-void	free_cmd(char *line, t_command *cmd, int cont, char *err)
+void	free_cmd(char **line, t_command *cmd, int cont, char *err)
 {
 	if (line != NULL)
-		free(line);
+	{
+		if (line && *line)
+		{
+			free(*line);
+			*line = NULL;
+		}
+	}
 	if (cmd != NULL)
 		t_command_free(cmd);
 	if (err && cont == STOP)

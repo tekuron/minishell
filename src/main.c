@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/03/28 21:12:59 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/29 11:06:49 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,18 +42,21 @@ void	parse_and_exec(char *line, t_shell *shell)
 	{
 		shell->last_exit = 2;
 		ft_strlcpy(shell->exit_env, "2", 2);
-		free_cmd(line, NULL, CONT, NULL);
+		free_cmd(&line, NULL, CONT, NULL);
 		return ;
 	}
 	cmd = get_cmd(line, shell);
 	if (!cmd)
-		free_cmd(line, NULL, STOP, "malloc");
-	// debug(cmd);
+		free_cmd(&line, NULL, STOP, "malloc");
+	if (line)
+		free(line);
 	shell->last_exit = exec_command(cmd, shell);
-	exit_env = ft_itoa(shell->last_exit);
+	exit_env = ft_itoa(shell->last_exit); //Check malloc failure
 	ft_strlcpy(shell->exit_env, exit_env, 10);
 	free(exit_env);
-	free_cmd(line, cmd, CONT, NULL);
+	if (shell->last_exit < 0)
+		free_cmd(NULL, cmd, STOP, "minishell");
+	free_cmd(NULL, cmd, CONT, NULL);
 }
 	
 int	loop(t_shell shell)
@@ -70,7 +73,6 @@ int	loop(t_shell shell)
 			rl_replace_line("", 0);
 			rl_on_new_line();
 			shell.last_exit = 130;
-			// change_exit(*(shell.envp), shell.last_exit);
 			continue ;
 		}
 		if (!line)
@@ -84,17 +86,11 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_list				*envl;
 	t_shell				shell;
-	// char				*status;
 	
 	(void)argc;
 	(void)argv;
 	set_signals(START);
-	// status = malloc(sizeof(char) * 15);
-	// if (!status)
-	// 	return (EXIT_FAILURE);
 	envl = lst_from_char(envp);
-	// ft_memmove(status, "?=0", 4);
-	// ft_lstadd_front(&envl, ft_lstnew(status));
 	shell.envp = &envl;
 	shell.interactive = isatty(STDIN_FILENO);
 	shell.last_exit = 0;
