@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 13:30:40 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/28 20:37:09 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/29 10:36:28 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,41 +57,57 @@ void	change_pwds(t_list *envp, char *oldpwd_ch)
 	return ((void) free(oldpwd_ch), (void) free(curr_dir));
 }
 
-void	error_msgs(int args, char *addr)
+char 	*obtain_address(t_command *cmd, t_shell *shell, int length)
 {
-	if (addr)
-		perror("minishell: cd");
-	else if (args == 1)
-		write(1, "minishell: cd: HOME not set\n", 29);
+	char	*addr;
+
+	if (length > 2)
+	{
+		write(1, "minishell: cd: too many arguments\n", 35);
+		addr = NULL;
+	}
+	if (length == 1 || (length == 2 && !ft_strncmp(cmd->command[1], "~", 2)))
+		addr = ft_getenv("$HOME", shell);
 	else
-		write(1, "minishell: cd: OLDPWD not set\n", 31);
+	{
+		addr = cmd->command[1];
+		if (ft_strncmp("-", addr, 2) == 0)
+		{
+			addr = ft_getenv("$OLDPWD", shell);
+			if (addr)
+			{
+				write(1, addr, ft_strlen(addr));
+				write(1, "\n", 1);
+			}
+		}
+	}
+	return (addr);
 }
 
 int	cd_builtin(t_command *cmd, t_shell *shell)
 {
 	char	*addr;
 	char	*current_dir;
+	int		length;
 
-	if (arr_len(cmd->command) > 2)
-		return ((void)write(1, "minishell: cd: too many arguments\n", 35), 1);
-	if (arr_len(cmd->command) == 1 || (arr_len(cmd->command) == 2 
-		&& !ft_strncmp((char *)cmd->command[1], "~", 2)))
-		addr = ft_getenv("$HOME", shell);
-	else
+	length = arr_len(cmd->command);
+	if (length == 2 && !*cmd->command[1])
+		return (0);
+	addr = obtain_address(cmd, shell, length);
+	if (!addr)
 	{
-		addr = cmd->command[1];
-		if (strncmp("-", addr, 2) == 0)
-		{
-			addr = ft_getenv("$OLDPWD", shell);
-			(void) (addr && write(1, addr, ft_strlen(addr)) && write(1, "\n", 1));
-		}
+		if (length == 1)
+			write(1, "minishell: cd: HOME not set\n", 29);
+		else
+			write(1, "minishell: cd: OLDPWD not set\n", 31);
+		return (1);
 	}
 	current_dir = getcwd(NULL, 0);
-	if (addr && chdir(addr) == 0)
+	if (chdir(addr) == 0)
 	{
 		change_pwds(*shell->envp, current_dir);
 		return (0);
 	}
-	error_msgs(arr_len(cmd->command), addr);
+	perror("minishell: cd");
 	return (1);
 }
