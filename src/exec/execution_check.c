@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 15:35:13 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/29 12:32:24 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/29 18:50:45 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,23 +53,74 @@ int	execute_builtin(t_command *cmd, t_shell *shell, int builtin)
 	return (1);
 }
 
-int	try_builtin(t_command *cmd, t_shell *shell, int *status, int phase)
-{
-	int	builtin;
-	int	exit_status;
+void	fd_cloning(int	mode, int fds[2], t_command *cmd, t_list **envp)
+{	
+	if (mode == SAVE)
+	{
+		fds[0] = dup(STDIN_FILENO);
+		if (fds[0] < 0)
+			free_and_exit(envp, cmd, 1, 1);
+		fds[1] = dup(STDOUT_FILENO);
+		if (fds[1] < 0)
+		{
+			close(fds[0]);
+			free_and_exit(envp, cmd, 1, 1);
+		}
+	}
+	if (mode == RESTORE)
+	{
+		if (dup2(fds[0], STDIN_FILENO) < 0|| dup2(fds[1], STDOUT_FILENO) < 0)
+		{
+			close(fds[0]);
+			close(fds[1]);
+			free_and_exit(envp, cmd, 1, 1);
+		}
+		close(fds[0]);
+		close(fds[1]);
+	}
+}
 
+int	try_builtin_child(t_command *cmd, t_shell *shell, int *status)
+{
+	int		builtin;
+	int		exit_status;
+	
 	builtin = 0;
-	if (!cmd->next || phase == MULTIPLE)
+	builtin = is_builtin(cmd);
+	if (builtin && builtin != -1)
+	{
+		if (!redirecting(cmd))
+		{
+			perror("minishell");
+			return (1);
+		}
+		exit_status = execute_builtin(cmd, shell, builtin);
+		*status = exit_status;
+		return (builtin);
+	}
+	return (-1);
+}
+
+int	try_builtin_parent(t_command *cmd, t_shell *shell, int *status)
+{
+	int		builtin;
+	int		exit_status;
+	int		fds[2];
+	
+	builtin = 0;
+	if (!cmd->next)
 	{
 		builtin = is_builtin(cmd);
 		if (builtin && builtin != -1)
 		{
+			fd_cloning(SAVE, fds, cmd, shell->envp);
 			if (!redirecting(cmd))
 			{
-				ft_lstclear(shell->envp, free);
-				free_cmd(NULL, cmd, STOP, "minishell");
+				fd_cloning(RESTORE, fds, cmd, shell->envp);
+				return (perror("minishell"), 1);
 			}
 			exit_status = execute_builtin(cmd, shell, builtin);
+			fd_cloning(RESTORE, fds, cmd, shell->envp);
 			*status = exit_status;
 			return (builtin);
 		}

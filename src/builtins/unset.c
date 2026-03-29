@@ -3,15 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 13:31:26 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/29 15:38:23 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/29 19:44:07 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int	validate_identifier(char *str)
+{
+	if (!*str)
+		return (0);
+	if (ft_isdigit(str[0]))
+		return (0);
+	while (*str)
+	{
+		if (!ft_isalnum(*str) && *str != '_')
+			return (0);
+		str++;
+	}
+	return (1);	
+}
 static int	validate_args(t_command *cmd)
 {
 	int	i;
@@ -19,11 +33,7 @@ static int	validate_args(t_command *cmd)
 	i = 1;
 	while (cmd->command && cmd->command[i])
 	{
-		if (!cmd->command[i][0])
-			return (0);
-		if (ft_isdigit(cmd->command[i][0]))
-			return (0);
-		if (ft_strchr(cmd->command[i], '='))
+		if (!validate_identifier(cmd->command[i]))
 			return (0);
 		i++;
 	}

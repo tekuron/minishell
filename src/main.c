@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/03/29 11:06:49 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/29 18:57:47 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,20 @@ void	debug(t_command *cmd)
 	}
 }
 
+void	update_last_exit(t_shell *shell, t_command *cmd)
+{
+	char *exit_env;
+
+	exit_env = ft_itoa(shell->last_exit);
+	if (!exit_env)
+		free_and_exit(shell->envp, cmd, 1, 1);
+	ft_strlcpy(shell->exit_env, exit_env, 10);
+	free(exit_env);
+}
+
 void	parse_and_exec(char *line, t_shell *shell)
 {
 	t_command	*cmd;
-	char *exit_env;
 	
 	if (check_cmd(line))
 	{
@@ -51,11 +61,9 @@ void	parse_and_exec(char *line, t_shell *shell)
 	if (line)
 		free(line);
 	shell->last_exit = exec_command(cmd, shell);
-	exit_env = ft_itoa(shell->last_exit); //Check malloc failure
-	ft_strlcpy(shell->exit_env, exit_env, 10);
-	free(exit_env);
+	update_last_exit(shell, cmd);
 	if (shell->last_exit < 0)
-		free_cmd(NULL, cmd, STOP, "minishell");
+		free_and_exit(shell->envp, cmd, 1, 1);
 	free_cmd(NULL, cmd, CONT, NULL);
 }
 	

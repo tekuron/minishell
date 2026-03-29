@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/03/29 15:43:27 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/29 19:44:05 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,38 +22,46 @@ int	is_dir(char *path)
 		return (-1);
 	return ((sb.st_mode & S_IFMT) == S_IFDIR);
 }
-
-void	failure_handling(t_list **envp, t_command *cmd, char *route, int phase)
+void	free_and_exit(t_list **envp, t_command *cmd, int err, int exit_code)
 {
-	int	eof_case;
-
-	eof_case = !cmd->command || !*cmd->command;
-	if (phase == 2)
-	{
-		if (is_dir(cmd->command[0]) == 1 || !ft_strncmp(cmd->command[0], ".", 2)
-			|| !ft_strncmp(cmd->command[0], "..", 3))
-			printf("Permision denied: %s\n", cmd->command[0]);
-		else
-			printf("minishell: %s: command not found...\n", cmd->command[0]); //Fix permission issues
-	}
-	free_cmd(&route, cmd, CONT, NULL);
 	ft_lstclear(envp, free);
-	if (phase == 1)
+	free_cmd(NULL, cmd, CONT, NULL);
+	if (err)
+		perror("minishell");
+	exit(exit_code);
+}
+
+void	execution_message(t_list **envp, t_command *cmd)
+{
+	if (!ft_strncmp(cmd->command[0], ".", 2))
 	{
-		if (eof_case)
-			exit (EXIT_SUCCESS);
-		else
-			exit(EXIT_FAILURE);
+		printf("minishell: .: filename argument required\n");
+		printf(".: usage . filename [arguments]\n");
+		free_and_exit(envp, cmd, 0, 2);
+	}
+	else if (!ft_strncmp(cmd->command[0], "..", 3))
+		free_and_exit(envp, cmd, 0, 127);
+	else if (is_dir(cmd->command[0]) == 1)
+	{
+		write(1, "minishell: ", 12);
+		write(1, cmd->command[0], ft_strlen(cmd->command[0]));
+		write(1, ": Is a directory\n", 18);
+	}
+	else if (access(cmd->command[0], F_OK) == 0 && access(cmd->command[0], X_OK) < 0)
+	{
+		perror(cmd->command[0]);
+		free_and_exit(envp, cmd, 0, 126);
 	}
 	else
-		exit(127);
+		printf("minishell: %s: command not found\n", cmd->command[0]);
+	free_and_exit(envp, cmd, 0, 127);
 }
 
 void	run_command_bi(t_command *cmd, t_shell *shell)
 {
 	t_pair	pair;
 
-	pair.cont = try_builtin(cmd, shell, &pair.status, MULTIPLE);
+	pair.cont = try_builtin_child(cmd, shell, &pair.status);
 	if (pair.cont > 0)
 	{
 		ft_lstclear(shell->envp, free);
@@ -62,27 +70,27 @@ void	run_command_bi(t_command *cmd, t_shell *shell)
 	}
 }
 
+
 void	handle_child(t_process *data, t_shell *shell, int total)
 {
 	char	*route;
 	char	**real_envp;
+	int		err;
 
-	if (!piping(data->pipes, total, data->process) || !redirecting(data->cmd)
-		|| !data->cmd->command || !*data->cmd->command)
-	{
-		free_pipes(data->pipes, total - 1);
-		failure_handling(shell->envp, data->cmd, NULL, 1);
-	}
+	err = !redirecting(data->cmd) || !piping(data->pipes, total, data->process);
 	free_pipes(data->pipes, total - 1);
+	if (err || !data->cmd->command || !*data->cmd->command)
+		free_and_exit(shell->envp, data->cmd, err, err);
 	run_command_bi(data->cmd, shell);
 	route = try_access(data->cmd, shell);
 	if (!route)
-		failure_handling(shell->envp, data->cmd, NULL, 2);
+		execution_message(shell->envp, data->cmd);
 	real_envp = t_list_to_char(*shell->envp);
 	if (execve(route, data->cmd->command, real_envp) == -1)
 	{
 		free_strs(real_envp);
-		failure_handling(shell->envp, data->cmd, route, 3);
+		free(route);
+		free_and_exit(shell->envp, data->cmd, 1, 127);
 	}
 }
 
@@ -162,7 +170,7 @@ int	exec_command(t_command *cmd, t_shell *shell)
 	pair.cont = heredoc_handling(cmd, shell);
 	if (!pair.cont)
 		return (130);
-	pair.cont = try_builtin(cmd, shell, &pair.status, SINGLE);
+	pair.cont = try_builtin_parent(cmd, shell, &pair.status);
 	if (pair.cont > 0)
 		return (pair.status);
 	data = (t_process){0};

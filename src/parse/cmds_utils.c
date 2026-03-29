@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 20:14:28 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/29 10:54:00 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/29 17:10:40 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,18 @@ void	free_cmd(char **line, t_command *cmd, int cont, char *err)
 		}
 	}
 	if (cmd != NULL)
-		t_command_free(cmd);
+		t_command_free(cmd);		
 	if (err && cont == STOP)
 	{
 		perror(err);
+		rl_clear_history();
 		exit(EXIT_FAILURE);
 	}
 	else if (cont == STOP)
+	{
+		rl_clear_history();
 		exit(EXIT_SUCCESS);
+	}
 	else if (err)
 		perror(err);
 }

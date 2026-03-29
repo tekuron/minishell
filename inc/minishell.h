@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/03/29 15:45:54 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/29 19:44:16 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,11 @@ typedef enum e_mode
 	IGNORE
 }		t_mode;
 
-typedef enum e_commands
+typedef enum e_redir_state
 {
-	SINGLE,
-	MULTIPLE
-}		t_commands;
-
+	SAVE,
+	RESTORE
+}		t_redir_state;
 typedef enum e_builtins
 {
 	ECHO_BI = 1,
@@ -154,7 +153,7 @@ int			piping(int **pipes, int total, int id);
 int			redirecting(t_command *cmd);
 void		s_int_handler_heredoc(int sig);
 char		*try_access(t_command *cmd, t_shell *shell);
-int			try_builtin(t_command *cmd, t_shell *shell, int *status, int phase);
+int			try_builtin_parent(t_command *cmd, t_shell *shell, int *status);
 int			**create_pipes(int total);
 int			heredoc_handling(t_command *cmd, t_shell *shell);
 char		**t_list_to_char(t_list *envp);
@@ -169,5 +168,6 @@ int			arr_len(char **strs);
 int			ft_isspace(char c);
 int			atoll_safe(char *str, long long *res);
 void		remove_from_env(t_list **envp, char *str);
-
+void		free_and_exit(t_list **envp, t_command *cmd, int err, int exit_code);
+int			try_builtin_child(t_command *cmd, t_shell *shell, int *status);
 #endif
