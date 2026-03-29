@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/03/28 15:03:47 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/28 21:12:59 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ void	parse_and_exec(char *line, t_shell *shell)
 	exit_env = ft_itoa(shell->last_exit);
 	ft_strlcpy(shell->exit_env, exit_env, 10);
 	free(exit_env);
-	//printf("Exit: %i\n", shell->last_exit);
 	free_cmd(line, cmd, CONT, NULL);
 }
 	

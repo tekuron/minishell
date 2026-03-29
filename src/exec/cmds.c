@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/03/28 19:26:05 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/29 10:09:51 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,19 +50,17 @@ void	failure_handling(t_list **envp, t_command *cmd, char *route, int phase)
 		exit(127);
 }
 
-int	run_command(char *route, t_command *cmd, t_shell *shell, char **real_envp)
+void	run_command_bi(t_command *cmd, t_shell *shell)
 {
 	t_pair	pair;
 
 	pair.cont = try_builtin(cmd, shell, &pair.status, MULTIPLE);
-	if (pair.cont >= 0)
+	if (pair.cont > 0)
 	{
 		ft_lstclear(shell->envp, free);
-		free_cmd(route, cmd, CONT, NULL);
-		free_strs(real_envp);
+		free_cmd(NULL, cmd, CONT, NULL);
 		exit(pair.status);
 	}
-	return (execve(route, cmd->command, real_envp));
 }
 
 void	handle_child(t_process *data, t_shell *shell, int total)
@@ -77,11 +75,12 @@ void	handle_child(t_process *data, t_shell *shell, int total)
 		failure_handling(shell->envp, data->cmd, NULL, 1);
 	}
 	free_pipes(data->pipes, total - 1);
+	run_command_bi(data->cmd, shell);
 	route = try_access(data->cmd, shell);
 	if (!route)
 		failure_handling(shell->envp, data->cmd, NULL, 2);
 	real_envp = t_list_to_char(*shell->envp);
-	if (run_command(route, data->cmd, shell, real_envp) == -1)
+	if (execve(route, data->cmd->command, real_envp) == -1)
 	{
 		free_strs(real_envp);
 		failure_handling(shell->envp, data->cmd, route, 3);
@@ -190,7 +189,7 @@ int	exec_command(t_command *cmd, t_shell *shell)
 	if (!pair.cont)
 		return (130);
 	pair.cont = try_builtin(cmd, shell, &pair.status, SINGLE);
-	if (pair.cont >= 0)
+	if (pair.cont > 0)
 		return (pair.status);
 	data = (t_process){0};
 	data.cmd = cmd;
