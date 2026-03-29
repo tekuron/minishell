@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/03/29 13:20:30 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/29 15:45:54 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@
 # include "libft.h"
 # include "ft_printf_bonus.h"
 
-typedef struct sigaction t_sa;
+typedef struct sigaction	t_sa;
 
 typedef enum e_bool
 {
@@ -68,7 +68,7 @@ typedef enum e_mode
 
 typedef enum e_commands
 {
-	SINGLE, 
+	SINGLE,
 	MULTIPLE
 }		t_commands;
 
@@ -114,7 +114,7 @@ void		t_command_append(t_command *top, t_command *new);
 void		t_command_free(t_command *cmd);
 void		free_cmd(char **line, t_command *cmd, int cont, char *err);
 
-typedef	struct s_process
+typedef struct s_process
 {
 	t_command			*cmd;
 	pid_t				*ids;
@@ -122,7 +122,7 @@ typedef	struct s_process
 	int					process;
 }		t_process;
 
-typedef	struct s_shell
+typedef struct s_shell
 {
 	t_list	**envp;
 	int		last_exit;
@@ -162,13 +162,12 @@ int			exec_command(t_command *cmd, t_shell *shell);
 int			t_command_size(t_command *cmd);
 void		*ft_realloc(void *ptr, size_t size, size_t new_size);
 char		*display_prompt(t_shell *shell);
-void		set_signals(int	mode);
+void		set_signals(int mode);
 void		ft_swap(char *str, int length);
 int			is_dir(char *path);
 int			arr_len(char **strs);
 int			ft_isspace(char c);
 int			atoll_safe(char *str, long long *res);
 void		remove_from_env(t_list **envp, char *str);
-
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/22 19:43:22 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/23 16:25:05 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/29 15:49:32 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	ft_swap(char *str, int length)
 	if (!str)
 		return ;
 	i = 0;
-	j =	length - 1;
+	j = length - 1;
 	while (i < length / 2)
 	{
 		aux = str[i];

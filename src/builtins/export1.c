@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/28 19:26:03 by danz              #+#    #+#             */
-/*   Updated: 2026/03/28 19:34:00 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/29 15:38:34 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static void	print_export_line(char *env)
 		ft_printf("%s\n", env);
 }
 
-void export_print(t_list *envp)
+void	export_print(t_list *envp)
 {
 	int		size;
 	int		i;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp1.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 11:39:33 by danz              #+#    #+#             */
-/*   Updated: 2026/03/28 18:46:12 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/29 15:49:55 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	*ft_getenv(char *var, t_shell *shell)
 
 size_t	envlen(char *env)
 {
-	size_t len;
+	size_t	len;
 
 	len = 0;
 	while (env[len] && env[len] != '=' && env[len] != '+')

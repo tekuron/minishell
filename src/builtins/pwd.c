@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 13:31:48 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/23 19:30:10 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/29 15:40:29 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	pwd_builtin(t_command *cmd, t_list *envp)
 {
-	char *path;
-	
+	char	*path;
+
 	(void) cmd;
 	(void) envp;
 	path = getcwd(NULL, 0);
