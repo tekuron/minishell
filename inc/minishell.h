@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/03/29 19:44:16 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/31 15:36:46 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,6 +168,8 @@ int			arr_len(char **strs);
 int			ft_isspace(char c);
 int			atoll_safe(char *str, long long *res);
 void		remove_from_env(t_list **envp, char *str);
-void		free_and_exit(t_list **envp, t_command *cmd, int err, int exit_code);
+void		free_and_exit(t_list **envp, t_command *cmd, int err,
+				int exit_code);
 int			try_builtin_child(t_command *cmd, t_shell *shell, int *status);
+
 #endif

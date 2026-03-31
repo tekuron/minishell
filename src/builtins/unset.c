@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 13:31:26 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/29 19:44:07 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/03/31 15:38:04 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,9 @@ int	validate_identifier(char *str)
 			return (0);
 		str++;
 	}
-	return (1);	
+	return (1);
 }
+
 static int	validate_args(t_command *cmd)
 {
 	int	i;
