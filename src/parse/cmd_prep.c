@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 17:24:40 by danz              #+#    #+#             */
-/*   Updated: 2026/03/28 12:53:39 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/31 15:48:15 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static void	remove_quotes(char **text)
 			if (str[i] == '\'' || str[i] == '\"')
 			{
 				j = i + 1;
-				while (str[j] != str[i])
+				while (str[j] && str[j] != str[i])
 					j++;
 				ft_memmove(&str[j], &str[j + 1], ft_strlen(&str[j]));
 				ft_memmove(&str[i], &str[i + 1], ft_strlen(&str[i]));
