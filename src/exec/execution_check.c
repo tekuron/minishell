@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 15:35:13 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/29 18:50:45 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/01 16:55:44 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ char	*try_access(t_command *cmd, t_shell *shell)
 	i = 0;
 	if (!cmd->command || !*cmd->command || is_dir(cmd->command[0]) == 1)
 		return (NULL);
-	if (access(cmd->command[0], X_OK) == 0)
+	if (ft_strchr(cmd->command[0], '/') && access(cmd->command[0], X_OK) == 0)
 		return (ft_strdup(cmd->command[0]));
 	paths = get_paths(shell);
 	while (paths && paths[i])

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/28 14:54:53 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/29 15:48:58 by danz             ###   ########.fr       */
+/*   Updated: 2026/04/01 19:13:09 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,18 @@ int	atoll_safe(char *str, long long *res)
 	}
 	*res = *res * sign;
 	return (1);
+}
+
+t_command	*t_command_index(t_command *cmd, int index)
+{
+	int	i;
+
+	i = 0;
+	while (cmd && i < index)
+	{
+		cmd = cmd->next;
+		i++;
+	}
+	return (cmd);
+
 }

@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 22:46:29 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/01 16:03:01 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/01 19:22:18 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,30 +64,30 @@ int	write_to_pipe(int pipes[2], t_io *redir, int lines_num, t_shell *shell)
 }
 
 
-int	prepare_heredoc(int	pipes[2], t_io *redir, t_shell *shell)
+int	prepare_heredoc(t_io *redir, t_shell *shell)
 {
 	int	line;
-
+	int	pipes[2];
+	
 	line = 0;
 	set_signals(HEREDOC);
 	pipe(pipes);
 	redir->heredoc_fd = pipes[0];
 	while (!get_signal_status() && write_to_pipe(pipes, redir, line++, shell));
+	close(pipes[1]);
 	if (get_signal_status())
 	{
 		set_signal_status(0);
-		close(pipes[1]);
 		set_signals(SHELL);
+		close(pipes[0]);
 		return (0);
 	}
-	close(pipes[1]);
 	set_signals(SHELL);
 	return (1);
 }
 
 int	heredoc_handling(t_command *cmd, t_shell *shell)
 {
-	int		pipes[2];
 	t_io	*redir;
 
 	while (cmd)
@@ -103,7 +103,7 @@ int	heredoc_handling(t_command *cmd, t_shell *shell)
 		{
 			if (redir->rd == REDIR_HEREDOC)
 			{
-				if (!prepare_heredoc(pipes, redir, shell))
+				if (!prepare_heredoc(redir, shell))
 					return (0);
 			}
 			redir = redir->next;
@@ -129,7 +129,7 @@ int	**create_pipes(int total)
 		if (!pipes[i] || pipe(pipes[i]) == -1)
 		{
 			free_pipes(pipes, -1);
-			return (NULL); // Handle perror's string
+			return (NULL);
 		}
 	}
 	pipes[total] = NULL;

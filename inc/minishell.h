@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/04/01 16:31:18 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/01 19:13:21 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ typedef enum e_redir_state
 	SAVE,
 	RESTORE
 }		t_redir_state;
+
 typedef enum e_builtins
 {
 	ECHO_BI = 1,
@@ -171,8 +172,7 @@ int			arr_len(char **strs);
 int			ft_isspace(char c);
 int			atoll_safe(char *str, long long *res);
 void		remove_from_env(t_list **envp, char *str);
-void		free_and_exit(t_list **envp, t_command *cmd, int err,
-				int exit_code);
+void		free_and_exit(t_list **envp, t_command *cmd, int err, int exit_code);
 int			try_builtin_child(t_command *cmd, t_shell *shell, int *status);
-
+t_command	*t_command_index(t_command *cmd, int index);
 #endif
