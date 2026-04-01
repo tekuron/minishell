@@ -6,7 +6,11 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 20:14:28 by dplazas-          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2026/03/31 15:37:36 by danz             ###   ########.fr       */
+=======
+/*   Updated: 2026/03/29 20:50:36 by dplazas-         ###   ########.fr       */
+>>>>>>> 8767f77 (Handled prompt leaks)
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +52,13 @@ void	free_cmd(char **line, t_command *cmd, int cont, char *err)
 	{
 		perror(err);
 		rl_clear_history();
+		prompt(EXIT_SUCCESS, EXIT_SHELL);
 		exit(EXIT_FAILURE);
 	}
 	else if (cont == STOP)
 	{
 		rl_clear_history();
+		prompt(EXIT_SUCCESS, EXIT_SHELL);
 		exit(EXIT_SUCCESS);
 	}
 	else if (err)

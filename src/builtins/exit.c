@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 13:31:02 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/29 15:39:46 by danz             ###   ########.fr       */
+/*   Updated: 2026/03/29 20:46:12 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ int	exit_builtin(t_command *cmd, t_list **envp)
 	exit_status = check_arguments(cmd, args);
 	free_cmd(NULL, cmd, CONT, NULL);
 	ft_lstclear(envp, free);
+	prompt(exit_status, EXIT_SHELL);
 	exit((unsigned char) exit_status);
 	return (exit_status);
 }

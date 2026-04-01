@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/01 18:09:05 by danz              #+#    #+#             */
-/*   Updated: 2026/03/28 11:41:40 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/01 16:15:10 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*display_prompt(t_shell *shell)
 	char	*line;
 
 	if (shell->interactive)
-		line = readline(prompt(shell->last_exit));
+		line = readline(prompt(shell->last_exit, DISPLAY_PROMPT));
 	else
 		line = readline("");
 	if (!line)
@@ -33,6 +33,7 @@ char	*display_prompt(t_shell *shell)
 			write(1, "exit\n", 6);
 		ft_lstclear(shell->envp, free);
 		rl_clear_history();
+		prompt(shell->last_exit, EXIT_SHELL);
 		exit(shell->last_exit);
 	}
 	if (shell->interactive && !get_signal_status() && !append_to_history(line))
@@ -40,12 +41,21 @@ char	*display_prompt(t_shell *shell)
 	return (line);
 }
 
-char	*prompt(int last_exit)
+char	*prompt(int last_exit, int mode)
 {
 	static char	*prompt;
 
+	if (mode == EXIT_SHELL)
+	{
+		free(prompt);
+		return (NULL);
+	}
 	if (!prompt)
+	{
 		prompt = malloc(PROMPT_SIZE);
+		if (!prompt)
+			return (NULL);
+	}
 	if (last_exit != 0)
 		ft_strlcpy(prompt, BRED, PROMPT_SIZE);
 	else

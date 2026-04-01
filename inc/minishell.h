@@ -6,7 +6,11 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2026/03/31 15:36:46 by danz             ###   ########.fr       */
+=======
+/*   Updated: 2026/04/01 16:27:37 by dplazas-         ###   ########.fr       */
+>>>>>>> 8767f77 (Handled prompt leaks)
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +37,9 @@
 # include <limits.h>
 # include "libft.h"
 # include "ft_printf_bonus.h"
+
+# define EXIT_SHELL 0
+# define DISPLAY_PROMPT 1
 
 typedef struct sigaction	t_sa;
 
@@ -132,7 +139,7 @@ typedef struct s_shell
 void		set_signal_status(int sig);
 int			get_signal_status(void);
 void		free_pipes(int **pipes, int total);
-char		*prompt(int last_exit);
+char		*prompt(int last_exit, int mode);
 t_command	*get_cmd(char *line, t_shell *shell);
 void		*ft_realloc(void *ptr, size_t size, size_t new_size);
 void		free_strs(char **strs);

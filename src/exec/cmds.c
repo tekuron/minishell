@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/03/29 19:44:05 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/01 16:25:45 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,14 @@ int	is_dir(char *path)
 		return (-1);
 	return ((sb.st_mode & S_IFMT) == S_IFDIR);
 }
+
 void	free_and_exit(t_list **envp, t_command *cmd, int err, int exit_code)
 {
 	ft_lstclear(envp, free);
 	free_cmd(NULL, cmd, CONT, NULL);
 	if (err)
 		perror("minishell");
+	prompt(exit_code, EXIT_SHELL);
 	exit(exit_code);
 }
 
@@ -64,12 +66,10 @@ void	run_command_bi(t_command *cmd, t_shell *shell)
 	pair.cont = try_builtin_child(cmd, shell, &pair.status);
 	if (pair.cont > 0)
 	{
-		ft_lstclear(shell->envp, free);
-		free_cmd(NULL, cmd, CONT, NULL);
-		exit(pair.status);
+		prompt(pair.status, EXIT_SHELL);
+		free_and_exit(shell->envp, cmd, 0, pair.status);
 	}
 }
-
 
 void	handle_child(t_process *data, t_shell *shell, int total)
 {
