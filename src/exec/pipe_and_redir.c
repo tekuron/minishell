@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 22:46:29 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/01 19:22:18 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/01 19:40:31 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,6 @@ int	heredoc_handling(t_command *cmd, t_shell *shell)
 			cmd = cmd->next;
 			continue ;
 		}
-		redir->heredoc_fd = -1;
 		while (redir)
 		{
 			if (redir->rd == REDIR_HEREDOC)

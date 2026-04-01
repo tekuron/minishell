@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 15:35:13 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/01 16:55:44 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/01 20:03:10 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,25 +32,6 @@ int	is_builtin(t_command *cmd)
 	else if (ft_strncmp(cmd->command[0], "pwd", 4) == 0)
 		return (PWD_BI);
 	return (0);
-}
-
-int	execute_builtin(t_command *cmd, t_shell *shell, int builtin)
-{
-	if (builtin == ECHO_BI)
-		return (echo_builtin(cmd));
-	if (builtin == CD_BI)
-		return(cd_builtin(cmd, shell));
-	else if (builtin == EXPORT_BI)
-		return (export_builtin(cmd, shell->envp));
-	else if (builtin == UNSET_BI)
-		return (unset_builtin(cmd, shell->envp));
-	else if (builtin == EXIT_BI)
-		return (exit_builtin(cmd, shell->envp));
-	else if (builtin == ENV_BI)
-		return (env_builtin(cmd, *shell->envp));
-	else if (builtin == PWD_BI)
-		return (pwd_builtin(cmd, *shell->envp));
-	return (1);
 }
 
 void	fd_cloning(int	mode, int fds[2], t_command *cmd, t_list **envp)
@@ -80,6 +61,31 @@ void	fd_cloning(int	mode, int fds[2], t_command *cmd, t_list **envp)
 	}
 }
 
+int	execute_builtin(t_command *cmd, t_shell *shell, int builtin, int fds[2])
+{
+	if (builtin == ECHO_BI)
+		return (echo_builtin(cmd));
+	if (builtin == CD_BI)
+		return(cd_builtin(cmd, shell));
+	else if (builtin == EXPORT_BI)
+		return (export_builtin(cmd, shell->envp));
+	else if (builtin == UNSET_BI)
+		return (unset_builtin(cmd, shell->envp));
+	else if (builtin == EXIT_BI)
+	{
+		if (fds != NULL)
+			fd_cloning(RESTORE, fds, cmd, shell->envp);
+		return (exit_builtin(cmd, shell->envp));
+	}
+	else if (builtin == ENV_BI)
+		return (env_builtin(cmd, *shell->envp));
+	else if (builtin == PWD_BI)
+		return (pwd_builtin(cmd, *shell->envp));
+	return (1);
+}
+
+
+
 int	try_builtin_child(t_command *cmd, t_shell *shell, int *status)
 {
 	int		builtin;
@@ -94,7 +100,7 @@ int	try_builtin_child(t_command *cmd, t_shell *shell, int *status)
 			perror("minishell");
 			return (1);
 		}
-		exit_status = execute_builtin(cmd, shell, builtin);
+		exit_status = execute_builtin(cmd, shell, builtin, NULL);
 		*status = exit_status;
 		return (builtin);
 	}
@@ -119,7 +125,7 @@ int	try_builtin_parent(t_command *cmd, t_shell *shell, int *status)
 				fd_cloning(RESTORE, fds, cmd, shell->envp);
 				return (perror("minishell"), 1);
 			}
-			exit_status = execute_builtin(cmd, shell, builtin);
+			exit_status = execute_builtin(cmd, shell, builtin, fds);
 			fd_cloning(RESTORE, fds, cmd, shell->envp);
 			*status = exit_status;
 			return (builtin);
