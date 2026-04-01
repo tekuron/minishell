@@ -6,7 +6,7 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 17:37:06 by danz              #+#    #+#             */
-/*   Updated: 2026/03/28 20:45:29 by danz             ###   ########.fr       */
+/*   Updated: 2026/04/01 18:23:45 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int	set_vars(char *str, int *pipe, int *redir, int word)
 			return (1);
 		*pipe = 1;
 	}
-	else if (*str == '<' || *str == '>')
+	else if (*str == '>')
 	{
 		if (*pipe || *redir)
 			return (1);
