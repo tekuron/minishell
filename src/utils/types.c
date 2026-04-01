@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 17:27:15 by danz              #+#    #+#             */
-/*   Updated: 2026/04/01 18:54:16 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/01 19:40:12 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,5 +74,7 @@ t_io	*t_io_new(char *path, t_redir rd)
 	ret->next = NULL;
 	ret->path = path;
 	ret->rd = rd;
+	ret->has_qts = FALSE;
+	ret->heredoc_fd = -1;
 	return (ret);
 }
