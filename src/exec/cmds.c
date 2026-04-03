@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/04/01 19:18:46 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/03 10:58:28 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,13 +222,13 @@ int	exec_command(t_command *cmd, t_shell *shell)
 	pair.status = initialize_data(&data, cmd);
 	if (pair.status < 0)
 		return (pair.status); //handle with perror
-	if (!forking(shell, &data, data.process))
+	pair.status = forking(shell, &data, data.process);
+	close_heredocs(cmd, -1);
+	if (!pair.status)
 	{
-		close_heredocs(cmd, -1);
 		set_signals(SHELL);
 		return (-3);
 	}
-	close_heredocs(cmd, -1);
 	return (wait_for_children(&data));
 }
 
