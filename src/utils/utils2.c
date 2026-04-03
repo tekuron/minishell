@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/28 14:54:53 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/01 19:13:09 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/03 13:30:54 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,26 @@ t_command	*t_command_index(t_command *cmd, int index)
 	}
 	return (cmd);
 
+}
+
+int	append_to_history(char *line)
+{
+	if (!*line)
+	{
+		free(line);
+		return (0);
+	}
+	add_history(line);
+	return (1);
+}
+
+void	free_and_exit(t_list **envp, t_command *cmd, int err, int exit_code)
+{
+	ft_lstclear(envp, free);
+	free_cmd(NULL, cmd, CONT, NULL);
+	if (err)
+		perror("minishell");
+	rl_clear_history();
+	prompt(exit_code, EXIT_SHELL);
+	exit(exit_code);
 }

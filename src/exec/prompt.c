@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/01 18:09:05 by danz              #+#    #+#             */
-/*   Updated: 2026/04/01 16:15:10 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/03 13:30:37 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #define BCYAN "\e[6;36m"
 #define CRESET "\e[0m"
 #define PROMPT_SIZE 37
-
 
 char	*display_prompt(t_shell *shell)
 {

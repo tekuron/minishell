@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/04/01 19:13:21 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/03 13:31:21 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,4 +175,8 @@ void		remove_from_env(t_list **envp, char *str);
 void		free_and_exit(t_list **envp, t_command *cmd, int err, int exit_code);
 int			try_builtin_child(t_command *cmd, t_shell *shell, int *status);
 t_command	*t_command_index(t_command *cmd, int index);
+int			is_dir(char *path);
+void		close_heredocs(t_command *cmd, int number);
+int			forking(t_shell *shell, t_process *data, int total);
+
 #endif

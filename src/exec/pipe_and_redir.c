@@ -6,129 +6,11 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 22:46:29 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/03 12:39:59 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/03 13:30:28 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	 calculate_chars(char *str)
-{
-	int	i = 0;
-
-	if (str[i + 1] && str[i + 1] == '?')
-		return (2);
-	else
-	{
-		while(str[i] && !ft_isspace(str[i]) && str[i] != '$')
-			i++;
-	}
-	return (i);
-}
-
-void	write_line(char *content, int pipe_fd, int expands, t_shell *shell)
-{
-	char	*expansion;
-	int		i;
-
-	i = 0;
-	if (!expands)
-		write(pipe_fd, content, ft_strlen(content));
-	else
-	{
-		while (content[i])
-		{
-			while (content[i] && content[i] != '$')
-				write(pipe_fd, &content[i++], 1);
-			if (content[i] == '$')
-			{
-				if ((content[i + 1] && ft_isspace(content[i + 1])) || !content[i + 1])
-					write(pipe_fd, &content[i++], 1);
-				else
-				{
-					expansion = ft_getenv(content + i, shell);
-					if (expansion)
-						write(pipe_fd, expansion, ft_strlen(expansion));
-					i += calculate_chars(content + i + 1) + 1;
-				}
-			}
-		}
-	}
-	write(pipe_fd, "\n", 1);
-}
-
-int	write_to_pipe(int pipes[2], t_io *redir, int lines_num, t_shell *shell)
-{
-	char	*line;
-	int		length;
-
-	line = readline(">");
-	if (!line)
-	{
-		printf("warning: here-document at line\
- %i delimited by end-of-file (wanted '%s')\n", lines_num, redir->path);
-		return (0);
-	}
-	length = ft_strlen(redir->path);
-	if (ft_strncmp(redir->path, line, length + 1) == 0)
-	{
-		free(line);
-		return (0);
-	}
-	write_line(line, pipes[1], !redir->has_qts, shell);
-	free(line);
-	return (1);
-}
-
-
-int	prepare_heredoc(t_io *redir, t_shell *shell)
-{
-	int	line;
-	int	pipes[2];
-	
-	line = 0;
-	set_signals(HEREDOC);
-	pipe(pipes);
-	redir->heredoc_fd = pipes[0];
-	while (!get_signal_status() && write_to_pipe(pipes, redir, line++, shell));
-	close(pipes[1]);
-	if (get_signal_status())
-	{
-		set_signal_status(0);
-		set_signals(SHELL);
-		close(pipes[0]);
-		return (0);
-	}
-	set_signals(SHELL);
-	return (1);
-}
-
-int	heredoc_handling(t_command *cmd, t_shell *shell)
-{
-	t_io	*redir;
-
-	while (cmd)
-	{
-		redir = cmd->redirs;
-		if (!redir)
-		{
-			cmd = cmd->next;
-			continue ;
-		}
-		while (redir)
-		{
-			if (redir->rd == REDIR_HEREDOC)
-			{
-				if (!prepare_heredoc(redir, shell))
-					return (0);
-			}
-			redir = redir->next;
-		}
-		cmd = cmd->next;
-	}
-
-	return (1);
-}
 
 int	**create_pipes(int total)
 {
@@ -144,7 +26,7 @@ int	**create_pipes(int total)
 		pipes[i] = malloc(sizeof(int) * 2);
 		if (!pipes[i] || pipe(pipes[i]) == -1)
 		{
-			free_pipes(pipes, -1);
+			free_pipes(pipes, i);
 			return (NULL);
 		}
 	}

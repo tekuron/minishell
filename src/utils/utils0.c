@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils0.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 14:24:17 by danzamor          #+#    #+#             */
-/*   Updated: 2026/03/29 15:46:42 by danz             ###   ########.fr       */
+/*   Updated: 2026/04/03 13:27:40 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,17 @@ int	is_redir(char *str)
 		|| (!ft_strncmp(str, ">>", 3)))
 		return (1);
 	return (0);
+}
+
+int	is_dir(char *path)
+{
+	struct stat	sb;
+
+	if (!path)
+		return (0);
+	if (stat(path, &sb) == -1)
+		return (-1);
+	return ((sb.st_mode & S_IFMT) == S_IFDIR);
 }
 
 void	free_strs(char **strs)
