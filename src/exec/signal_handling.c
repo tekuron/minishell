@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 22:26:11 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/01 16:14:00 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/03 11:14:50 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ void	set_signals(int	mode)
 	static t_sa sigint_default;
 	static t_sa sigquit_default;
 
+	if (!isatty(STDIN_FILENO))
+		return ;
 	if (mode == START)
 	{
 		assign_signal(SIGINT, s_int_handler_input, &sigint_default);
