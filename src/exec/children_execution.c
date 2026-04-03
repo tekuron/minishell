@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/03 13:28:20 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/03 13:35:20 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/03 13:45:11 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ void	execution_message(t_list **envp, t_process *data, t_command *cmd)
 		write(1, cmd->command[0], ft_strlen(cmd->command[0]));
 		write(1, ": Is a directory\n", 18);
 	}
-	else if (access(cmd->command[0], F_OK) == 0 && access(cmd->command[0], X_OK) < 0)
+	else if (access(cmd->command[0], F_OK) == 0
+		&& access(cmd->command[0], X_OK) < 0)
 	{
 		perror(cmd->command[0]);
 		free_and_exit(envp, data->cmd, 0, 126);
@@ -42,17 +43,17 @@ void	run_command_bi(t_process *data, t_shell *shell, t_command *cmd)
 {
 	t_pair		pair;
 
-	pair.cont = try_builtin_child(cmd ,shell, &pair.status);
+	pair.cont = try_builtin_child(cmd, shell, &pair.status);
 	if (pair.cont > 0)
 		free_and_exit(shell->envp, data->cmd, 0, pair.status);
 }
 
 void	handle_child(t_process *data, t_shell *shell, int total)
 {
-	char	*route;
-	char	**real_envp;
-	int		err;
-	t_command *cmd;
+	char		*route;
+	char		**real_envp;
+	int			err;
+	t_command	*cmd;
 
 	cmd = t_command_index(data->cmd, data->process);
 	err = !piping(data->pipes, total, data->process) || !redirecting(cmd);

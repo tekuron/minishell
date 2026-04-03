@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/28 14:54:53 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/03 13:30:54 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/03 18:21:21 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,20 +47,6 @@ int	atoll_safe(char *str, long long *res)
 	return (1);
 }
 
-t_command	*t_command_index(t_command *cmd, int index)
-{
-	int	i;
-
-	i = 0;
-	while (cmd && i < index)
-	{
-		cmd = cmd->next;
-		i++;
-	}
-	return (cmd);
-
-}
-
 int	append_to_history(char *line)
 {
 	if (!*line)
@@ -72,13 +58,27 @@ int	append_to_history(char *line)
 	return (1);
 }
 
-void	free_and_exit(t_list **envp, t_command *cmd, int err, int exit_code)
+void	free_and_exit(t_list **envp, t_command *cmd, int err, int ex_code)
 {
 	ft_lstclear(envp, free);
 	free_cmd(NULL, cmd, CONT, NULL);
 	if (err)
 		perror("minishell");
 	rl_clear_history();
-	prompt(exit_code, EXIT_SHELL);
-	exit(exit_code);
+	prompt(ex_code, EXIT_SHELL);
+	exit(ex_code);
+}
+
+int	check_tty(void)
+{
+	static int	val;
+
+	if (!val)
+	{
+		val = isatty(STDIN_FILENO) + 1;
+		return (1);
+	}
+	else if (val == 2)
+		return (1);
+	return (0);
 }

@@ -6,11 +6,24 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 20:14:28 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/01 16:31:21 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/03 18:20:23 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include "minishell.h"
+
+t_command	*t_command_index(t_command *cmd, int index)
+{
+	int	i;
+
+	i = 0;
+	while (cmd && i < index)
+	{
+		cmd = cmd->next;
+		i++;
+	}
+	return (cmd);
+}
 
 void	free_pipes(int **pipes, int total)
 {

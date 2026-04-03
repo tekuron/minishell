@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 22:26:11 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/03 12:50:35 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/03 18:19:20 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	set_signal_status(int sig)
 	g_sig = sig;
 }
 
-int		get_signal_status(void)
+int	get_signal_status(void)
 {
 	return (g_sig);
 }
@@ -45,33 +45,30 @@ int	exit_prompt(void)
 	return (0);
 }
 
-void	set_signals(int	mode)
+void	set_signals(int mode)
 {
-	static t_sa sigint_default;
-	static t_sa sigquit_default;
+	static t_sa	sigint_default;
+	static t_sa	sigquit_default;
 
-	if (!isatty(STDIN_FILENO))
-		return ;
-	if (mode == START)
+	if (mode == START && check_tty())
 	{
 		assign_signal(SIGINT, s_int_handler_input, &sigint_default);
 		assign_signal(SIGQUIT, s_backslash_handler, &sigquit_default);
 		rl_event_hook = exit_prompt;
 		rl_catch_signals = 0;
 	}
-	else if (mode == SHELL)
+	else if (mode == SHELL && check_tty())
 	{
 		assign_signal(SIGINT, s_int_handler_input, NULL);
 		assign_signal(SIGQUIT, s_backslash_handler, NULL);
 	}
-	else if (mode == HEREDOC)
+	else if (mode == HEREDOC && check_tty())
 		assign_signal(SIGINT, s_int_handler_heredoc, NULL);
-	else if (mode == EXECUTION)
+	else if (mode == EXECUTION && check_tty())
 	{
 		sigaction(SIGINT, &sigint_default, NULL);
 		sigaction(SIGQUIT, &sigquit_default, NULL);
 	}
-	else if (mode == IGNORE)
+	else if (mode == IGNORE && check_tty())
 		assign_signal(SIGINT, s_backslash_handler, NULL);
 }
-

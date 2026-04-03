@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/04/03 13:31:21 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/03 18:05:07 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,11 +172,12 @@ int			arr_len(char **strs);
 int			ft_isspace(char c);
 int			atoll_safe(char *str, long long *res);
 void		remove_from_env(t_list **envp, char *str);
-void		free_and_exit(t_list **envp, t_command *cmd, int err, int exit_code);
+void		free_and_exit(t_list **envp, t_command *cmd, int err, int ex_code);
 int			try_builtin_child(t_command *cmd, t_shell *shell, int *status);
 t_command	*t_command_index(t_command *cmd, int index);
 int			is_dir(char *path);
 void		close_heredocs(t_command *cmd, int number);
 int			forking(t_shell *shell, t_process *data, int total);
+int			check_tty(void);
 
 #endif

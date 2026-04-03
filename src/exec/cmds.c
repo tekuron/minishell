@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/04/03 13:35:29 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/03 17:49:59 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ int	wait_for_children(t_process *data)
 	last_exit = -1;
 	while (++i < data->process)
 	{
-		while (waitpid(data->ids[i], &status, 0) == -1 && errno == EINTR);
+		while (waitpid(data->ids[i], &status, 0) == -1 && errno == EINTR)
+			(void)i;
 	}
 	free(data->ids);
 	if (WIFEXITED(status))
@@ -84,7 +85,7 @@ int	exec_command(t_command *cmd, t_shell *shell)
 {
 	t_process	data;
 	t_pair		pair;
-	
+
 	pair.cont = heredoc_handling(cmd, shell);
 	if (!pair.cont)
 		return (130);
@@ -104,4 +105,3 @@ int	exec_command(t_command *cmd, t_shell *shell)
 	}
 	return (wait_for_children(&data));
 }
-

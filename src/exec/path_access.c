@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 15:35:13 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/03 12:54:58 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/03 13:43:20 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ char	**get_paths(t_shell *shell)
 {
 	char	*path_env;
 	char	**paths;
-	
+
 	path_env = ft_getenv("$PATH", shell);
 	if (!path_env)
 		return (NULL);
@@ -33,13 +33,13 @@ char	*try_access(t_command *cmd, t_shell *shell)
 	char	**paths;
 	int		i;
 
-	i = 0;
+	i = -1;
 	if (!cmd->command || !*cmd->command || is_dir(cmd->command[0]) == 1)
 		return (NULL);
 	if (ft_strchr(cmd->command[0], '/') && access(cmd->command[0], X_OK) == 0)
 		return (ft_strdup(cmd->command[0]));
 	paths = get_paths(shell);
-	while (paths && paths[i])
+	while (paths && paths[++i])
 	{
 		partial_path = ft_strjoin(paths[i], "/");
 		if (!partial_path)
@@ -51,8 +51,6 @@ char	*try_access(t_command *cmd, t_shell *shell)
 		if (access(path, X_OK) == 0)
 			return (free_strs(paths), path);
 		free(path);
-		i++;
 	}
-	free_strs(paths);
-	return (NULL);
+	return ((void) free_strs(paths), NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/03 12:53:12 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/03 12:55:02 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/03 13:46:39 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ int	is_builtin(t_command *cmd)
 	return (0);
 }
 
-void	fd_cloning(int	mode, int fds[2], t_command *cmd, t_list **envp)
-{	
+void	fd_cloning(int mode, int fds[2], t_command *cmd, t_list **envp)
+{
 	if (mode == SAVE)
 	{
 		fds[0] = dup(STDIN_FILENO);
@@ -50,7 +50,7 @@ void	fd_cloning(int	mode, int fds[2], t_command *cmd, t_list **envp)
 	}
 	if (mode == RESTORE)
 	{
-		if (dup2(fds[0], STDIN_FILENO) < 0|| dup2(fds[1], STDOUT_FILENO) < 0)
+		if (dup2(fds[0], STDIN_FILENO) < 0 || dup2(fds[1], STDOUT_FILENO) < 0)
 		{
 			close(fds[0]);
 			close(fds[1]);
@@ -66,7 +66,7 @@ int	execute_builtin(t_command *cmd, t_shell *shell, int builtin, int fds[2])
 	if (builtin == ECHO_BI)
 		return (echo_builtin(cmd));
 	if (builtin == CD_BI)
-		return(cd_builtin(cmd, shell));
+		return (cd_builtin(cmd, shell));
 	else if (builtin == EXPORT_BI)
 		return (export_builtin(cmd, shell->envp));
 	else if (builtin == UNSET_BI)
@@ -88,7 +88,7 @@ int	try_builtin_child(t_command *cmd, t_shell *shell, int *status)
 {
 	int		builtin;
 	int		exit_status;
-	
+
 	builtin = 0;
 	builtin = is_builtin(cmd);
 	if (builtin && builtin != -1)
@@ -110,7 +110,7 @@ int	try_builtin_parent(t_command *cmd, t_shell *shell, int *status)
 	int		builtin;
 	int		exit_status;
 	int		fds[2];
-	
+
 	builtin = 0;
 	if (!cmd->next)
 	{
