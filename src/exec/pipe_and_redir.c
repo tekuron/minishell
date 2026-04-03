@@ -6,16 +6,30 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 22:46:29 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/01 19:40:31 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/03 12:39:59 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int	 calculate_chars(char *str)
+{
+	int	i = 0;
+
+	if (str[i + 1] && str[i + 1] == '?')
+		return (2);
+	else
+	{
+		while(str[i] && !ft_isspace(str[i]) && str[i] != '$')
+			i++;
+	}
+	return (i);
+}
+
 void	write_line(char *content, int pipe_fd, int expands, t_shell *shell)
 {
-	int	i;
 	char	*expansion;
+	int		i;
 
 	i = 0;
 	if (!expands)
@@ -28,13 +42,16 @@ void	write_line(char *content, int pipe_fd, int expands, t_shell *shell)
 				write(pipe_fd, &content[i++], 1);
 			if (content[i] == '$')
 			{
-				expansion = ft_getenv(content + i, shell);
-				if (expansion)
-					write(pipe_fd, expansion, ft_strlen(expansion));
+				if ((content[i + 1] && ft_isspace(content[i + 1])) || !content[i + 1])
+					write(pipe_fd, &content[i++], 1);
+				else
+				{
+					expansion = ft_getenv(content + i, shell);
+					if (expansion)
+						write(pipe_fd, expansion, ft_strlen(expansion));
+					i += calculate_chars(content + i + 1) + 1;
+				}
 			}
-			while (content[i] && content[i] != ' ' 
-					&& !(content[i] >= 9 && content[i] <= 13))
-				i++;
 		}
 	}
 	write(pipe_fd, "\n", 1);
