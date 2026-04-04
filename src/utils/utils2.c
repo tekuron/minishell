@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/28 14:54:53 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/03 18:21:21 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/04 18:59:18 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	check_tty(void)
 	if (!val)
 	{
 		val = isatty(STDIN_FILENO) + 1;
-		return (1);
+		return (val - 1);
 	}
 	else if (val == 2)
 		return (1);
