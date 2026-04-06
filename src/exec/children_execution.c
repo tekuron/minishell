@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/03 13:28:20 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/03 13:45:11 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/06 20:13:39 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	execution_message(t_list **envp, t_process *data, t_command *cmd)
 	}
 	else if (!ft_strncmp(cmd->command[0], "..", 3))
 		free_and_exit(envp, data->cmd, 0, 127);
-	else if (is_dir(cmd->command[0]) == 1)
+	else if (ft_strchr(cmd->command[0], '/') && is_dir(cmd->command[0]) == 1)
 	{
 		write(1, "minishell: ", 12);
 		write(1, cmd->command[0], ft_strlen(cmd->command[0]));
