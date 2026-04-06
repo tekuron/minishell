@@ -6,11 +6,26 @@
 /*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/28 19:09:09 by danz              #+#    #+#             */
-/*   Updated: 2026/03/29 15:37:27 by danz             ###   ########.fr       */
+/*   Updated: 2026/04/06 20:58:45 by danz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	echo_option(char *str)
+{
+	int	ret;
+
+	ret = 0;
+	if (!str || *str++ != '-')
+		return (0);
+	while (*str)
+	{
+		ret = *str != 'n';
+		str++;
+	}
+	return (!ret);
+}
 
 static int	echo_print(char *str)
 {
@@ -30,7 +45,7 @@ int	echo_builtin(t_command *cmd)
 	int		opt;
 	int		i;
 
-	opt = (cmd->command[1] && !ft_strncmp(cmd->command[1], "-n", 3));
+	opt = echo_option(cmd->command[1]);
 	i = 1 + opt;
 	while (cmd->command[i])
 	{
