@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/03 12:45:29 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/03 18:01:46 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/06 21:31:16 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,9 @@ static int	write_to_pipe(int pipes[2], t_io *redir, int curr, t_shell *shell)
 	line = readline(">");
 	if (!line)
 	{
-		printf("warning: here-document at line\
- %i delimited by end-of-file (wanted '%s')\n", curr, redir->path);
+		write_err("warning: here-document at line ", NULL, NULL);
+		ft_putnbr_fd(curr, STDERR_FILENO);
+		write_err(" delimited by end-of-file (wanted '", redir->path, "')\n");
 		return (0);
 	}
 	length = ft_strlen(redir->path);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 13:30:40 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/29 15:42:22 by danz             ###   ########.fr       */
+/*   Updated: 2026/04/06 21:32:24 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ char	*obtain_address(t_command *cmd, t_shell *shell, int length)
 
 	if (length > 2)
 	{
-		write(1, "minishell: cd: too many arguments\n", 35);
+		write(STDERR_FILENO, "minishell: cd: too many arguments\n", 35);
 		return (NULL);
 	}
 	if (length == 1 || (length == 2 && !ft_strncmp(cmd->command[1], "~", 2)))

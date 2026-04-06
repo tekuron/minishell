@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 13:31:02 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/29 20:46:12 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/06 21:39:55 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ long long	check_arguments(t_command *cmd, int args)
 	safe = 1;
 	if (args > 2)
 	{
-		write(1, "minishell: exit: too many arguments\n", 37);
+		write(STDERR_FILENO, "minishell: exit: too many arguments\n", 37);
 		return (1);
 	}
 	if (args == 2)
@@ -49,8 +49,8 @@ long long	check_arguments(t_command *cmd, int args)
 		safe = atoll_safe(cmd->command[1], &res);
 		if (contains_non_digits(cmd->command[1]) || !safe)
 		{
-			printf("minishell: exit: %s: numeric argument required\n",
-				cmd->command[1]);
+			write_err("minishell: exit: ", cmd->command[1], ": numeric \
+argument required\n");
 			return (2);
 		}
 		else

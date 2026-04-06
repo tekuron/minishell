@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_check.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 17:37:06 by danz              #+#    #+#             */
-/*   Updated: 2026/04/06 20:51:46 by danz             ###   ########.fr       */
+/*   Updated: 2026/04/06 21:50:54 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	check_cmd(char *str)
 	int	pipe;
 	int	redir;
 	int	word;
-	int err;
+	int	err;
 
 	pipe = 0;
 	redir = 0;

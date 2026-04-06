@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 13:31:26 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/03/31 15:38:04 by danz             ###   ########.fr       */
+/*   Updated: 2026/04/06 21:50:06 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,12 +76,14 @@ int	unset_builtin(t_command *cmd, t_list **envp)
 	args = arr_len(cmd->command);
 	if (args <= 1)
 	{
-		printf("minishell: unset: not enough arguments\n");
+		write_err("minishell: unset: not enough arguments\n",
+			NULL, NULL);
 		return (1);
 	}
 	if (!validate_args(cmd))
 	{
-		printf("minishell: unset: invalid parameter name\n");
+		write_err("minishell: unset: invalid parameter name\n",
+			NULL, NULL);
 		return (1);
 	}
 	i = 1;

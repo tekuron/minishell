@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/04/03 17:49:59 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/06 21:35:52 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,9 @@ int	wait_for_children(t_process *data)
 	else if (WIFSIGNALED(status))
 		last_exit = 128 + WTERMSIG(status);
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGQUIT)
-		write(1, "Quit\n", 5);
+		write(STDERR_FILENO, "Quit (core dumped)\n", 20);
 	else if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-		write(1, "\n", 1);
+		write(STDERR_FILENO, "\n", 1);
 	set_signals(SHELL);
 	return (last_exit);
 }

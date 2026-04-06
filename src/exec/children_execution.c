@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/03 13:28:20 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/06 21:13:37 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/06 21:28:57 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,14 @@ void	execution_message(t_list **envp, t_process *data, t_command *cmd)
 {
 	if (!ft_strncmp(cmd->command[0], ".", 2))
 	{
-		printf("minishell: .: filename argument required\n");
-		printf(".: usage . filename [arguments]\n");
+		write_err("minishell: .: filename argument required\n", NULL, NULL);
+		write_err(".: usage . filename [arguments]\n", NULL, NULL);
 		free_and_exit(envp, data->cmd, 0, 2);
 	}
 	else if (!ft_strncmp(cmd->command[0], "..", 3))
 		free_and_exit(envp, data->cmd, 0, 127);
 	else if (ft_strchr(cmd->command[0], '/') && is_dir(cmd->command[0]) == 1)
-	{
-		write(1, "minishell: ", 12);
-		write(1, cmd->command[0], ft_strlen(cmd->command[0]));
-		write(1, ": Is a directory\n", 18);
-	}
+		write_err("minishell: ", cmd->command[0], ": Is a directory\n");
 	else if (ft_strchr(cmd->command[0], '/') && !access(cmd->command[0], F_OK)
 		&& access(cmd->command[0], X_OK) < 0)
 	{
@@ -35,7 +31,7 @@ void	execution_message(t_list **envp, t_process *data, t_command *cmd)
 		free_and_exit(envp, data->cmd, 0, 126);
 	}
 	else
-		printf("minishell: %s: command not found\n", cmd->command[0]);
+		write_err("minishell: ", cmd->command[0], ": command not found\n");
 	free_and_exit(envp, data->cmd, 0, 127);
 }
 
