@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/03 13:28:20 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/06 20:13:39 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/06 21:13:37 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	execution_message(t_list **envp, t_process *data, t_command *cmd)
 		write(1, cmd->command[0], ft_strlen(cmd->command[0]));
 		write(1, ": Is a directory\n", 18);
 	}
-	else if (access(cmd->command[0], F_OK) == 0
+	else if (ft_strchr(cmd->command[0], '/') && !access(cmd->command[0], F_OK)
 		&& access(cmd->command[0], X_OK) < 0)
 	{
 		perror(cmd->command[0]);
