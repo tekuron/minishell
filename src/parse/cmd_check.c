@@ -6,7 +6,7 @@
 /*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 17:37:06 by danz              #+#    #+#             */
-/*   Updated: 2026/04/08 18:16:42 by danzamor         ###   ########.fr       */
+/*   Updated: 2026/04/08 18:23:22 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,16 +53,18 @@ static int	set_vars(char *str, int *pipe, int *redir, int word)
 
 static int check_qts(char *str)
 {
-	int	qts;
+	int	open;
 
-	qts = 0;
+	open = 0;
 	while (*str)
 	{
-		if (*str == '\'' || *str == '\"')
-			qts++;
+		if ((*str == '\'' || *str == '\"') && !open)
+			open = *str;
+		else if (*str == open)
+			open = 0;
 		str++;
 	}
-	return (qts % 2);
+	return (open != 0);
 }
 
 int	check_cmd(char *str)
