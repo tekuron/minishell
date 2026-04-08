@@ -6,7 +6,7 @@
 /*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/04/08 16:47:58 by danzamor         ###   ########.fr       */
+/*   Updated: 2026/04/08 17:38:35 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int	exec_command(t_command *cmd, t_shell *shell)
 	data = (t_process){0};
 	pair.status = initialize_data(&data, cmd);
 	if (pair.status < 0)
-		return (pair.status);
+		return (1);
 	pair.status = forking(shell, &data, data.process);
 	close_heredocs(cmd, -1);
 	if (!pair.status)
