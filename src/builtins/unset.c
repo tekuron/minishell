@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 13:31:26 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/06 21:50:06 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/08 20:45:07 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@ void	remove_from_env(t_list **envp, char *str)
 		length = ft_strlen(str);
 		if (curr->content
 			&& ft_strncmp((char *)curr->content, str, length) == 0
-			&& ((char *)curr->content)[length] == '=')
+			&& (((char *)curr->content)[length] == '='
+			|| ((char *)curr->content)[length] == '\0'))
 		{
 			if (prev == NULL)
 				*envp = curr->next;

@@ -6,7 +6,7 @@
 /*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 13:31:02 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/08 19:49:53 by danzamor         ###   ########.fr       */
+/*   Updated: 2026/04/08 20:36:39 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ int	contains_non_digits(char *str)
 	return (0);
 }
 
-long long	check_arguments(t_command *cmd, int args)
+long long	check_arguments(t_shell *shell, t_command *cmd, int args)
 {
 	long long	res;
 	int			safe;
 
-	res = 0;
+	res = shell->last_exit;
 	safe = 1;
 	if (cmd->command[1])
 	{
@@ -57,20 +57,20 @@ argument required\n");
 	return (res);
 }
 
-int	exit_builtin(t_command *cmd, t_list **envp, int fds[2])
+int	exit_builtin(t_command *cmd, t_shell *shell, int fds[2])
 {
 	int			args;
 	long long	exit_status;
 
 	args = arr_len(cmd->command);
 	write(1, "exit\n", 5);
-	exit_status = check_arguments(cmd, args);
+	exit_status = check_arguments(shell, cmd, args);
 	if (exit_status < 0)
 		return (1);
 	if (fds != NULL)
-		fd_cloning(RESTORE, fds, cmd, envp);
+		fd_cloning(RESTORE, fds, cmd, shell->envp);
 	free_cmd(NULL, cmd, CONT, NULL);
-	ft_lstclear(envp, free);
+	ft_lstclear(shell->envp, free);
 	prompt(exit_status, EXIT_SHELL);
 	exit((unsigned char) exit_status);
 	return (exit_status);

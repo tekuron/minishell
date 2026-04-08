@@ -6,7 +6,7 @@
 /*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:54 by danz              #+#    #+#             */
-/*   Updated: 2026/04/08 17:43:07 by danzamor         ###   ########.fr       */
+/*   Updated: 2026/04/08 20:30:56 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,17 @@ void	update_last_exit(t_shell *shell, t_command *cmd)
 	free(exit_env);
 }
 
+static int	line_is_empty(char *line)
+{
+	while (*line)
+	{
+		if (!ft_isspace(*line))
+			return (0);
+		line++;
+	}
+	return (1);
+}
+
 void	parse_and_exec(char *line, t_shell *shell)
 {
 	t_command	*cmd;
@@ -34,6 +45,8 @@ void	parse_and_exec(char *line, t_shell *shell)
 		free_cmd(&line, NULL, CONT, NULL);
 		return ;
 	}
+	if (line_is_empty(line))
+		return (free(line));
 	cmd = get_cmd(line, shell);
 	if (!cmd)
 		free_cmd(&line, NULL, STOP, "malloc");

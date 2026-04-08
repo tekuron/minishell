@@ -6,7 +6,7 @@
 /*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/03 12:53:12 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/08 17:14:38 by danzamor         ###   ########.fr       */
+/*   Updated: 2026/04/08 20:36:54 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	execute_builtin(t_command *cmd, t_shell *shell, int builtin, int fds[2])
 	else if (builtin == UNSET_BI)
 		return (unset_builtin(cmd, shell->envp));
 	else if (builtin == EXIT_BI)
-		return (exit_builtin(cmd, shell->envp, fds));
+		return (exit_builtin(cmd, shell, fds));
 	else if (builtin == ENV_BI)
 		return (env_builtin(cmd, *shell->envp));
 	else if (builtin == PWD_BI)
