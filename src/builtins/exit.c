@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 13:31:02 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/06 21:39:55 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/08 15:10:29 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ long long	check_arguments(t_command *cmd, int args)
 	if (args > 2)
 	{
 		write(STDERR_FILENO, "minishell: exit: too many arguments\n", 37);
+		if (!contains_non_digits(cmd->command[1]))
+			return (-1);
 		return (1);
 	}
 	if (args == 2)
@@ -60,7 +62,7 @@ argument required\n");
 		return (0);
 }
 
-int	exit_builtin(t_command *cmd, t_list **envp)
+int	exit_builtin(t_command *cmd, t_list **envp, int fds[2])
 {
 	int			args;
 	long long	exit_status;
@@ -68,6 +70,9 @@ int	exit_builtin(t_command *cmd, t_list **envp)
 	args = arr_len(cmd->command);
 	write(1, "exit\n", 5);
 	exit_status = check_arguments(cmd, args);
+	if (exit_status < 0)
+		return (1);
+	fd_cloning(RESTORE, fds, cmd, envp);
 	free_cmd(NULL, cmd, CONT, NULL);
 	ft_lstclear(envp, free);
 	prompt(exit_status, EXIT_SHELL);

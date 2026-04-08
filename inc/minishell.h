@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/04/06 21:27:18 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/08 15:10:18 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,5 +180,6 @@ void		close_heredocs(t_command *cmd, int number);
 int			forking(t_shell *shell, t_process *data, int total);
 int			check_tty(void);
 void		write_err(char *str, char *str2, char *str3);
+void		fd_cloning(int mode, int fds[2], t_command *cmd, t_list **envp);
 
 #endif
