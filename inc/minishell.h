@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:49 by danz              #+#    #+#             */
-/*   Updated: 2026/04/08 15:10:18 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/08 18:40:49 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,8 +121,9 @@ typedef struct s_process
 {
 	t_command			*cmd;
 	pid_t				*ids;
-	int					**pipes;
+	int					pipes[2];
 	int					process;
+	int					prev_fd;
 }		t_process;
 
 typedef struct s_shell
@@ -153,7 +154,7 @@ int			is_redir(char *str);
 int			append_to_history(char *line);
 void		s_int_handler_input(int sig);
 void		s_backslash_handler(int sig);
-int			piping(int **pipes, int total, int id);
+int			piping(t_process *data, int total);
 int			redirecting(t_command *cmd);
 void		s_int_handler_heredoc(int sig);
 char		*try_access(t_command *cmd, t_shell *shell);

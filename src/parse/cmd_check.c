@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_check.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 17:37:06 by danz              #+#    #+#             */
-/*   Updated: 2026/04/08 18:23:22 by danzamor         ###   ########.fr       */
+/*   Updated: 2026/04/08 18:43:10 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static int	set_vars(char *str, int *pipe, int *redir, int word)
 	return (0);
 }
 
-static int check_qts(char *str)
+static int	check_qts(char *str)
 {
 	int	open;
 

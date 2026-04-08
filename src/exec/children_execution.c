@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   children_execution.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/03 13:28:20 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/08 17:10:13 by danzamor         ###   ########.fr       */
+/*   Updated: 2026/04/08 18:43:01 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,11 @@ void	handle_child(t_process *data, t_shell *shell, int total)
 	t_command	*cmd;
 
 	cmd = t_command_index(data->cmd, data->process);
-	err = !piping(data->pipes, total, data->process) || !redirecting(cmd);
-	free_pipes(data->pipes, total - 1);
+	err = !piping(data, total) || !redirecting(cmd);
+	if (data->process != 0)
+		close(data->prev_fd);
+	if (data->process != total - 1)
+		close(data->pipes[1]);
 	if (err || !cmd->command || !*cmd->command)
 		free_and_exit(shell->envp, data->cmd, err, err);
 	run_command_bi(data, shell, cmd);
@@ -70,6 +73,21 @@ void	handle_child(t_process *data, t_shell *shell, int total)
 	}
 }
 
+int	assess_and_fork(t_shell *shell, t_process *data, int total)
+{
+	data->ids[data->process] = fork();
+	if (data->ids[data->process] < 0)
+		return (0);
+	if (data->ids[data->process] == 0)
+	{
+		free(data->ids);
+		close_heredocs(data->cmd, data->process);
+		set_signals(EXECUTION);
+		handle_child(data, shell, total);
+	}
+	return (1);
+}
+
 int	forking(t_shell *shell, t_process *data, int total)
 {
 	int	i;
@@ -79,19 +97,22 @@ int	forking(t_shell *shell, t_process *data, int total)
 	while (i < total)
 	{
 		data->process = i;
-		data->ids[i] = fork();
-		if (data->ids[i] < 0)
-			return (0);
-		if (data->ids[i] == 0)
+		if (i != total - 1)
 		{
-			free(data->ids);
-			close_heredocs(data->cmd, i);
-			set_signals(EXECUTION);
-			handle_child(data, shell, total);
+			if (pipe(data->pipes) == -1)
+				return (0);
+		}
+		if (!assess_and_fork(shell, data, total))
+			return (0);
+		if (data->prev_fd != -1)
+			close(data->prev_fd);
+		if (i != total - 1)
+		{
+			close(data->pipes[1]);
+			data->prev_fd = data->pipes[0];
 		}
 		i++;
 	}
 	data->process = total;
-	free_pipes(data->pipes, total - 1);
 	return (1);
 }

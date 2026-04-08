@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/04/08 17:38:35 by danzamor         ###   ########.fr       */
+/*   Updated: 2026/04/08 18:41:47 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,17 +65,11 @@ int	initialize_data(t_process *data, t_command *cmd)
 {
 	data->cmd = cmd;
 	data->process = t_command_size(cmd);
-	data->pipes = create_pipes(data->process - 1);
-	if (!data->pipes)
-	{
-		close_heredocs(cmd, -1);
-		return (-1);
-	}
+	data->prev_fd = -1;
 	data->ids = malloc(sizeof(pid_t) * data->process);
 	if (!data->ids)
 	{
 		close_heredocs(cmd, -1);
-		free_pipes(data->pipes, data->process - 1);
 		return (-2);
 	}
 	return (1);
