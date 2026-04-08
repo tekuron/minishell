@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/04/08 18:41:47 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/08 19:01:32 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ int	exec_command(t_command *cmd, t_shell *shell)
 	close_heredocs(cmd, -1);
 	if (!pair.status)
 	{
+		free(data.ids);
 		set_signals(SHELL);
 		return (-3);
 	}

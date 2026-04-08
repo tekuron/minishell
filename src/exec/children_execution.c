@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/03 13:28:20 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/08 18:56:37 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/08 19:08:24 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,6 @@ void	handle_child(t_process *data, t_shell *shell, int total)
 
 	cmd = t_command_index(data->cmd, data->process);
 	err = !piping(data, total) || !redirecting(cmd);
-	if (data->process != 0)
-		close(data->prev_fd);
-	if (data->process != total - 1)
-		close(data->pipes[1]);
 	if (err || !cmd->command || !*cmd->command)
 		free_and_exit(shell->envp, data->cmd, err, err);
 	run_command_bi(data, shell, cmd);
@@ -102,7 +98,7 @@ int	forking(t_shell *shell, t_process *data, int total)
 			if (pipe(data->pipes) == -1)
 				return (0);
 		}
-		if (!assess_and_fork(shell, data, total) || i - 5 > 0)
+		if (!assess_and_fork(shell, data, total))
 			return (0);
 		if (data->prev_fd != -1)
 			close(data->prev_fd);
