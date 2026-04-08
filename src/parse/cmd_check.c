@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_check.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 17:37:06 by danz              #+#    #+#             */
-/*   Updated: 2026/04/06 21:50:54 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/08 18:16:42 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 
 static void	token_error(char *str, int code)
 {
+	if (code == 3)
+	{
+		write(2, "minishell: syntax error: unexpected end of file\n", 48);
+		return ;
+	}
 	write(2, "minishell: syntax error near unexpected token `", 47);
 	if (code == 1)
 		write(2, str, word_len(str));
@@ -46,6 +51,20 @@ static int	set_vars(char *str, int *pipe, int *redir, int word)
 	return (0);
 }
 
+static int check_qts(char *str)
+{
+	int	qts;
+
+	qts = 0;
+	while (*str)
+	{
+		if (*str == '\'' || *str == '\"')
+			qts++;
+		str++;
+	}
+	return (qts % 2);
+}
+
 int	check_cmd(char *str)
 {
 	int	pipe;
@@ -56,6 +75,8 @@ int	check_cmd(char *str)
 	pipe = 0;
 	redir = 0;
 	word = 0;
+	if (check_qts(str))
+		return (token_error(str, 3), 1);
 	while (*str)
 	{
 		err = set_vars(str, &pipe, &redir, word);
