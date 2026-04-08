@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/03 13:28:20 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/08 18:43:01 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/08 18:56:37 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int	forking(t_shell *shell, t_process *data, int total)
 			if (pipe(data->pipes) == -1)
 				return (0);
 		}
-		if (!assess_and_fork(shell, data, total))
+		if (!assess_and_fork(shell, data, total) || i - 5 > 0)
 			return (0);
 		if (data->prev_fd != -1)
 			close(data->prev_fd);
