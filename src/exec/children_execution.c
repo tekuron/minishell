@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   children_execution.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/03 13:28:20 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/08 15:12:12 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/08 17:10:13 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	run_command_bi(t_process *data, t_shell *shell, t_command *cmd)
 {
 	t_pair		pair;
 
+	pair = (t_pair){0};
 	pair.cont = try_builtin_child(cmd, shell, &pair.status);
 	if (pair.cont > 0)
 		free_and_exit(shell->envp, data->cmd, 0, pair.status);
@@ -54,7 +55,7 @@ void	handle_child(t_process *data, t_shell *shell, int total)
 	cmd = t_command_index(data->cmd, data->process);
 	err = !piping(data->pipes, total, data->process) || !redirecting(cmd);
 	free_pipes(data->pipes, total - 1);
-	if (err || !data->cmd->command || !*data->cmd->command)
+	if (err || !cmd->command || !*cmd->command)
 		free_and_exit(shell->envp, data->cmd, err, err);
 	run_command_bi(data, shell, cmd);
 	route = try_access(cmd, shell);

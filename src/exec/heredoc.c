@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/03 12:45:29 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/06 21:31:16 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/08 16:59:00 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,11 +87,12 @@ static int	prepare_heredoc(t_io *redir, t_shell *shell)
 	int	pipes[2];
 
 	line = 0;
+	if (pipe(pipes) == -1)
+		return (0);
 	set_signals(HEREDOC);
-	pipe(pipes);
 	redir->heredoc_fd = pipes[0];
-	while (!get_signal_status() && write_to_pipe(pipes, redir, line++, shell))
-		(void) line;
+	while (!get_signal_status() && write_to_pipe(pipes, redir, line, shell))
+		line++;
 	close(pipes[1]);
 	if (get_signal_status())
 	{

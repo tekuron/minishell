@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 16:57:36 by danz              #+#    #+#             */
-/*   Updated: 2026/04/08 15:09:06 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/08 16:47:58 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ int	exec_command(t_command *cmd, t_shell *shell)
 	t_process	data;
 	t_pair		pair;
 
+	pair = (t_pair){0};
 	pair.cont = heredoc_handling(cmd, shell);
 	if (!pair.cont)
 		return (130);

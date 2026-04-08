@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 13:31:02 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/08 15:10:29 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/08 16:26:07 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,8 @@ int	exit_builtin(t_command *cmd, t_list **envp, int fds[2])
 	exit_status = check_arguments(cmd, args);
 	if (exit_status < 0)
 		return (1);
-	fd_cloning(RESTORE, fds, cmd, envp);
+	if (fds != NULL)
+		fd_cloning(RESTORE, fds, cmd, envp);
 	free_cmd(NULL, cmd, CONT, NULL);
 	ft_lstclear(envp, free);
 	prompt(exit_status, EXIT_SHELL);

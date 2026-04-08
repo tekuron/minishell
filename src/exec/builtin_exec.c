@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exec.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/03 12:53:12 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/08 15:08:51 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/08 17:14:38 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,11 +89,6 @@ int	try_builtin_child(t_command *cmd, t_shell *shell, int *status)
 	builtin = is_builtin(cmd);
 	if (builtin && builtin != -1)
 	{
-		if (!redirecting(cmd))
-		{
-			perror("minishell");
-			return (1);
-		}
 		exit_status = execute_builtin(cmd, shell, builtin, NULL);
 		*status = exit_status;
 		return (builtin);
@@ -117,6 +112,7 @@ int	try_builtin_parent(t_command *cmd, t_shell *shell, int *status)
 			if (!redirecting(cmd))
 			{
 				fd_cloning(RESTORE, fds, cmd, shell->envp);
+				*status = 1;
 				return (perror("minishell"), 1);
 			}
 			exit_status = execute_builtin(cmd, shell, builtin, fds);
