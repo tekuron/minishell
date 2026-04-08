@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 22:26:11 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/03 18:19:20 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/08 20:05:28 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void	set_signals(int mode)
 	{
 		assign_signal(SIGINT, s_int_handler_input, &sigint_default);
 		assign_signal(SIGQUIT, s_backslash_handler, &sigquit_default);
+		assign_signal(SIGPIPE, s_backslash_handler, NULL);
 		rl_event_hook = exit_prompt;
 		rl_catch_signals = 0;
 	}
