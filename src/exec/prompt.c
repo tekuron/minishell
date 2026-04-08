@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/01 18:09:05 by danz              #+#    #+#             */
-/*   Updated: 2026/04/03 13:30:37 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/08 14:50:18 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-#define BRED "\e[1;31m"
-#define BGREEN "\e[1;32m"
-#define BCYAN "\e[6;36m"
-#define CRESET "\e[0m"
-#define PROMPT_SIZE 37
+#define BRED "\e[1;31m\002"
+#define BGREEN "\e[1;32m\002"
+#define BCYAN "\e[1;36m\002"
+#define CRESET "\e[0m\002"
+#define PROMPT_SIZE 100
 
 char	*display_prompt(t_shell *shell)
 {
