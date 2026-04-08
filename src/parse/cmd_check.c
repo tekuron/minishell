@@ -6,7 +6,7 @@
 /*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 17:37:06 by danz              #+#    #+#             */
-/*   Updated: 2026/04/08 18:49:09 by danzamor         ###   ########.fr       */
+/*   Updated: 2026/04/08 19:15:18 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static int	check_qts(char *str)
 	return (open != 0);
 }
 
-static int check_end(int pipe, int redir)
+static int	check_end(int pipe, int redir)
 {
 	if (pipe || redir)
 		return (token_error(NULL, 2), 1);

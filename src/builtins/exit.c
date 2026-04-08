@@ -6,7 +6,7 @@
 /*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 13:31:02 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/08 16:26:07 by danzamor         ###   ########.fr       */
+/*   Updated: 2026/04/08 19:29:01 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,7 @@ long long	check_arguments(t_command *cmd, int args)
 
 	res = 0;
 	safe = 1;
-	if (args > 2)
-	{
-		write(STDERR_FILENO, "minishell: exit: too many arguments\n", 37);
-		if (!contains_non_digits(cmd->command[1]))
-			return (-1);
-		return (1);
-	}
-	if (args == 2)
+	if (cmd->command[1])
 	{
 		safe = atoll_safe(cmd->command[1], &res);
 		if (contains_non_digits(cmd->command[1]) || !safe)
@@ -55,11 +48,13 @@ long long	check_arguments(t_command *cmd, int args)
 argument required\n");
 			return (2);
 		}
-		else
-			return (res);
 	}
-	else
-		return (0);
+	if (args > 2)
+	{
+		write(STDERR_FILENO, "minishell: exit: too many arguments\n", 37);
+		return (-1);
+	}
+	return (res);
 }
 
 int	exit_builtin(t_command *cmd, t_list **envp, int fds[2])
