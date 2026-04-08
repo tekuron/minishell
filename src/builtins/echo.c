@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/28 19:09:09 by danz              #+#    #+#             */
-/*   Updated: 2026/04/06 20:58:45 by danz             ###   ########.fr       */
+/*   Updated: 2026/04/08 20:09:53 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,23 +21,18 @@ static int	echo_option(char *str)
 		return (0);
 	while (*str)
 	{
-		ret = *str != 'n';
+		ret += *str != 'n';
 		str++;
 	}
 	return (!ret);
 }
 
-static int	echo_print(char *str)
+static void	echo_print(char *str)
 {
 	size_t	len;
 
 	len = ft_strlen(str);
-	if (write(STDOUT_FILENO, str, len) < 0)
-	{
-		perror("minishell: echo");
-		return (1);
-	}
-	return (0);
+	write(STDOUT_FILENO, str, len);
 }
 
 int	echo_builtin(t_command *cmd)
@@ -49,19 +44,12 @@ int	echo_builtin(t_command *cmd)
 	i = 1 + opt;
 	while (cmd->command[i])
 	{
-		if (echo_print(cmd->command[i]))
-			return (1);
+		echo_print(cmd->command[i]);
 		if (cmd->command[i + 1])
-		{
-			if (echo_print(" "))
-				return (1);
-		}
+			echo_print(" ");
 		i++;
 	}
 	if (!opt)
-	{
-		if (echo_print("\n"))
-			return (1);
-	}
+		echo_print("\n");
 	return (0);
 }
