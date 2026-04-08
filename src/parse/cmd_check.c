@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_check.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 17:37:06 by danz              #+#    #+#             */
-/*   Updated: 2026/04/08 18:43:10 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/08 18:49:09 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,13 @@ static int	check_qts(char *str)
 	return (open != 0);
 }
 
+static int check_end(int pipe, int redir)
+{
+	if (pipe || redir)
+		return (token_error(NULL, 2), 1);
+	return (0);
+}
+
 int	check_cmd(char *str)
 {
 	int	pipe;
@@ -93,5 +100,5 @@ int	check_cmd(char *str)
 		else
 			str++;
 	}
-	return (0);
+	return (check_end(pipe, redir));
 }
