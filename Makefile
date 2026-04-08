@@ -14,10 +14,11 @@ AR = ar rcs
 LIB_DIR = libft
 LIB = $(LIB_DIR)/libft.a
 
-GREEN = \033[0;32m
-YELLOW = \033[0;33m
-BLUE = \033[0;34m
-CYAN = \033[0;36m
+GREEN = \033[0;32m\002
+YELLOW = \033[0;33m\002
+BLUE = \033[0;34m\002
+CYAN = \033[0;36m\002
+CRESET = \e[0m\002
 
 SRCS = $(shell find $(SRC_DIR) -wholename "*/*.c")
 
@@ -30,34 +31,34 @@ $(LIB):
 
 $(NAME): $(LIB) $(OBJS)
 	@$(CC) $(CFLAGS) $(INCLUDE) $(OBJS) $(LIB) -lreadline -o $(NAME)
-	@echo "$(GREEN)$(PROJECT) built: $(NAME)"
+	@echo "$(GREEN)$(PROJECT) built: $(NAME)$(CRESET)"
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@)
-	@echo "$(CYAN)Compiling: $<"
+	@echo "$(CYAN)Compiling: $<$(CRESET)"
 	@$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
 clean:
 	@$(RM) $(OBJ_DIR)
 	@$(MAKE_F) clean -C $(LIB_DIR)
-	@echo "$(BLUE)$(PROJECT) object files removed"
+	@echo "$(BLUE)$(PROJECT) object files removed$(CRESET)"
 
 fclean: clean
 	@$(RM) $(NAME)
 	@$(RM) libft/libft.a
-	@echo "$(BLUE)libft clean (library removed)"
-	@echo "$(BLUE)$(PROJECT) clean (binary removed)"
+	@echo "$(BLUE)libft clean (library removed)$(CRESET)"
+	@echo "$(BLUE)$(PROJECT) clean (binary removed)$(CRESET)"
 
 re: fclean all
 	@echo "$(GREEN)$(PROJECT) rebuilt"
 
 pclean:
 	@$(RM) $(OBJ_DIR)
-	@echo "$(BLUE)$(PROJECT) non-library object files removed"
+	@echo "$(BLUE)$(PROJECT) non-library object files removed$(CRESET)"
 
 pfclean: pclean
 	@$(RM) $(NAME)
-	@echo "$(BLUE)$(PROJECT) pclean (library removed)"
+	@echo "$(BLUE)$(PROJECT) pclean (library removed)$(CRESET)"
 
 pre: pfclean all
 
