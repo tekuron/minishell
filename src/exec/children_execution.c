@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/03 13:28:20 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/08 19:08:24 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/08 19:16:22 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,12 @@ int	assess_and_fork(t_shell *shell, t_process *data, int total)
 {
 	data->ids[data->process] = fork();
 	if (data->ids[data->process] < 0)
+	{
+		close(data->pipes[0]);
+		close(data->pipes[1]);
+		close(data->prev_fd);
 		return (0);
+	}
 	if (data->ids[data->process] == 0)
 	{
 		free(data->ids);
@@ -95,7 +100,7 @@ int	forking(t_shell *shell, t_process *data, int total)
 		data->process = i;
 		if (i != total - 1)
 		{
-			if (pipe(data->pipes) == -1)
+			if (pipe(data->pipes) == -1 && i != 0 && close(data->prev_fd))
 				return (0);
 		}
 		if (!assess_and_fork(shell, data, total))
