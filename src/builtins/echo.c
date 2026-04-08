@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danz <danz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/28 19:09:09 by danz              #+#    #+#             */
-/*   Updated: 2026/04/06 20:58:45 by danz             ###   ########.fr       */
+/*   Updated: 2026/04/08 19:55:45 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	echo_option(char *str)
 		return (0);
 	while (*str)
 	{
-		ret = *str != 'n';
+		ret += *str != 'n';
 		str++;
 	}
 	return (!ret);
