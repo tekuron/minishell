@@ -6,7 +6,7 @@
 /*   By: dplazas- <dplazas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 13:30:40 by dplazas-          #+#    #+#             */
-/*   Updated: 2026/04/06 21:32:24 by dplazas-         ###   ########.fr       */
+/*   Updated: 2026/04/18 21:26:39 by dplazas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	replace_content(char *name, t_list *node, t_list **envp, char *dir)
 	}
 }
 
-void	change_pwds(t_list **envp, char *oldpwd_ch)
+int	change_pwds(t_list **envp, char *oldpwd_ch)
 {
 	t_list	*oldpwd;
 	t_list	*newpwd;
@@ -66,7 +66,9 @@ void	change_pwds(t_list **envp, char *oldpwd_ch)
 	curr_dir = getcwd(NULL, 0);
 	if (newpwd)
 		replace_content("PWD", newpwd, envp, curr_dir);
-	return ((void) free(oldpwd_ch), (void) free(curr_dir));
+	free(oldpwd_ch);
+	free(curr_dir);
+	return (0);
 }
 
 char	*obtain_address(t_command *cmd, t_shell *shell, int length)
@@ -117,10 +119,9 @@ int	cd_builtin(t_command *cmd, t_shell *shell)
 	}
 	current_dir = getcwd(NULL, 0);
 	if (chdir(addr) == 0)
-	{
-		change_pwds(shell->envp, current_dir);
-		return (0);
-	}
+		return (change_pwds(shell->envp, current_dir));
+	else if (current_dir)
+		free(current_dir);
 	perror("minishell: cd");
 	return (1);
 }
