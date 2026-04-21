@@ -6,7 +6,7 @@
 /*   By: danzamor <danzamor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 14:18:02 by danzamor          #+#    #+#             */
-/*   Updated: 2026/04/19 11:03:12 by danzamor         ###   ########.fr       */
+/*   Updated: 2026/04/21 20:43:44 by danzamor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static int	has_env(t_list *node)
 			while (*str && *str != '\'')
 				str++;
 		}
-		if (*str && *str++ == '$' && ft_isalnum(*(str)))
+		if (*str && *str++ == '$' && (ft_isalnum(*(str)) || *str == '?'))
 			return (1);
 	}
 	return (0);
