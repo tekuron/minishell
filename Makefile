@@ -52,14 +52,4 @@ fclean: clean
 re: fclean all
 	@echo "$(GREEN)$(PROJECT) rebuilt"
 
-pclean:
-	@$(RM) $(OBJ_DIR)
-	@echo "$(BLUE)$(PROJECT) non-library object files removed$(CRESET)"
-
-pfclean: pclean
-	@$(RM) $(NAME)
-	@echo "$(BLUE)$(PROJECT) pclean (library removed)$(CRESET)"
-
-pre: pfclean all
-
 .PHONY: all clean fclean re
